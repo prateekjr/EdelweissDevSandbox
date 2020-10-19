@@ -102,7 +102,6 @@
      <aura:attribute name="HoldingInformationAPI" type="String[]" />
  	<aura:attribute name="folioByAPI" type="boolean"  default="false"/>
      <aura:attribute name="folioByAPIList" type="String[]" />
-    <aura:attribute name="showAllScheme" type="boolean"  default="false"/>
     
     
     <aura:renderIf isTrue="{!v.isProfileAccess}">
@@ -191,7 +190,7 @@
                                                   label="Product Type"
                                                   onchange="{!c.onControllerFieldChange}" required="true" >
                                     <aura:iteration items="{!v.listControllingValues}" var="val">                                        
-                                        <aura:if isTrue ="{!or(val == '--- None ---',val =='PMS')}" >
+                                        <aura:if isTrue ="{!val =='PMS'}" >
                                             <option value="{!val}">{!val}</option>
                                         </aura:if>                                                                                
                                     </aura:iteration>

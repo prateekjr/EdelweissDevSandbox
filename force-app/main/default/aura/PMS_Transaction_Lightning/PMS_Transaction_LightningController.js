@@ -97,7 +97,6 @@
         
     },
     transactionSelection : function(component, event, helper) {
-        component.set("v.showAllScheme",false);
         var orderEntry = component.get("v.orderEntry");  
         component.set("v.orderEntry",orderEntry);  
     },
@@ -139,106 +138,7 @@
         component.set("v.orderEntry", orderEntry); 
         
     },
-    
-    onControllerFieldChange: function(component, event, helper) {     
-        var controllerValueKey = event.getSource().get("v.value"); // get selected controller field value
-        var depnedentFieldMap = component.get("v.depnedentFieldMap");
-
-        component.set("v.selectedAMCName1",'');
         
-        if (controllerValueKey != '--- None ---') {
-            var ListOfDependentFields = depnedentFieldMap[controllerValueKey];
-
-            if(controllerValueKey === 'PMS'){
-                    component.set("v.showProductName",true);
-                    component.set("v.showInstrument",false);
-                    component.set("v.showAmc" , false);
-					component.set("v.showAllScheme" , false);
-                    
-                }
-            
-            
-            if(ListOfDependentFields.length > 0){
-                component.set("v.bDisabledDependentFld" , false);  
-                helper.fetchDepValues(component, ListOfDependentFields);
-                
-            }else{
-                component.set("v.bDisabledDependentFld" , true); 
-                component.set("v.listDependingValues", ['--- None ---']);
-            }  
-        }
-        else {
-            component.set("v.listDependingValues", ['--- None ---']);
-            component.set("v.bDisabledDependentFld" , true);
-        }
-        
-        var orderEntry = component.get("v.orderEntry");
-        
-    },
-    /* De-merger comment Starts */
-    /*
-    getFolioOnHolding : function(component, event, helper){
-        
-        var orderEntry = component.get("v.orderEntry");  
-        // Folio Number set Final for purchase
-        if(orderEntry.Transaction_Type__c == 'Purchase' ){
-            //orderEntry.Folio__c = 'New';
-            component.set("v.orderEntry", orderEntry );
-            var folioList = new Array();
-            var action = component.get("c.getFolioNumbersPurchase");
-            action.setParams({
-                "clientAccountId" : orderEntry.Client_Account__c,
-                "bseStarAmcCode" : orderEntry.AMC_Name__c,
-                "holdingType" : orderEntry.Client_Holding_and_Type__c
-            });                  
-            action.setCallback(this, function(response) {    
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    var clientAssetList = response.getReturnValue();
-                    if(clientAssetList == null){
-                        folioList.push('New');  
-                        component.set("v.folioListPurchase",folioList); 
-                    }else{
-                        folioList.push('New');                    
-                        for(var m=0 ; m < clientAssetList.length; m++){
-                            folioList.push(clientAssetList[m].Folio_Number__c); 
-                        }
-                        component.set("v.clientAssetListPurchase",clientAssetList); 
-                        component.set("v.folioListPurchase",folioList); 
-                    }
-                }
-            });$A.enqueueAction(action);
-            
-        }
-        if(orderEntry.Transaction_Type__c == 'Redemption' || orderEntry.Transaction_Type__c == 'Switch' ){
-            var folioListOther = new Array();
-            var action = component.get("c.getFolioNumbers");
-            action.setParams({
-                "clientAccountId" : orderEntry.Client_Account__c,
-                "productId" : orderEntry.Product_lookup__c,
-                "holdingType" : orderEntry.Client_Holding_and_Type__c
-            });                  
-            action.setCallback(this, function(response) {    
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    var clientAssetList = response.getReturnValue();
-                    if(clientAssetList == null){
-                        folioListOther.push('-- None --');
-						component.set("v.folioListPurchase",folioListOther);
-                    }else{
-                        folioListOther.push('-- None --');
-                        for(var m=0 ; m < clientAssetList.length; m++){
-                            folioListOther.push(clientAssetList[m].Folio_Number__c); 
-                        }
-                        component.set("v.clientAssetListPurchase",clientAssetList); 
-                        component.set("v.folioListPurchase",folioListOther); 
-                    }
-                }
-            });$A.enqueueAction(action);         
-        }
-    },*/
-    /* De-merger comment Ends */
-    
     loadMainScreen: function(component, event, helper){
         component.set("v.folioByAPI",false); 
         var orderEntry = component.get("v.orderEntry");  
@@ -434,15 +334,10 @@
                                 component.set("v.isPOADisplay",false);
                                 component.set("v.isExternalDisplay",true);
                                 
-                            }
-                            
-                            
+                            }  
                         }
                     }
                 });$A.enqueueAction(action); 
-                
-                
-                
             }
         }
         helper.setClientAccountNameController(component, event, helper);
@@ -504,9 +399,7 @@
         var isValid = helper.validateThirdScreen(component, event, helper);
     
         if(isValid == 1){             
-        
-                            helper.saveObjRecord(component, event, helper);
-            
+        helper.saveObjRecord(component, event, helper);   
         }
     },   
     
@@ -624,6 +517,7 @@
                     helper.showToast("Client not found for family","Error");
                 }else{                    
                     component.set("v.filteredClientList",listOfAllClients);
+                    helper.setValueToProductType(component, event, helper);
                 }
             }
             

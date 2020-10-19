@@ -142,7 +142,7 @@
             if (response.getState() == "SUCCESS") {
                 //store the return response from server (map<string,List<string>>)  
                 var StoreResponse = response.getReturnValue();
-                
+                console.log('StoreResponse :'+JSON.stringify(StoreResponse));
                 // once set #StoreResponse to depnedentFieldMap attribute 
                 component.set("v.depnedentFieldMap",StoreResponse);
                 
@@ -155,12 +155,7 @@
                 for (var singlekey in StoreResponse) {
                     listOfkeys.push(singlekey);
                 }
-                
-                //set the controller field value for lightning:select
-                if (listOfkeys != undefined && listOfkeys.length > 0) {
-                    ControllerField.push('--- None ---');
-                }
-                
+                              
                 for (var i = 0; i < listOfkeys.length; i++) {
                     ControllerField.push(listOfkeys[i]);
                 }  
@@ -452,4 +447,32 @@
             }
         });$A.enqueueAction(action);
     }, 
+    setValueToProductType: function(component, event, helper){     
+        var orderEntry = component.get("v.orderEntry");
+        orderEntry.Product_Type_Order_Entry__c = 'PMS';
+        component.set("v.orderEntry",orderEntry);
+        var controllerValueKey = 'PMS';
+        var depnedentFieldMap = component.get("v.depnedentFieldMap");
+        component.set("v.selectedAMCName1",'');
+        if (controllerValueKey != '--- None ---') {
+            var ListOfDependentFields = depnedentFieldMap[controllerValueKey];
+            component.set("v.showProductName",true);       
+
+            if(ListOfDependentFields.length > 0){
+                component.set("v.bDisabledDependentFld" , false);  
+                helper.fetchDepValues(component, ListOfDependentFields);
+                
+            }else{
+                component.set("v.bDisabledDependentFld" , true); 
+                component.set("v.listDependingValues", ['--- None ---']);
+            }  
+        }
+        else {
+            component.set("v.listDependingValues", ['--- None ---']);
+            component.set("v.bDisabledDependentFld" , true);
+        }
+        
+    }, 
+
+
 })
