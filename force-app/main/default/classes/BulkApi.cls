@@ -4,5 +4,6 @@ public class BulkApi {
     {
      System.debug('This is commited changes');
      System.debug('I wnat burger');
+     System.debug('I wnat Pizza');
     }
 }
