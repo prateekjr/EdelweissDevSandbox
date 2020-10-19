@@ -1,0 +1,266 @@
+div.header {
+    padding: 0px;
+    position: running(header);
+}
+
+.pageNumber:before {
+    content: counter(page);
+    color: white;
+    text-align: left;
+    padding-top: 15px;
+    padding-left: 3px;
+}
+
+.leftHalf {
+    background-color: #ffffff;
+    position: absolute;
+    margin-top: -3px;
+    right: 100px;
+    width: 28%;
+    height: 28px;
+}
+
+.rightHalf {
+    background-color: #0066cc;
+    margin-top: -3px;
+    position: absolute;
+    right: 0px;
+    width: 100px;
+    height: 28px;
+}
+
+.bottomDiv {
+    background-color: #f2f2f2;
+    margin-top: 23px;
+    position: absolute;
+    right: 102px;
+    width: 100%;
+    height: 7px;
+}
+
+.textHeader {   
+    font-style: italic;
+    text-align: left;
+    margin-top: 7px;
+    margin-left: 10px;
+}
+
+.innerdiv1,
+.innerdiv2,
+.innerdiv3,
+.innerdiv4 {
+    background-color: #0066cc;
+    float: right;
+    margin-right: 50px;
+    width: 320px;
+    height: 10px;
+    clear: right;
+}
+
+.heading1,
+.heading2,
+.heading3 {
+    background-color: #ffffff;
+    float: right;
+    margin-right: 50px;
+    width: 320px;
+    clear: right;
+}
+
+.innerdiv1 {
+    margin-top: 60px;
+}
+
+.heading1 {
+    height: 60px;
+}
+
+.heading2 {
+    height: 100px;
+}
+
+.heading3 {
+    height: 60px;
+}
+
+p.heading {    
+    font-size: 20px;
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+h1 {   
+    font-size: 25px;
+    color: #001984;
+}
+
+table.page1 {
+    text-align: left;
+    width: 100%;
+	border-collapse: collapse;
+}
+
+td.page1 {
+    font-size: 20px;
+    height: 30px;
+    vertical-align: top;
+    padding: 20px;
+    text-align: left;
+}
+
+th.page1 {
+    font-size: 20px;
+    height: 30px;
+    padding: 20px;
+    text-align: left;
+}
+
+tr:nth-child(odd) {
+    background-color: #eaeedd;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table.page2 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;    
+    font-style: italic;
+    font-size: 17px;
+}
+
+td.page2 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
+th.page2 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+}
+
+table.page9 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 100%;
+    text-align: left;
+    font-size: 15px;
+}
+
+td.page9 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 6px;
+}
+
+th.page9 {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 6px;
+}
+
+p.instruction {
+    margin-top: 30px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    word-spacing: 15px;
+}
+
+p.question { 
+    font-style: italic;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: #ffa31a;
+    margin-left: 10px;
+}
+
+p.bigQuestion {  
+    font-style: italic;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 3px;
+    line-height: 150%;
+    color: #ffa31a;
+    margin-left: 10px;
+}
+
+p.answer {
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+p.statement {  
+    font-size: 15px;
+    margin-left: 10px;
+}
+
+p.note {
+    font-size: 15px;
+    margin-top: 40px;
+}
+
+div.quesAns {
+    line-height: 65%;
+    margin-top: 30px;
+}
+
+div.bigQuesAns {
+    line-height: 80%;
+    margin-top: 30px;
+}
+
+div.signature {
+	float: left;
+	padding: 100px 15px 0px 5px;
+}
+
+div.date {
+	float: right;
+	padding: 120px 80px 40px 10px;
+}
+
+div.footer {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+div.mainFooter {
+    background-color: #0071b7;
+    width: 100%;
+    height: 30px;
+}
+
+div.subFooter {
+    background-color: #e48b21;
+    width: 100%;
+    height: 5px;
+}
+
+
+/* Page break will never be seen by us */
+
+@media all {
+    .pageBreak {
+        display: none;
+    }
+}
+
+
+/* Page break will be seen by the printer */
+
+@media print {
+    .pageBreak {
+        display: block;
+        page-break-before: always;
+    }
+}

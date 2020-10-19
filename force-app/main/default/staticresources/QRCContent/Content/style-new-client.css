@@ -1,0 +1,243 @@
+.navbar-default {
+	background: #034ea2;
+	border-radius: 0;
+	border: none;
+	min-height: 60px;
+	position: fixed;
+}
+.navbar-default .navbar-brand {
+	padding: 14px 0;
+}
+.navbar-default .navbar-text {
+	margin: 18px 0;
+	color: #fff;
+	font-size: 17px;
+}
+#myForm {
+	margin-top: 75px;
+}
+/*#myForm .btn-group.btn-block.btn-rating .QA.btn.btn-default {
+	margin-right: 5px;
+	width: 35px;
+	height: 35px;
+	padding: 6px 0px;
+	text-align: center;
+	border-radius: 100%;
+	color: #fff;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-0 {
+	background: #a63326;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-1 {
+	background: #c0392b;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-2 {
+	background: #d55244;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-3 {
+	background: #de796e;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-4 {
+	background: #e67919;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-5 {
+	background: #e88630;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-6 {
+	background: #eb9447;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-7 {
+	background: #44d580;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-8 {
+	background: #2abb67;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-9 {
+	background: #27ae60;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-10 {
+	background: #26a65b;
+}
+#myForm .btn-group.btn-block.btn-rating .QA.btn.btn-default.active {
+	background-color: #e6e6e6;
+	color: #333;
+}*/
+#myForm .btn-group.btn-block.btn-rating .btn.btn-default.active {
+	background-color: #d9d9d9;
+	border-color: #8c8c8c;
+	color: #333;
+	font-weight: bold;
+}
+#myForm .btn-group.btn-toggle.btn-fa-cxo .btn.btn-default.active {
+	background-color: #d9d9d9;
+	border-color: #8c8c8c;
+	color: #333;
+	font-weight: bold;
+}
+#myForm .rating-desc {
+	width: 100%;
+	max-width: 370px;
+	color: #333;
+	font-weight: 500;
+	font-size: 12px;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn.btn-default {
+	margin-right: 5px;
+	width: 55px;
+	height: 55px;
+	padding: 6px 0px;
+	text-align: center;
+	border-radius: 100%;
+	border-width: 2px;/*color: #fff;*/
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-yes {
+	border-color: #1E824C;
+	background-image: none !important;
+	background-color: #fff;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-no {
+	border-color: #D91E18;
+	background-image: none !important;
+	background-color: #fff;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-yes.active {
+	background: #1E824C;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-no.active {
+	background: #D91E18;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn.btn-default {
+	margin-right: 5px;
+	width: 55px;
+	height: 55px;
+	padding: 6px 0px;
+	text-align: center;
+	border-radius: 100%;
+	border-width: 2px;
+	font-size: 9.5px;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-excellent {
+	border-color: #1E824C;
+	background-image: none !important;
+	background-color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-good {
+	border-color: #ddb308;
+	background-image: none !important;
+	background-color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-improvement {
+	border-color: #D91E18;
+	background-image: none !important;
+	background-color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-excellent.active {
+	background: #1E824C;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-good.active {
+	background: #ddb308;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn-improvement.active {
+	background: #D91E18;
+	color: #fff;
+}
+ textarea.placeholder-style::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+ font-weight: bold;
+}
+textarea.placeholder-style::-moz-placeholder { /* Firefox 19+ */
+ font-weight: bold;
+}
+textarea.placeholder-style:-ms-input-placeholder { /* IE 10+ */
+ font-weight: bold;
+}
+textarea.placeholder-style:-moz-placeholder { /* Firefox 18- */
+ font-weight: bold;
+}
+.btn-submit input[type="button"] {
+	width: 150px;
+	background: #034ea2;
+	border: 0;
+	color: #fff;
+	padding: 10px 0;
+	border-radius: 7px;
+	font-weight: bold;
+	font-size: 15px;
+}
+.btn-submit {
+	margin-bottom: 15px;
+}
+
+.btn-img{
+	background-image: url(img/white_img.png);
+	background-color: #fff;
+	background-repeat: repeat;
+}
+
+/*Media Queries*/
+
+@media only screen and (max-width : 500px) {
+body {
+	padding: 0;
+}
+.navbar-default .navbar-header {
+	text-align: center;
+}
+.navbar-default .navbar-header .navbar-brand {
+	float: none;
+	padding: 0;
+}
+.navbar-default .navbar-header .navbar-brand img {
+	float: none;
+	display: inline-block;
+	margin-top: 10px;
+}
+.navbar-default .navbar-text.navbar-right {
+	text-align: center;
+	margin: 20px 0 10px;
+	font-size: 15px;
+}
+.survey {
+	margin: 35px 0 0;
+}
+#myForm .row {
+	margin-right: -15px;
+	margin-left: -15px;
+}
+#myForm .rating-desc {
+	width: 100%;
+	max-width: 240px;
+	font-size: 11px;
+}
+#myForm .btn-group.btn-block.btn-rating .btn.btn-default {
+	font-size: 11px;
+	padding: 6px 7px;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn.btn-default {
+	width: 45px;
+	height: 45px;
+	font-size: 12px;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji {
+	font-size: 30px;
+}
+#myForm .btn-group.btn-toggle.emoji-group .btn.btn-default {
+	width: 45px;
+	height: 45px;
+	font-size: 7.5px;
+	margin-right: 5px;
+}
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+}

@@ -1,0 +1,181 @@
+ .leftHalf {
+	background-color: #ffffff;
+	position: absolute;
+	margin-top: -3px;
+	right: -130px;
+	width: 35%;
+	height: 28px;
+}
+ 
+ .rightHalf {
+     background-color: #0066cc;
+     position: absolute;
+     right: -100px;
+     width: 100px;
+     height: 28px;
+ }
+ 
+ .bottomDiv {
+     background-color: #f2f2f2;
+     margin-top: 23px;
+     position: absolute;
+     right: 0px;
+     width: 120%;
+     height: 7px;
+ }
+ 
+ .textHeader {
+     font-family: Calibri;
+     font: 13px;
+     text-align: left;
+     margin-top: 7px;
+     margin-left: 10px;
+ }
+ 
+ .pageNumber:before {
+     content: counter(page);
+     color: white;
+     text-align: left;
+     padding-top: 15px;
+     padding-left: 3px;
+ }
+ 
+ .innerdiv1,
+ .innerdiv2,
+ .innerdiv3,
+ .innerdiv4 {
+     background-color: #0066cc;
+     float: right;
+     margin-right: 50px;
+     width: 320px;
+     height: 10px;
+     clear: right;
+ }
+ 
+ .heading1,
+ .heading2,
+ .heading3 {
+     background-color: #ffffff;
+     float: right;
+     margin-right: 50px;
+     width: 320px;
+     clear: right;
+ }
+ 
+ .innerdiv1 {
+     margin-top: 60px;
+ }
+ 
+ .heading1,
+ .heading3 {
+     height: 60px;
+ }
+ 
+ .heading2 {
+     height: 100px;
+ }
+ 
+ p.heading {
+     font-family: Calibri;
+     font-size: 20px;
+     text-align: left;
+     margin-left: 10px;
+     margin-top: 15px;
+ }
+ 
+ h1 {
+     font-family: Calibri;
+     font-size: 25px;
+     color: #001984;
+ }
+ 
+ table.page1 {
+     margin-top: 50px;
+     padding-top: 50px;
+     text-align: left;
+     width: 100%;
+     border-collapse: collapse;
+ }
+ 
+ td.page1 {
+     font-size: 20px;
+     height: 30px;
+     vertical-align: top;
+     padding: 30px;
+     text-align: left;
+ }
+ 
+ th.page1 {
+     font-family: Calibri;
+     font-size: 20px;
+     height: 30px;
+     padding: 20px;
+     text-align: left;
+ }
+ 
+ p.question {
+     font-family: Calibri;
+     font-style: italic;
+     font-weight: bold;
+     font-size: 15px;
+     letter-spacing: 3px;
+     color: #ffa31a;
+     margin-left: 10px;
+     align: justify;
+ }
+ 
+ p.bigQuestion {
+     font-family: Calibri;
+     font-style: italic;
+     font-weight: bold;
+     font-size: 15px;
+     letter-spacing: 3px;
+     line-height: 150%;
+     color: #ffa31a;
+     margin-left: 10px;
+     align: justify;
+ }
+ 
+ p.answer {
+     font-family: Calibri;
+     font-size: 15px;
+     margin-left: 34px;
+     align: justify;
+	 line-height: 150%;
+ }
+ 
+ div.quesAns {
+     line-height: 65%;
+     margin-top: 40px;
+ }
+ 
+ div.bigQuesAns {
+     line-height: 80%;
+     margin-top: 40px;
+ }
+ 
+ div.signature {
+     float: left;
+     padding: 100px 15px 0px 10px;
+ }
+ 
+ div.date {
+     float: right;
+     padding: 120px 80px 40px 10px;
+ }
+ 
+ /* Page break will never be seen by us */
+ 
+ @media all {
+     .pageBreak {
+         display: none;
+     }
+ }
+ /* Page break will be seen by the printer */
+ 
+ @media print {
+     .pageBreak {
+         display: block;
+         page-break-before: always;
+     }
+ }

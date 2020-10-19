@@ -1,0 +1,181 @@
+﻿.navbar-default {
+	background: #034ea2;
+	border-radius: 0;
+	border: none;
+	min-height: 60px;
+	position: fixed;
+}
+.navbar-default .navbar-brand {
+	padding: 15px 0;
+}
+.navbar-default .navbar-text {
+	margin: 18px 0;
+	color: #fff;
+	font-size: 17px;
+}
+#myForm {
+	margin-top: 75px;
+}
+/*#myForm .btn-group.btn-block.btn-rating .QA.btn.btn-default {
+	margin-right: 5px;
+	width: 35px;
+	height: 35px;
+	padding: 6px 0px;
+	text-align: center;
+	border-radius: 100%;
+	color: #fff;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-0 {
+	background: #a63326;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-1 {
+	background: #c0392b;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-2 {
+	background: #d55244;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-3 {
+	background: #de796e;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-4 {
+	background: #e67919;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-5 {
+	background: #e88630;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-6 {
+	background: #eb9447;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-7 {
+	background: #44d580;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-8 {
+	background: #2abb67;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-9 {
+	background: #27ae60;
+}
+#myForm .btn-group.btn-block.btn-rating .btn-10 {
+	background: #26a65b;
+}
+#myForm .btn-group.btn-block.btn-rating .QA.btn.btn-default.active {
+	background-color: #e6e6e6;
+	color: #333;
+}*/
+
+#myForm .rating-desc {
+	width: 100%;
+	max-width: 370px;
+	color: #666;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .QA.btn.btn-default {
+	margin-right: 5px;
+	width: 55px;
+	height: 55px;
+	padding: 6px 0px;
+	text-align: center;
+	border-radius: 100%;
+	border-width: 2px;/*color: #fff;*/
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-yes {
+	border-color: #1E824C;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-no {
+	border-color: #D91E18;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-yes.active {
+	background: #1E824C;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .btn-no.active {
+	background: #D91E18;
+	color: #fff;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji-btn {
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji {
+	font-size: 49px;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji.emoji-excellent {
+	color: #1E824C;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji.emoji-good {
+	color: #ddb308;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji.emoji-improvement {
+	color: #D91E18;
+}
+.btn-submit input[type="button"] {
+	width: 150px;
+	background: #034ea2;
+	border: 0;
+	color: #fff;
+	padding: 10px 0;
+	border-radius: 7px;
+	font-weight: bold;
+	font-size: 15px;
+}
+.btn-submit {
+	margin-bottom: 15px;
+}
+
+/*Media Queries*/
+
+@media only screen and (max-width : 500px) {
+body {
+	padding: 0;
+}
+.navbar-default .navbar-header {
+	text-align: center;
+}
+.navbar-default .navbar-header .navbar-brand {
+	float: none;
+	padding: 0;
+}
+.navbar-default .navbar-header .navbar-brand img {
+	float: none;
+	display: inline-block;
+	margin-top: 10px;
+}
+.navbar-default .navbar-text.navbar-right {
+	text-align: center;
+	margin: 20px 0 10px;
+	font-size: 15px;
+}
+.survey {
+	margin: 35px 0 0;
+}
+#myForm .row {
+	margin-right: -15px;
+	margin-left: -15px;
+}
+#myForm .rating-desc {
+	width: 100%;
+	max-width: 240px;
+	font-size: 11px;
+}
+#myForm .btn-group.btn-block.btn-rating .QA.btn.btn-default {
+	font-size: 11px;
+	padding: 6px 7px;
+}
+#myForm .btn-group.btn-toggle.btn-yes-no .QA.btn.btn-default {
+	width: 40px;
+	height: 40px;
+	font-size: 12px;
+}
+#myForm .btn-group.btn-toggle.emoji-group .emoji {
+	font-size: 30px;
+}
+#myForm .btn-group.btn-toggle.emoji-group .QA.btn.btn-default {
+	padding: 6px;
+	font-size: 11px;
+}
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+}
