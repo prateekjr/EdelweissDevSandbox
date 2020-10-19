@@ -19,10 +19,11 @@
     <!-- disable preview screen fields -->
     <aura:attribute name="isDisabled" type="Boolean" default="true" />
     
-    
+    <aura:attribute name="selectedFamilyRecord" type="sObject" default="{}"/>
     <aura:attribute name="orderEntry" type="Order_Entry__c" 
                     default="{ 'sobjectType': 'Order_Entry__c' }"/>	
     
+    <aura:attribute name="filteredFamilyList" type="String[]" />
     <aura:attribute name="filteredClientList" type="String[]" />
     <aura:attribute name="filteredClientAccountList" type="String[]" />
     <aura:attribute name="filteredClientAssetList" type="String[]" />
@@ -68,10 +69,10 @@
     <aura:attribute name="currentTime" type="DateTime" />
     
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="change" value="{!v.orderEntry.Family_Name__c}" action="{!c.familySelection}"/>
+   <!-- <aura:handler name="change" value="{!v.orderEntry.Family_Name__c}" action="{!c.familySelection}"/> -->
     <aura:handler name="change" value="{!v.selectedClientRecord}" action="{!c.clientAccountSelection}"/>
     <aura:handler name="change" value="{!v.selectedClientAccountRecord}" action="{!c.getProducts}"/>
-
+     <aura:handler name="change" value="{!v.selectedFamilyRecord}" action="{!c.setValueToFamily}"/>
      <!-- PMS Start -->
     <aura:attribute name="isPMS" type="Boolean" Default ="false" />
     <aura:attribute name="showProductName" type="Boolean" Default ="false" />
@@ -161,7 +162,9 @@
                                 <!--lightning help text for input field-->                                                                
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Family Name</label>
-                                <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />
+                                <!-- <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />  -->
+                               <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedFamilyRecord}" listOfFilteredRecords ="{!v.filteredFamilyList}" placeholder="Search Family"  /> 
+
                             </div>
                         </div>
                         

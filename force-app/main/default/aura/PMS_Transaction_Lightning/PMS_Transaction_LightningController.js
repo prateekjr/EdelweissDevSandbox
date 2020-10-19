@@ -55,6 +55,7 @@
                     // call the helper function
                     helper.fetchPicklistValues(component,objDetails,controllingFieldAPI, dependingFieldAPI);      
                     helper.currentTime(component, event, helper);
+                    helper.getFilteredFamilyRecords(component, event, helper);
                 }
             } else{
                 
@@ -592,5 +593,40 @@
         orderEntry.Folio__c = selectedPicklistValue;
         /*orderEntry.Folio_Number__c = selectedPicklistValue;*/
         component.set("v.orderEntry",orderEntry); 
+    },
+    
+        setValueToFamily : function(component, event, helper) {
+        
+        var orderEntry = component.get("v.orderEntry");  
+        if(orderEntry.Family_Name__c != ''){
+            component.set("v.familySelected",true);
+        }else if(orderEntry.Family_Name__c == '') {
+            component.set("v.familySelected",false);
+        }
+        var selectedFamilyRecord = component.get("v.selectedFamilyRecord");
+        console.log('selectedFamilyRecord :'+JSON.stringify(component.get("v.filteredFamilyList")));
+        var selectedFamilyId = selectedFamilyRecord.Id;
+        
+        orderEntry.Family_Name__c =selectedFamilyId;
+        component.set("v.orderEntry", orderEntry);
+
+        var orderEntry = component.get("v.orderEntry");  
+        var action = component.get("c.getClientInformation");
+        action.setParams({
+            "familyId" : orderEntry.Family_Name__c
+        });                  
+        
+        action.setCallback(this, function(response) {    
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var listOfAllClients = response.getReturnValue();
+                if(listOfAllClients == null){
+                    helper.showToast("Client not found for family","Error");
+                }else{                    
+                    component.set("v.filteredClientList",listOfAllClients);
+                }
+            }
+            
+        });$A.enqueueAction(action);
     },
 })

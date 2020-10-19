@@ -437,4 +437,19 @@
             }
         });$A.enqueueAction(action);
     },
+  getFilteredFamilyRecords: function(component, event, helper){      
+        var action = component.get("c.getFilteredFamilyRecords");
+        action.setCallback(this, function(response){
+            var state = response.getState();
+            if(state === "SUCCESS"){
+                var listOfAllFamilies = response.getReturnValue();
+                if(listOfAllFamilies == null){
+                    helper.showToast("Family not Found","Error");
+                }else{                    
+                    component.set("v.filteredFamilyList",listOfAllFamilies);
+                    console.log('filteredFamilyList :'+JSON.stringify(component.get("v.filteredFamilyList")));
+                }
+            }
+        });$A.enqueueAction(action);
+    }, 
 })
