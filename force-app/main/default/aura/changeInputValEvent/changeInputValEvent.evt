@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Input element change event" >
+    <aura:attribute name="fieldName" type="String" />
+    <aura:attribute name="fieldVal" type="String" />
+    <aura:attribute name="fieldRefVal" type="String" />
+     <aura:attribute name="isLookUp" type="Boolean" />
+</aura:event>

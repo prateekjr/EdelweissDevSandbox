@@ -1,0 +1,11 @@
+.THIS.SectionLabelClass{
+   padding: 16px 0px 6px 0px !important;
+   margin-left: 16px !important;
+   border-bottom: 1px solid #e0e0e0 !important;
+}
+.THIS .expandIcon{
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: -10px;
+    height: 10px;
+}

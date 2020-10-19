@@ -1,0 +1,42 @@
+<apex:page controller="thirdPartyVisitingCalendar_Controller" sidebar="true" renderAs="pdf">   
+    <apex:form >
+        <apex:pageBlock title="Visiting Client's Details">
+            <apex:pageBlockSection columns="1">
+                <apex:outputText label="Meeting Agenda : ">{!objClientMeeting.Meeting_Agenda__c}</apex:outputText> 
+                <apex:outputText label="Product Name : ">{!objClientMeeting.Associated_Product__r.Name}</apex:outputText> 
+                <apex:outputText label="Meeting Notes : ">{!objClientMeeting.Notes_On_Meeting__c}</apex:outputText> 
+                <apex:outputText label="Visiting 3rd Party Person Name : ">{!objClientMeeting.Visiting_3rd_Party_Contact__r.Name}</apex:outputText> 
+                <apex:outputText label="Visiting Date : ">{!objClientMeeting.Visit_Date__c}</apex:outputText>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <br /><br />
+        <apex:outputpanel >
+            <apex:pageblock >
+                <apex:pageBlockSection >
+                    <apex:pageBlockTable id="displayScheduleTime" value="{!listproposedSchedule}" var="finalMeetingList" width="100%" border="1px">
+                        <apex:column width="100px">
+                            <apex:facet name="header">Requester Name</apex:facet>
+                            <apex:outputLabel >{!finalMeetingList.Meeting_Reuester__c}</apex:outputLabel>
+                        </apex:column>
+                        <apex:column width="80px">
+                            <apex:facet name="header">Start Time</apex:facet>
+                            <apex:outputLabel >{!finalMeetingList.Start_Time__c}</apex:outputLabel>
+                        </apex:column>
+                        <apex:column width="80px">
+                            <apex:facet name="header">End Time</apex:facet>
+                            <apex:outputLabel >{!finalMeetingList.End_Time__c}</apex:outputLabel>
+                        </apex:column>
+                        <apex:column width="250px">
+                            <apex:facet name="header" >Purpose Of Meeting</apex:facet>
+                            <apex:outputLabel >{!finalMeetingList.Purpose_Of_Meeting__c}</apex:outputLabel>
+                        </apex:column>
+                        <apex:column width="100px">
+                            <apex:facet name="header">Meeting Status</apex:facet>
+                            <apex:outputLabel >{!finalMeetingList.Meeting_Status__c}</apex:outputLabel>
+                        </apex:column>                        
+                    </apex:pageBlockTable>
+                </apex:pageBlockSection>
+            </apex:pageblock>
+        </apex:outputpanel>
+    </apex:form>
+</apex:page>

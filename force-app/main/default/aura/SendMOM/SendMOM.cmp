@@ -1,0 +1,5 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="UtilityActionLighting">
+	<aura:attribute name="recordId" type="String" default=""/>
+   	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+</aura:component>

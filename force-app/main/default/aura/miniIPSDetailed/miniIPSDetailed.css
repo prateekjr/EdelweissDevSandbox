@@ -1,0 +1,70 @@
+.THIS div.Message {            
+    font-weight : bold;            
+    padding : 25px;
+}
+
+.THIS div.container {
+    margin: 0px 20px 0px 40px;
+}
+
+.THIS div.expandCollapse{
+    cursor : pointer;           
+}
+.THIS .show{
+    display:block;
+}
+.THIS .hide{
+    display:none;
+}
+.THIS .multiple{
+    width : 525px;
+    height : 70px;
+}
+
+
+.THIS .slds-card{
+        background-color: white !important;
+}
+.THIS .slds-media__body{
+        text-align: left !important;
+}
+.THIS h2.slds-text-heading--small.slds-truncate.fieldSetName {
+    color: #002061 !important;
+    font-weight: bold !important;
+}
+.THIS .slds-form--horizontal {
+    width: 99% !important;
+}
+.THIS .slds-form-element {
+    width: 92% !important;
+}
+.THIS .slds-card__header.slds-grid {
+    margin-bottom: 10px !important;
+}
+.THIS h3.slds-text-heading--small.fieldSetName {
+    text-align: left !important;
+    padding: 5px !important;
+}
+.THIS button.slds-button.slds-button--neutral.uiButton {
+    margin-top: 20px;
+}
+.THIS .slds-form--horizontal{
+     text-align: left !important;
+}
+.THIS .slds-form-element__control {
+       	margin-left: 15px!important;
+    	/* width: 60%!important; */
+    	margin-bottom: 14px !important;
+}
+.THIS h3.slds-text-heading--small.fieldSetName {
+    margin: 10px !important;
+}
+.THIS h1.slds-page-header__title.slds-truncate {
+    text-align: center;
+    padding: 10px;
+}
+.THIS .errorDiv {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}

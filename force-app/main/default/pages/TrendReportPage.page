@@ -1,0 +1,91 @@
+<apex:page standardController="Account" extensions="TrendReportController" title="AUA Trend Report" >
+<apex:form style="{!IF(isAccess,'','display:none')}; margin-top: 20px;">
+<apex:actionStatus id="status">
+    <apex:facet name="start">
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.25; z-index: 1000; background-color: black;">
+        &nbsp;
+    </div>
+    <div style="position: fixed; left: 0; top: 0; bottom: 0; right: 0; z-index: 1001; margin: 15% 50%">
+        <div style="display: inline-block; padding: 2px; background-color: #fff; width: 125px;">
+            <img src="/img/loading.gif" style="float: left; margin: 8px;" />
+            <span style="display: inline-block; padding: 10px 0px;">Please Wait...</span>
+        </div>
+    </div>
+    </apex:facet>
+</apex:actionStatus>
+<table align="left">
+    <tr>
+        <td><apex:outputLabel ><b>Choose Period</b></apex:outputLabel> &nbsp;&nbsp;&nbsp;</td>
+        <td>
+            <apex:selectList id="choosePeriod"  value="{!selectedPeriod}" size="1">
+                <apex:selectOption itemValue="Quarterly" itemLabel="Quarterly"/>
+                <apex:selectOption itemValue="6months" itemLabel="Monthly"/>  
+            </apex:selectList>
+        </td>
+    </tr>
+    <tr>
+        <td><br/></td>
+    </tr>   
+    
+     <tr style="{!IF((isGWM || isZonal) && !isInlineVF,'','display:none')}">    
+        <td><apex:outputLabel ><b>Select Sub-Lob</b></apex:outputLabel> &nbsp;&nbsp;&nbsp;</td>
+        <td>
+        <apex:actionRegion >    
+            <apex:selectList id="selSubLob" size="1" title="Select Sub-Lob" rendered="{!(isGWM || isZonal) && !isInlineVF}" value="{!selectedSubLob}">
+                <apex:selectOptions value="{!sublLobs}"/>
+                <apex:actionSupport event="onchange" rerender="selFA" status="status" />    
+            </apex:selectList>
+        </apex:actionRegion>    
+        </td>
+    </tr>   
+    <tr style="{!IF((isGWM || isZonal) && !isInlineVF,'','display:none')}">    
+        <td><apex:outputLabel ><b>Select Financial Advisor</b></apex:outputLabel> &nbsp;&nbsp;&nbsp;</td>
+        <td>
+        <apex:actionRegion >    
+            <apex:selectList rendered="{!(isGWM || isZonal) && !isInlineVF}" id="selFA" size="1" title="Select Financial Advisor" value="{!selectedFA}">
+                <apex:selectOptions value="{!FAOptions}"/>
+                <apex:actionSupport event="onchange" rerender="selFamily" status="status"  />    
+            </apex:selectList>
+        </apex:actionRegion>    
+        </td>
+    </tr>   
+    <tr style="{!IF((isGWM || isZonal || isFA) && !isInlineVF,'','display:none')}">    
+        <td><apex:outputLabel ><b>Select Family</b></apex:outputLabel> &nbsp;&nbsp;&nbsp;</td>
+        <td>
+        <apex:actionRegion >    
+            <apex:selectList rendered="{!(isGWM || isZonal || isFA) && !isInlineVF}" id="selFamily" size="1" title="Select Family" value="{!selectedFamily}">
+                <apex:selectOptions value="{!FamilyOptions}"/>          
+            </apex:selectList>
+        </apex:actionRegion>    
+        </td>
+    </tr>
+    <tr>
+        <td><br/></td>
+    </tr>
+    <tr>
+         <td><apex:commandButton status="status"  id="RunReport" title="Run Report" value="Run Report" action="{!runReport}" rerender="ContainerPanel"/></td>
+    </tr>
+</table>  
+ 
+<apex:outputPanel id="ContainerPanel"> 
+ <table align="center">   
+        <tr>
+          <td>
+                <div id="container" style="width:100%; height:450px">
+                <apex:outputPanel rendered="{!!noDataFound}">
+                    <apex:chart height="450" width="550" data="{!respList}" theme="Salesforce">
+                        <apex:axis type="Numeric" position="left" fields="AUMValue"  minimum="0" dashSize="5" title="Total AUM (INR Crores)" grid="true"/>
+                        <apex:axis type="Category" position="bottom" fields="TMonth" title="{!if(selectedPeriod == '6months','Month of the Year','Quarter of the Year')}"/>
+                        <apex:barSeries orientation="vertical" axis="left" xField="TMonth" yField="AUMValue" highlight="true" tips="true" title="Total AUM"/>
+                        <!-- apex:legend position="right"/ -->
+                    </apex:chart>
+                    </apex:outputPanel>
+                    <apex:outputPanel style="font-weight:bold" rendered="{!noDataFound}">No Data available</apex:outputPanel>
+                </div>                        
+          </td>
+     </tr>   
+  </table>
+</apex:outputPanel> 
+</apex:form>
+         
+</apex:page>

@@ -1,0 +1,44 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" controller="RecordTypeSelectorController" access="global">
+    
+    <ltng:require styles="/resource/SLDS103/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" access="public"/>
+    <aura:attribute name="recordTypes" type="String[]" access="public"/>
+    <aura:attribute name="myrRecordTypes" type="String[]" access="public"/>
+    <aura:attribute name="selectedrecordType" type="String" default=""/>
+    <aura:attribute name="serviceRequestId" type="String" default=""/>
+    <aura:attribute name="accountOpeningId" type="String" default=""/>
+    <aura:attribute name="FundTransferId" type="String" default=""/>
+    <aura:attribute name="showCaseCreation" type="boolean" default="false"/>
+    <aura:renderIf isTrue="{!!v.showCaseCreation}"> 
+    <div class="demo-only slds-scrollable_y">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" style="padding-bottom: 160px;padding-top: 40px;">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                        X
+                        <span class="slds-assistive-text">Close</span></button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select New Record Type</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:iteration items="{!v.myrRecordTypes}" var="rt">
+                        <div class="demo-only ">
+                            <div class="slds-size_1-of-1">
+                                <div class="slds-box slds-box_x-small slds-text-align_center slds-m-top--none" style="padding:0px;overflow:hidden;">
+                                    <lightning:button value="{!selectedrecordType}" variant="base" label="{!rt.rt.Name}" name="{!rt.rt.Id}" title="Base action" onclick="{! c.buttonClick }" />
+                                </div>
+                            </div>
+                        </div>
+                    </aura:iteration>
+                    <div class="slds-box slds-box_x-small slds-text-align_center slds-m-top--none" style="padding:0px">
+                        <lightning:button variant="base" label="Cancel" title="Cancel" onclick="{! c.closeModel }"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+           <!-- <div class="slds-backdrop slds-backdrop_open"></div>    --> 
+    </aura:renderIf>
+    <aura:renderIf isTrue="{!v.showCaseCreation}"> 
+          {!v.body}
+    </aura:renderIf>
+</aura:component>

@@ -1,0 +1,835 @@
+<apex:page standardController="Investment_Policy_Statement_IPS__c" standardStylesheets="false" extensions="IPSCorporateExtensions"  >
+<apex:form >
+<style type = "text/css">
+th.tableHeader{
+background-color:#808080;
+text-align:center;
+}
+td.tableData{
+ text-align:center;
+ vertical-align:middle;
+ } 
+td.withBorder{
+   border:1Px;
+}       
+tr.withoutBorder{
+  border:0;
+}   
+</style>
+
+
+
+        
+        
+<apex:pageMessages id="errorId"/>
+<apex:pageBlock title="Investment Policy Statement (Corporate)"> 
+<apex:pageBlockButtons location="top">
+<apex:commandButton action="{!Save}" value="Save" />  
+<apex:commandButton action="{!Cancel}" value="Cancel" /> </apex:pageBlockButtons>                      
+<apex:outputPanel id="IPSCorporateClientDetailsPanle">
+    <apex:pageBlockSection columns="1">  
+            <apex:outputText value="{!accountObj.name}" ></apex:outputText>
+            <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Objectives__c}" id="Objectives" Label="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Objectives__c.Label}"/>
+        <apex:pageBlockSectionItem >
+           <apex:outputText value="Name of FA "></apex:outputText>
+           <apex:outputText value="{!accountObj.Owner.name}"></apex:outputText> 
+       </apex:pageBlockSectionItem>
+       <apex:pageBlockSectionItem >
+            <apex:outputText value="Date of Implementation "></apex:outputText>
+            <apex:outputText label="Date of Implementation"  value="{0,date,MM'/'dd'/'yyyy}">
+            <apex:param value="{!Investment_Policy_Statement_IPS__c.createdDate}" /> 
+           </apex:outputText>
+           
+            
+       </apex:pageBlockSectionItem>
+          
+            <apex:outputText label="Date of Last Update"  value="{0,date,MM'/'dd'/'yyyy}">
+            <apex:param value="{!Investment_Policy_Statement_IPS__c.LastModifiedDate}" /> 
+           </apex:outputText>
+            
+    </apex:pageBlockSection>  
+</apex:outputPanel>
+</apex:pageBlock> 
+<!-- THE NEW INVESTMENT GUIDELINES details -->
+
+<apex:pageBlock title="THE NEW INVESTMENT GUIDELINES:">                              
+ <apex:outputText value="{!$Label.New_Investment_Guideline}" />
+ <br/><br/>
+   <table id="InvestmentTable" border="1" cellpadding="5" cellspacing="0" style='width:100%'>
+     
+      <tr style='height:50%'>
+        <th class="tableHeader" style='width:30%;'>
+            <font color="#fff">{!$Label.Category}</font>
+         </th>
+           <th class="tableHeader" style='width:30%'>
+               <font color="#fff"> {!$Label.Preferred_Allocation}</font>
+           </th>
+           <th class="tableHeader" style='width:40%'>
+              <font color="#fff">  {!$Label.Instruments_permitted}</font>
+            </th>
+        </tr>
+      
+      
+          <!-- Central and State Gov Category Details  -->
+          <tr>
+              <td class="tableData">
+                  <apex:outputText value="{!$Label.Central_and_State_Gov_Category}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                  <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Central_and_State_Gov__c}"  style="width:80%"/>
+              </td>
+              <td>
+                 <table>
+                     <tr>
+                         <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.GOI_Dated_Securities__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Dated_Securities__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                       </tr> 
+                        <tr><td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Treasury_Bills__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Treasury_Bills__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                        </tr> 
+                        <tr> 
+                          <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.GOI_Special_Bonds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Special_Bonds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         </tr> 
+                        <tr>
+                          <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Gilt_Mutual_Funds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Gilt_Mutual_Funds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         </tr> 
+                        <tr>
+                         <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.State_Development_Loans__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Development_Loans__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         </tr> 
+                        <tr>
+                         <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.State_Guaranteed_Papers__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Guaranteed_Papers__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                     </tr>
+                    </table>
+              </td>
+          </tr>  
+<!-- PSU_and_Private_Category details -->
+             <tr>
+              <td class="tableData">
+                  <apex:outputText value="{!$Label.PSU_and_Private_Category}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                  <apex:inputField value="{!Investment_Policy_Statement_IPS__c.PSU_and_Private__c}"  style="width:80%"/>
+              </td>
+              <td>
+                 <table>
+                     <tr>
+                         <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.PSU_Bonds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.PSU_Bonds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                       </tr> 
+                        <tr><td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.PFI_Bonds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.PFI_Bonds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                        </tr> 
+                        <tr> 
+                          <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Private_Sector_Bonds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Private_Sector_Bonds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         </tr> 
+                        <tr>
+                          <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.BASEL_III_Bonds__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.BASEL_III_Bonds__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         </tr> 
+                        <tr>
+                         <td>
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Term_Deposits_of_more_than_1_year__c}">
+                             <apex:actionSupport event="onchange" rerender="tBlock"/>  
+                             </apex:inputField>   
+                             <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Term_Deposits_of_more_than_1_year__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                       </tr>  
+                       </table>
+                  </td>
+             </tr>
+             <tr>
+<td class="tableData">
+<apex:outputText value="{!$Label.Money_Market_Category}"></apex:outputText>
+</td>
+<td class="tableData">
+<apex:inputField value="{!Investment_Policy_Statement_IPS__c.Money_Market__c}"  style="width:80%"/>
+</td>
+<td>
+<table>
+<tr>
+ <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Certificate_of_Deposits__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>   
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Certificate_of_Deposits__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr><td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Commercial_Papers__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Commercial_Papers__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr> 
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Units_of_Liquid_Mutual_Funds__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_Liquid_Mutual_Funds__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr> 
+<tr>
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Term_Deposits__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Term_Deposits__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr> 
+</table>
+</td>
+</tr>  
+<!-- Equity and Equity Linked Mutual Fund details -->
+<tr>
+<td class="tableData">
+<apex:outputText value="{!$Label.Equity_and_Equity_Linked_Mutual_Fund}"></apex:outputText>
+</td>
+<td class="tableData">
+<apex:inputField value="{!Investment_Policy_Statement_IPS__c.Equity_and_Equity_Linked_Mutual_Fund__c}"  style="width:80%"/>
+</td>
+<td>
+<table>
+<tr>
+ <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Equity_Shares__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Equity_Shares__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr><td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Equity_Linked_Mutual_Fund__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Equity_Linked_Mutual_Fund__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr> 
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Exchange_Traded_Funds__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Exchange_Traded_Funds__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr> 
+<tr>
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Index_Funds__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Index_Funds__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr> 
+</table>
+</td>
+</tr>
+
+<!-- Asset Backed Securities details -->
+<tr>
+<td class="tableData">
+<apex:outputText value="{!$Label.Asset_Backed_Securities}"></apex:outputText>
+</td>
+<td class="tableData">
+<apex:inputField value="{!Investment_Policy_Statement_IPS__c.Asset_Backed_Securities__c}"  style="width:80%"/>
+</td>
+<td>
+<table>
+<tr>
+ <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.CMBS_RMBS__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.CMBS_RMBS__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr><td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Units_of_REITs__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_REITs__c.inlineHelpText}"></apex:outputText>
+ </td>
+</tr> 
+<tr> 
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Asset_Backed_Securities_chk__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Asset_Backed_Securities_chk__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr> 
+<tr>
+  <td>
+     <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Units_of_Infra_Inv_Trusts__c}">
+     <apex:actionSupport event="onchange" rerender="tBlock"/>  
+     </apex:inputField>
+     <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_Infra_Inv_Trusts__c.inlineHelpText}"></apex:outputText>
+ </td>
+ </tr>
+ 
+</table>
+</td>
+</tr>
+
+</table>
+
+
+</apex:pageBlock>
+
+<!-- RISK MANAGEMENT FRAMEWORK details -->
+<apex:pageBlock id="tBlock" title="RISK MANAGEMENT FRAMEWORK:">                              
+ <h1>{!$Label.Instrument_wise_limits}</h1>
+ <br/><br/>
+   <table id="RiskManagementTable" border="1px" cellpadding="5" cellspacing="0" style='width:100%'>
+     
+      <tr style='height:50%'>
+        <th class="tableHeader" style='width:30%;'>
+            <font color="#fff">{!$Label.Category}</font>
+         </th>
+           <th class="tableHeader" style='width:30%'>
+               <font color="#fff"> {!$Label.Eligible_Instruments}</font>
+           </th>
+           <th class="tableHeader" style='width:40%'>
+              <font color="#fff">  {!$Label.Preferred_Limit}</font>
+            </th>
+        </tr>
+      
+          <!-- Central and State Gov Category Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="6">
+                  <apex:outputText value="{!$Label.Central_and_State_Gov_Category}"></apex:outputText>
+              </td>
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Dated_Securities__c.inlineHelpText}"></apex:outputText>
+               </td>
+               
+              <td class="tableData" >
+                    <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.GOI_Dated_Securities__c == true}" value="{!Investment_Policy_Statement_IPS__c.GOI_Dated_Securities_Per__c}" style="width:80%"/>
+               </td >
+               
+           </tr>
+           <tr class="withoutBorder">
+                <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Treasury_Bills__c.inlineHelpText}"></apex:outputText>
+                </td>
+                <td class="tableData">
+                       <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Treasury_Bills__c == true}" value="{!Investment_Policy_Statement_IPS__c.Treasury_Bills_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder"> 
+               <td>
+                    <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Special_Bonds__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                     <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.GOI_Special_Bonds__c == true}" value="{!Investment_Policy_Statement_IPS__c.GOI_Special_Bonds_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Gilt_Mutual_Funds__c.inlineHelpText}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                        <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Gilt_Mutual_Funds__c == true}" value="{!Investment_Policy_Statement_IPS__c.Gilt_Mutual_Fund_Per__c}" style="width:80%"/>
+              </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                  <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Development_Loans__c.inlineHelpText}"></apex:outputText>
+             </td>
+             <td class="tableData">
+                             <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.State_Development_Loans__c == true}" value="{!Investment_Policy_Statement_IPS__c.State_Development_Loans_per__c}" style="width:80%"/>
+             </td>
+           </tr> 
+            <tr class="withoutBorder">
+               <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Guaranteed_Papers__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                             <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.State_Guaranteed_Papers__c == true}" value="{!Investment_Policy_Statement_IPS__c.State_Guaranteed_Papers_Per__c}" style="width:80%"/>
+                </td>
+            </tr>
+            
+             <!-- Corporate Bonds Category Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="5">
+                  <apex:outputText value="{!$Label.Corporate_Bonds_Category}"></apex:outputText>
+              </td>
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.PSU_Bonds__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.PSU_Bonds__c == true}" value="{!Investment_Policy_Statement_IPS__c.PSU_Bonds_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+                <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.PFI_Bonds__c.inlineHelpText}"></apex:outputText>
+                </td>
+                <td class="tableData">
+                       <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.PFI_Bonds__c == true}" value="{!Investment_Policy_Statement_IPS__c.PFI_Bonds_Per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder"> 
+               <td>
+                    <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Private_Sector_Bonds__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                     <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Private_Sector_Bonds__c == true}" value="{!Investment_Policy_Statement_IPS__c.Private_Sector_Bonds_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.BASEL_III_Bonds__c.inlineHelpText}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                        <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.BASEL_III_Bonds__c == true}" value="{!Investment_Policy_Statement_IPS__c.BASEL_III_Bonds_Per__c}" style="width:80%"/>
+              </td>
+           </tr> 
+           <!--<tr class="withoutBorder">
+              <td>
+                  <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Debt_Mutual_Funds_Per__c.inlineHelpText}"></apex:outputText>
+             </td>
+             <td class="tableData">
+                             <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.GOI_Dated_Securities__c == true}" value="{!Investment_Policy_Statement_IPS__c.Debt_Mutual_Funds_Per__c}" style="width:80%"/>
+             </td>
+           </tr> -->
+            <tr class="withoutBorder">
+               <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Term_Deposits_of_more_than_1_year__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                             <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Term_Deposits_of_more_than_1_year__c == true}" value="{!Investment_Policy_Statement_IPS__c.Term_Deposits_of_more_than_1_year_per__c}" style="width:80%"/>
+                </td>
+            </tr>
+            
+            
+            <!-- Money Market Category Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="4">
+                  <apex:outputText value="{!$Label.Money_Market_Category}"></apex:outputText>
+              </td>
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Certificate_of_Deposits__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Certificate_of_Deposits__c == true}" value="{!Investment_Policy_Statement_IPS__c.Certificate_of_Deposits_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+                <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Commercial_Papers__c.inlineHelpText}"></apex:outputText>
+                </td>
+                <td class="tableData">
+                       <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Commercial_Papers__c == true}" value="{!Investment_Policy_Statement_IPS__c.Commercial_Papers_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder"> 
+               <td>
+                    <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_Liquid_Mutual_Funds__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                     <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Units_of_Liquid_Mutual_Funds__c== true}" value="{!Investment_Policy_Statement_IPS__c.Units_of_Liquid_Mutual_Funds_Per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Term_Deposits__c.inlineHelpText}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                        <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Term_Deposits__c == true}" value="{!Investment_Policy_Statement_IPS__c.Term_Deposits_per__c}" style="width:80%"/>
+              </td>
+           </tr>
+            
+            
+               <!-- Equity and Equity Linked Mutual Fund Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="4">
+                  <apex:outputText value="{!$Label.Equity_and_Equity_Linked_Mutual_Fund}"></apex:outputText>
+              </td>
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Equity_Shares__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Equity_Shares__c == true}" value="{!Investment_Policy_Statement_IPS__c.Equity_Shares_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+                <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Equity_Linked_Mutual_Fund__c.inlineHelpText}"></apex:outputText>
+                </td>
+                <td class="tableData">
+                       <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Equity_Linked_Mutual_Fund__c == true}" value="{!Investment_Policy_Statement_IPS__c.Equity_Linked_Mutual_Fund_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder"> 
+               <td>
+                    <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Exchange_Traded_Funds__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                     <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Exchange_Traded_Funds__c == true}" value="{!Investment_Policy_Statement_IPS__c.Exchange_Traded_Funds_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Index_Funds__c.inlineHelpText}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                        <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Index_Funds__c == true}" value="{!Investment_Policy_Statement_IPS__c.Index_Funds_per__c}" style="width:80%"/>
+              </td>
+           </tr>
+           
+           <!-- Asset Backed Securities details Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="4">
+                  <apex:outputText value="{!$Label.Asset_Backed_Securities}"></apex:outputText>
+              </td>
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.CMBS_RMBS__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.CMBS_RMBS__c == true}" value="{!Investment_Policy_Statement_IPS__c.CMBS_RMBS_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+                <td>
+                   <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_REITs__c.inlineHelpText}"></apex:outputText>
+                </td>
+                <td class="tableData">
+                       <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Units_of_REITs__c == true}" value="{!Investment_Policy_Statement_IPS__c.Units_of_REITs_per__c}" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder"> 
+               <td>
+                    <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Asset_Backed_Securities_chk__c.inlineHelpText}"></apex:outputText>
+               </td>
+               <td class="tableData">
+                     <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Asset_Backed_Securities_chk__c == true}" value="{!Investment_Policy_Statement_IPS__c.Asset_Backed_Securities_per__c }" style="width:80%"/>
+                 </td>
+           </tr> 
+           <tr class="withoutBorder">
+              <td>
+                <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Units_of_Infra_Inv_Trusts__c.inlineHelpText}"></apex:outputText>
+              </td>
+              <td class="tableData">
+                        <apex:inputField rendered="{!Investment_Policy_Statement_IPS__c.Units_of_Infra_Inv_Trusts__c == true}" value="{!Investment_Policy_Statement_IPS__c.Units_of_Infra_Inv_Trusts_Per__c}" style="width:80%"/>
+              </td>
+           </tr>
+           
+           
+           
+           
+   </table>
+<br/><br/>
+<br/><br/>
+
+
+<!-- Rating_wise_limits -->
+ <h1>{!$Label.Rating_wise_limits}</h1>
+ <br/><br/>
+  <center> <table id="RiskManagementRatingwiseTable" border="1px" cellpadding="5" cellspacing="0" style='width:50%'>
+     
+      <tr style='height:50%'>
+        <th class="tableHeader" style='width:25%;'>
+            <font color="#fff">{!$Label.Issuer_Rating}</font>
+         </th>
+           <th class="tableHeader" style='width:25%'>
+               <font color="#fff"> {!$Label.Maximum_Preferred_Percentage_of_overall_Portfolio}</font>
+           </th>
+        </tr>
+      
+          
+            <!-- AAA Rating Issue Details  -->
+          <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AAA_per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AAA_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AA_Plus_per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AA_Plus_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AA_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AA_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AA_Below_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AA_Below_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+     
+    </table> 
+  </center>   
+  
+  
+  
+  <br/><br/>
+<br/><br/>
+
+
+<!-- Sector-wise Limits  -->
+ <h1>{!$Label.Sector_wise_Limits}</h1>
+ <br/><br/>
+  <center> <table id="RiskManagementSectorWiseTable" border="1px" cellpadding="5" cellspacing="0" style='width:50%'>
+     
+      <tr style='height:50%'>
+        <th class="tableHeader" style='width:25%;'>
+            <font color="#fff">{!$Label.Sector}</font>
+         </th>
+           <th class="tableHeader" style='width:25%'>
+               <font color="#fff"> {!$Label.Maximum_Preferred_Percentage_of_overall_sectoral_exposure}</font>
+           </th>
+        </tr>
+      
+      
+          
+            <!-- AAA Rating Issue Details  -->
+          <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Banking_per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Banking_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Finance_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Finance_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Infrastructure_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Infrastructure_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Power_per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Power_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+                 <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Housing_per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Housing_per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Manufacturing_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Manufacturing_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+           <tr class="withoutBorder">
+               <td>
+                 <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Others_Per__c.inlineHelpText}"></apex:outputText>
+               </td>
+              <td class="tableData">
+                    <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Others_Per__c}" style="width:80%"/>
+               </td >
+           </tr>
+      
+    </table> 
+  </center>
+
+
+<!-- Issuer- Rating wise  Limits  -->
+ <h1> {!$Label.Issuer_Rating_wise_limits} </h1>
+ <br/><br/>
+ <apex:outputText value="{!$Label.Issuer_Rating_wise_limits_desc}" ></apex:outputText>
+ <br/><br/>
+ <br/><br/>
+  <center> <table id="RiskManagementIssuerRatingWiseTable" border="1px" cellpadding="5" cellspacing="0" style='width:50%'>
+     
+      <tr style='height:50%'>
+        <th class="tableHeader" style='width:25%;'>
+            <font color="#fff">{!$Label.Category}</font>
+         </th>
+         <th class="tableHeader" style='width:25%'>
+               <font color="#fff"> {!$Label.Issuer_Type}</font>
+           </th>
+           <th class="tableHeader" style='width:25%'>
+               <font color="#fff"> {!$Label.Maximum_Preferred_Percentage_of_overall_Portfolio}</font>
+           </th>
+        </tr>
+         
+              <!-- Central and State Gov Category Details  -->
+         <tr class="withoutBorder">
+              <td class="tableData" rowspan="5">
+                  <apex:outputText value="{!$Label.Central_and_State_Gov_Category}"></apex:outputText>
+              </td>
+              <td class="tableData">    
+                  <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Dated_Securities_Issue_Per__c.inlineHelpText}"></apex:outputText>
+            </td>
+              <td class="tableData">
+                   <apex:inputField value="{!Investment_Policy_Statement_IPS__c.GOI_Dated_Securities_Issue_Per__c}"  style="width:80%"/>
+                </td>
+            
+            </tr> 
+                       <tr class="withoutBorder">
+                        <td class="tableData">        
+                          <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Treasury_Bills_issue_per__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Treasury_Bills_issue_per__c}"  style="width:80%"/>
+                            </td>
+                        
+                        </tr> 
+                       <tr class="withoutBorder"> 
+                         <td class="tableData">
+                            <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.GOI_Special_Bonds_issue_per__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                          <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.GOI_Special_Bonds_issue_per__c}"  style="width:80%"/>
+                            </td>
+                           
+                         </tr> 
+                       <tr class="withoutBorder">
+                        <td class="tableData">
+                           <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Development_Loans_issue_per__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.State_Development_Loans_issue_per__c}"  style="width:80%"/>
+                        </td>
+                        
+                         </tr> 
+                       <tr class="withoutBorder">
+                         <td class="tableData">
+                          <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.State_Guaranteed_Papers_issue_Per__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.State_Guaranteed_Papers_issue_Per__c}"  style="width:80%"/>
+                         </td>
+                           
+                     </tr>  
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                         <!-- Corporate Bonds Category issuer Details  -->
+          <tr class="withoutBorder">
+              <td class="tableData" rowspan="5">
+                  <apex:outputText value="{!$Label.Corporate_Bonds_Category}"></apex:outputText>
+              </td>
+              <td class="tableData">    
+                  <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AAA_Rated_Each_Issuer__c.inlineHelpText}"></apex:outputText>
+            </td>
+              <td class="tableData">
+                   <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AAA_Rated_Each_Issuer__c}"  style="width:80%"/>
+                </td>
+            
+            </tr> 
+                        <tr class="withoutBorder">
+                        <td class="tableData">        
+                          <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AA_Plus_Rated_Each_Issuer__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                         <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AA_Plus_Rated_Each_Issuer__c}"  style="width:80%"/>
+                            </td>
+                        
+                        </tr> 
+                        <tr class="withoutBorder"> 
+                         <td class="tableData">
+                            <apex:outputText value="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.AA_Rated_Each_Issuer__c.inlineHelpText}"></apex:outputText>
+                         </td>
+                          <td class="tableData">
+                             <apex:inputField value="{!Investment_Policy_Statement_IPS__c.AA_Rated_Each_Issuer__c}"  style="width:80%"/>
+                            </td>
+                           
+                         </tr> 
+      
+      </table>
+    </center>  
+
+
+<!-- Notes and Remarks -->
+
+<br/><br/>
+ <br/><br/>
+  
+<center> <div><h1 style="text-align: left;">{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.Notes_Remarks__c.inlineHelpText} </h1>
+    <br/><br/>
+            <apex:inputField value="{!Investment_Policy_Statement_IPS__c.Notes_Remarks__c}" style="width:50%;height:70%" />
+        </div>
+ </center><br/>
+<apex:pageBlockButtons location="bottom">
+<apex:commandButton action="{!Save}" value="Save"/> 
+<apex:commandButton action="{!Cancel}" value="Cancel" /></apex:pageBlockButtons>
+</apex:pageBlock> 
+</apex:form>
+</apex:page>

@@ -1,0 +1,12 @@
+<apex:component controller="DocumentCheckListController" access="global">
+    <apex:attribute name="csId" type="Id" description="Id of the case" assignTo="{!CaseId}"/>
+    <ul>
+    <table cellspacing = "5">
+        <apex:repeat value="{!RequiredDocuments}" var="o">
+        <tr>
+            <td><li>{!o}</li></td>
+        </tr>
+        </apex:repeat>        
+    </table>
+    </ul>
+</apex:component>

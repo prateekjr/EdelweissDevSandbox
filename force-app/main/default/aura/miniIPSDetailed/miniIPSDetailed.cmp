@@ -1,0 +1,983 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" controller="miniIPSDetailController">
+    <aura:attribute name="recordId" type="String" default="001O0000017qaOnIAI" />
+    <aura:attribute name="messageBody" type="String"/>
+    <aura:attribute name="today" type="Date" default="" />
+    <aura:attribute name="isCorporate" type="Boolean" default="false" />
+    <aura:attribute name="isNewIPS" type="Boolean" default="false"/>
+    <aura:attribute name="account" type="Account" default="{ 'sobjectType': 'Account' }" />
+    <aura:attribute name="IPSRecord" type="Investment_Policy_Statement_IPS__c" default="{ 'sobjectType': 'Investment_Policy_Statement_IPS__c' }" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+    <div>
+        <aura:renderIf isTrue="{!v.isCorporate}">
+            <h1 class="slds-page-header__title slds-truncate" title="Investment Policy Statement">Detailed Investment Policy Statement - Corporate</h1>
+            <aura:set attribute="else">
+                <h1 class="slds-page-header__title slds-truncate" title="Investment Policy Statement">Detailed Investment Policy Statement - Individual</h1>
+            </aura:set>
+        </aura:renderIf>
+       
+        <div class="slds-form--stacked">
+
+            <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0; text-align: left;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">I. General Information</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="GeneralInformation" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Name Of Client(s):</label>
+                        <div class="slds-form-element__control">
+                            <ui:outputText aura:id="Clientname"  value="{!v.account.Name}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+                            <label class="slds-form-element__label" for="textareaSample2">Date Of Incorporation:</label>
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">Date Of Birth / Incorporation:</label>
+                            </aura:set>
+                        </aura:renderIf>
+                        <div class="slds-form-element__control">
+                            <ui:inputDate aura:id="birthdate" class="field" value="{!v.IPSRecord.DateOfBirth__c}" displayDatePicker="true" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                            <label class="slds-form-element__label" for="textareaSample2">Type Of Entity:</label>
+                            <div class="slds-form-element__control">
+                                <ui:inputText aura:id="entity" class="slds-input" labelClass="slds-form-element__label" value="{!v.IPSRecord.entity__c}" />
+                            </div>
+                            <aura:set attribute="else">
+                                <img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                                <label class="slds-form-element__label" for="textareaSample2">Residential Status: Indian/NRI</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputSelect aura:id="Status" value="{!v.IPSRecord.ResidentialStatus__c}">
+                                        <ui:inputSelectOption text="Indian" value="Indian" />
+                                        <ui:inputSelectOption text="NRI" value="NRI" />
+                                    </ui:inputSelect>
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                    <div class="slds-form-element">
+						<aura:renderIf isTrue="{!v.isCorporate}">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+							<label class="slds-form-element__label" for="textareaSample2">Tax Status Or Investments</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="TaxStatus" value="{!v.IPSRecord.TaxStatusforInvestments__c}">
+									<ui:inputSelectOption text="---None---" value="---None---"/> 
+										<ui:inputSelectOption text="MAT" value="MAT"/>
+										<ui:inputSelectOption text="Corporate Tax" value="Corporate Tax"/>
+                                		<ui:inputSelectOption text="No Tax" value="No Tax"/>
+                            </ui:inputSelect>
+                        </div>
+						<aura:set attribute="else">
+						</aura:set>
+						</aura:renderIf>
+                    </div>
+                   <!-- <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Current Investable Assets:</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputText aura:id="InvestableAssets" labelClass="slds-form-element__label" value="{!v.IPSRecord.CurrentInvestableAssets__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Current Liabilities:</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputText aura:id="CurrentLiabilities" labelClass="slds-form-element__label" value="{!v.IPSRecord.Current_Liabilities__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">Family Tree:</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="familytree" class="slds-input" labelClass="slds-form-element__label" value="{!v.IPSRecord.Family_Tree__c}" />
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>-->
+
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Current Investment Advisor(s):</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputText aura:id="InvestmentAdvisor" labelClass="slds-form-element__label" value="{!v.IPSRecord.Current_Investment_Advisors__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">Other Specific Information:</label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputText aura:id="otherspecificinformation" class="slds-input" labelClass="slds-form-element__label" value="{!v.IPSRecord.Other_specific_information__c}" />
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">II.Current Investment Position</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="CurrentInvestmentPosition" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <h3 class="slds-text-heading--small fieldSetName">Kindly Answer The Following Questions Based On Your Objectives, Requirements And Expectations.</h3>
+					<div class="slds-form-element">
+						<aura:renderIf isTrue="{!v.isCorporate}">
+							<!--no field mapping here  -->
+							<aura:set attribute="else">		
+										<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>							
+										<label class="slds-form-element__label" for="textareaSample2">What Is My Current Net Worth?</label>
+										<div class="slds-form-element__control">
+												<ui:inputSelect aura:id="currentNetworth" value="{!v.IPSRecord.current_Net_worth__c}">
+                                                    <ui:inputSelectOption text="---None---" value="---None---"/>
+													<ui:inputSelectOption text="5cr – 25cr" value="5cr – 25cr" />
+													<ui:inputSelectOption text="25cr – 100cr" value="25cr – 100cr" />
+													<ui:inputSelectOption text="100cr+" value="100cr+" />
+												</ui:inputSelect>
+										</div>								
+							</aura:set>
+						</aura:renderIf>
+					</div>
+					
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+                            <label class="slds-form-element__label" for="textareaSample2">What Is The Total Investible Asset (Cr)? </label>
+                            <div class="slds-form-element__control">
+                                    <!--labelClass="slds-form-element__label" -->
+                                    <ui:inputText aura:id="totalinvestibleasset" value="{!v.IPSRecord.Investible_asset__c}" />
+                            </div>
+                            <aura:set attribute="else">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                                <label class="slds-form-element__label" for="textareaSample2">What Is My Family’s Annual Income (Cr)? </label>
+                                <div class="slds-form-element__control">
+                                        <!--labelClass="slds-form-element__label" -->
+                                        <ui:inputCurrency aura:id="familyannualincome" value="{!v.IPSRecord.family_s_annual_income__c}" />
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+					<h3 class="slds-text-heading--small fieldSetName">What does my Current Investment Portfolio Look Like?</h3>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Direct Equity (Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="DirectEquity" labelClass="slds-form-element__label" value="{!v.IPSRecord.Direct_equities__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Fixed Income (Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="FixeIncome" labelClass="slds-form-element__label" value="{!v.IPSRecord.Fixed_Income__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Balanced (Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="Balanced" labelClass="slds-form-element__label" value="{!v.IPSRecord.Balanced__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Alternates (Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="Alternates" labelClass="slds-form-element__label" value="{!v.IPSRecord.Alternates__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Real Estate – Physical (Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="RealEstatePhysical" labelClass="slds-form-element__label" value="{!v.IPSRecord.Real_Estate_Physical__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Other Investments(Cr)</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputCurrency aura:id="OtherInvestments" labelClass="slds-form-element__label" value="{!v.IPSRecord.Other_Investments_Details__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                   <aura:renderIf isTrue="{!v.isCorporate}"><hr></hr>
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                    	<label class="slds-form-element__label" for="textareaSample2">Liabilities (Cr)</label>
+                   <div class="slds-form-element__control" >
+                     <ui:inputCurrency aura:id="Liabilities" value="{!v.IPSRecord.Liabilities__c}"/>
+        			</div>
+                 <aura:set attribute="else">
+                 </aura:set>	
+                </aura:renderIf>                
+              </div>
+					<aura:renderIf isTrue="{!!v.isCorporate}"> 
+						<div class="slds-form-element">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+							<label class="slds-form-element__label" for="textareaSample2">Housing Loan (Cr)</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="HousingLoan" labelClass="slds-form-element__label" value="{!v.IPSRecord.Housing_Loan__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+							<label class="slds-form-element__label" for="textareaSample2">Auto Loan(Cr)</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="AutoLoan" labelClass="slds-form-element__label" value="{!v.IPSRecord.Auto_loan__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+							<label class="slds-form-element__label" for="textareaSample2">Business Loan(Cr)</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="BusinessLoan" labelClass="slds-form-element__label" value="{!v.IPSRecord.Business_Loan__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+							<label class="slds-form-element__label" for="textareaSample2">Other Loans (Details)(Cr)</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="Otherloan" labelClass="slds-form-element__label" value="{!v.IPSRecord.Other_loan__c}" required="false" />
+							</div>
+						</div>											
+					</aura:renderIf>
+					
+					<aura:renderIf isTrue="{!!v.isCorporate}">
+						 <h3 class="slds-text-heading--small fieldSetName" for="textareaSample2">What Are My Foreseeable Liquidity Requirements?</h3>
+						 <div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Event:</label>
+							<div class="slds-form-element__control">
+								<ui:inputText aura:id="Event" labelClass="slds-form-element__label" value="{!v.IPSRecord.Event__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Amount:</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="Amount1" labelClass="slds-form-element__label" value="{!v.IPSRecord.Amount_1__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Event:</label>
+							<div class="slds-form-element__control">
+								<ui:inputText aura:id="Event1" labelClass="slds-form-element__label" value="{!v.IPSRecord.Event1__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Amount:</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="Amount2" labelClass="slds-form-element__label" value="{!v.IPSRecord.Amount_2__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Event:</label>
+							<div class="slds-form-element__control">
+								<ui:inputText aura:id="Event2" labelClass="slds-form-element__label" value="{!v.IPSRecord.Event2__c}" required="false" />
+							</div>
+						</div>
+						<div class="slds-form-element">
+							<label class="slds-form-element__label" for="textareaSample2">Amount:</label>
+							<div class="slds-form-element__control">
+								<ui:inputCurrency aura:id="Amount3" labelClass="slds-form-element__label" value="{!v.IPSRecord.Amount_3__c}" required="false" />
+							</div>
+						</div>
+					
+					</aura:renderIf>		
+                   
+                </div>
+            </div>
+
+            <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">III. Wealth Management Needs Including Business Needs</h2>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="WealthManagement" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                                <label class="slds-form-element__label" for="textareaSample2">What Are My Primary Wealth Management Requirements? </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputSelect multiple="true" class="multiple" aura:id="Selectwealth" value="{!v.IPSRecord.wealth_management_requirements__c}">
+										<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                        <ui:inputSelectOption text="Estate / Succession Planning" value="Estate / Succession Planning" />
+                                        <ui:inputSelectOption text="Lifestyle Planning" value="Lifestyle Planning" />
+                                        <ui:inputSelectOption text="Specific Milestones" value="Specific Milestones" />
+                                        <ui:inputSelectOption text="Philanthropy" value="Philanthropy" />
+                                        <ui:inputSelectOption text="Special Family Needs" value="Special Family Needs" />
+                                        <ui:inputSelectOption text="Taxation Plannig" value="Taxation Plannig" />
+                                    </ui:inputSelect>
+                                    <!--<force:inputField value="{!v.IPSRecord.wealth_management_requirements__c}"/>-->
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Is My Time Horizon For My Financial Goal? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="Selecttimehorizon" value="{!v.IPSRecord.Time_horizon_for_clients_financial_goal__c}">
+                                <ui:inputSelectOption text="---None---" value="---None---"/>
+                                <ui:inputSelectOption text="Short term (1 – 3 years)" value="Short term (1 – 3 years)" />
+                                <ui:inputSelectOption text="Medium term (3 – 5 years)" value="Medium term (3 – 5 years)" />
+                                <ui:inputSelectOption text="Long term (5 – 10 years)" value="Long term (5 – 10 years)" />
+                                <ui:inputSelectOption text="Very long term ( > 10 years)" value="Very long term ( > 10 years)" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Time_horizon_for_clients_financial_goal__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Are My Treasury Management Needs? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect multiple="true" class="multiple" aura:id="Selecttreasury" value="{!v.IPSRecord.treasury_management_needs__c}">
+								<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                <ui:inputSelectOption text="Enhanced cash flow management" value="Enhanced cash flow management" />
+                                <ui:inputSelectOption text="Special Situation Trades" value="Special Situation Trades" />
+                                <ui:inputSelectOption text="Low risk derivative strategies" value="Low risk derivative strategies" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.treasury_management_needs__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">What Are My Investment Banking Requirements? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect multiple="true" class="multiple" aura:id="investBank" value="{!v.IPSRecord.Investment_Banking_requirements__c}">
+								<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                <ui:inputSelectOption text="Mergers and acquisitions" value="Mergers and acquisitions" />
+                                <ui:inputSelectOption text="Private equity" value="Private equity" />
+                                <ui:inputSelectOption text="IPO, QIP, rights, open offer" value="IPO, QIP, rights, open offer" />
+                                <ui:inputSelectOption text="Corporate restructuring" value="Corporate restructuring" />
+                                <ui:inputSelectOption text="Leasing" value="Leasing" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Investment_Banking_requirements__c}"/>-->
+                        </div>
+                    </div>
+                 
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">What Are My Real Estate Requirements? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect multiple="true" class="multiple" aura:id="realestate" value="{!v.IPSRecord.What_are_real_estate_requirements__c}">
+								<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                <ui:inputSelectOption text="Commercial real estate space (new office space requirement etc.)" value="Commercial real estate space (new office space requirement etc.)" />
+                                <ui:inputSelectOption text="Special real estate requirements (land, warehousing etc.)" value="Special real estate requirements (land, warehousing etc.)" />
+                               
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.What_are_real_estate_requirements__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Am I Protected Against Business Risks? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect multiple="true" class="multiple" aura:id="BusinessRisks" value="{!v.IPSRecord.Am_I_protected_against_Business_Risks__c}">
+								<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                <ui:inputSelectOption text="Foreign Exchange Exposure" value="Foreign Exchange Exposure" />
+                                <ui:inputSelectOption text="Commodity/Raw Material Price Exposure" value="Commodity/Raw Material Price Exposure" />
+                                <ui:inputSelectOption text="Regulatory risks(Domestic International)" value="Regulatory risks(Domestic International)" />
+                                <ui:inputSelectOption text="Supplier / Customer Risk" value="Supplier / Customer Risk" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Am_I_protected_against_Business_Risks__c}"/>-->
+                        </div>
+                    </div>
+                    
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">What Is My Current Financial Goal? </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputSelect multiple="true" class="multiple" aura:id="curfingoal" value="{!v.IPSRecord.what_is_clients_financial_goal__c}">
+                                        <ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                        <ui:inputSelectOption text="Starting out to build capital" value="Starting out to build capital" />
+                                        <ui:inputSelectOption text="To achieve steady growth on capital" value="To achieve steady growth on capital" />
+                                        <ui:inputSelectOption text="Specific Goals" value="Specific Goals" />
+                                    </ui:inputSelect>
+                                    <!--<force:inputField value="{!v.IPSRecord.what_is_clients_financial_goal__c}"/>-->
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">What Is My Present Investment Pattern? </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputSelect multiple="true" class="multiple" aura:id="presentinvest" value="{!v.IPSRecord.client_s_present_investment_pattern__c}">
+										<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                        <ui:inputSelectOption text="I invest specific amounts on a periodic basis" value="I invest specific amounts on a periodic basis" />
+                                        <ui:inputSelectOption text="I invest a lump sum when there is liquidity available" value="I invest a lump sum when there is liquidity available" />
+                                        <ui:inputSelectOption text="My investments are dependent on market opportunity" value="My investments are dependent on market opportunity" />
+                                        <ui:inputSelectOption text="I invest on an annual basis primarily to park funds" value="I invest on an annual basis primarily to park funds" />
+                                    </ui:inputSelect>
+                                    <!--<force:inputField value="{!v.IPSRecord.client_s_present_investment_pattern__c}"/>-->
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                    <div class="slds-form-element">
+                        <aura:renderIf isTrue="{!v.isCorporate}">
+
+                            <aura:set attribute="else">
+                                <label class="slds-form-element__label" for="textareaSample2">What Are My Current Sources Of Investment Ideas? </label>
+                                <div class="slds-form-element__control">
+                                    <ui:inputSelect multiple="true" class="multiple" aura:id="sourceidea" value="{!v.IPSRecord.current_sources_of_investment_ideas__c}">
+										<ui:inputSelectOption text="---Not Applicable---" value="---Not Applicable---"/>
+                                        <ui:inputSelectOption text="Self led, based on market research" value="Self led, based on market research" />
+                                        <ui:inputSelectOption text="Reaching out Financial Advisors / Research Analysts" value="Reaching out Financial Advisors / Research Analysts" />
+                                        <ui:inputSelectOption text="From Friends /Relatives" value="From Friends /Relatives" />
+                                    </ui:inputSelect>
+                                    <!--<force:inputField value="{!v.IPSRecord.current_sources_of_investment_ideas__c}"/>-->
+                                </div>
+                            </aura:set>
+                        </aura:renderIf>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0; text-align: left;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">IV. Service Expectations</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="ServiceExpectation" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">How Often Do I Wish To Monitor Your Portfolio Performance? </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="monitorportfolio" value="{!v.IPSRecord.How_often_does_client_monitor_po__c}">
+                                <ui:inputSelectOption text="Monthly" value="Monthly" />
+                                <ui:inputSelectOption text="Quarterly" value="Quarterly" />
+                                <ui:inputSelectOption text="Bi-Annually" value="Bi-Annually" />
+                                <ui:inputSelectOption text="Annually" value="Annually" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Time_horizon_for_clients_financial_goal__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">What Are My Performance Benchmarks?</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="benchmarks" value="{!v.IPSRecord.performancebenchmarks__c}">
+                                <ui:inputSelectOption text="Nifty" value="Nifty" />
+                                <ui:inputSelectOption text="Nifty Mid Cap" value="Nifty Mid Cap" />
+                                <ui:inputSelectOption text="Crisil" value="Crisil" />
+                                <ui:inputSelectOption text="Absolute %" value="Absolute %" />
+                                <ui:inputSelectOption text="% Above Benchmark" value="% Above Benchmark" />
+                                <ui:inputSelectOption text="% target return" value="% target return" />
+                            </ui:inputSelect>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">What Kind Of Information Do You Expect To Get From Financial Advisor?</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="FinancialAdvisor1" value="{!v.IPSRecord.Financial_Advisor__c}">
+                                <ui:inputSelectOption text="Regular Portfolio Reports, Frequency" value="Regular Portfolio Reports, Frequency" />
+                                <ui:inputSelectOption text="Research Reports, Frequency" value="Research Reports, Frequency" />
+                                <ui:inputSelectOption text="New Products" value="New Products" />
+                                <ui:inputSelectOption text="Portfolio Performance Updates" value="Portfolio Performance Updates" />
+                            </ui:inputSelect>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aura:renderIf isTrue="{!v.isCorporate}">
+                <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">V. The New Investment Guidelines</h2>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="newinvestmentguidlines" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">                        
+                        <label class="slds-form-element__label" for="textareaSample2"><b>The Following Instruments Qualify For Investments For A Financial Year, Ensuring Adherence To The Investment Pattern:</b> </label>
+               			<br/>
+                        <label class="slds-form-element__label" for="textareaSample2">Central Government And State Government Category</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="GOIone" labelClass="slds-form-element__label" value="{!v.IPSRecord.Central_and_State_Gov__c}" required="false" />
+                            <ui:inputCheckbox aura:id="ChkGOIDatedSecurities" label="GOI Dated Securities" value="{!v.IPSRecord.GOI_Dated_Securities__c}"/> <br/>                       
+                       		<ui:inputCheckbox aura:id="ChkTreasuryBills" label="Treasury Bills" value="{!v.IPSRecord.Treasury_Bills__c}"/> <br/>                     
+                        	<ui:inputCheckbox aura:id="ChkGOISpecialBonds" label="GOI Special Bonds" value="{!v.IPSRecord.GOI_Special_Bonds__c}"/> <br/>                     
+                            <ui:inputCheckbox aura:id="ChkGiltMutualFund" label="Gilt Mutual Funds " value="{!v.IPSRecord.Gilt_Mutual_Funds__c}"/> <br/>
+                            <ui:inputCheckbox aura:id="ChkStateDevelopmentLoans" label="State Development Loans" value="{!v.IPSRecord.State_Development_Loans__c}"/> <br/>
+                            <ui:inputCheckbox aura:id="ChkStateGuaranteedPapers" label="State Guaranteed Papers " value="{!v.IPSRecord.State_Guaranteed_Papers__c}"/> <br/>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">PSU And Private Category </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="PSUtwo" labelClass="slds-form-element__label" value="{!v.IPSRecord.PSU_and_Private__c}" required="false" />
+                            <ui:inputCheckbox aura:id="ChkPSUBonds" label="PSU Bonds" value="{!v.IPSRecord.PSU_Bonds__c}"/> <br/>                       
+                       		<ui:inputCheckbox aura:id="ChkPFIBonds" label="PFI Bonds" value="{!v.IPSRecord.PFI_Bonds__c}"/> <br/>                     
+                        	<ui:inputCheckbox aura:id="ChkPrivateSectorBonds" label="Private Sector Bonds" value="{!v.IPSRecord.Private_Sector_Bonds__c}"/> <br/>                     
+                            <ui:inputCheckbox aura:id="ChkBASELIIIBonds" label="BASEL III Bonds" value="{!v.IPSRecord.BASEL_III_Bonds__c}"/> <br/>
+     					    <ui:inputCheckbox aura:id="ChkTermDeposits" label="Term Deposits of more than 1 year" value="{!v.IPSRecord.Term_Deposits_of_more_than_1_year__c}"/> <br/>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Money Market Category</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="PSUthree" labelClass="slds-form-element__label" value="{!v.IPSRecord.Money_Market__c}" required="false" />
+                            <ui:inputCheckbox aura:id="ChkCertificateDeposits" label="Certificate of Deposits" value="{!v.IPSRecord.Certificate_of_Deposits__c}"/> <br/>                       
+                       		<ui:inputCheckbox aura:id="ChkCommercialPapers" label="Commercial Papers" value="{!v.IPSRecord.Commercial_Papers__c}"/> <br/>                     
+                        	<ui:inputCheckbox aura:id="ChkLiquidMutualFunds" label="Units of Liquid Mutual Funds" value="{!v.IPSRecord.Units_of_Liquid_Mutual_Funds__c}"/> <br/>                     
+                            <ui:inputCheckbox aura:id="ChkTermDepositsbank" label="Term Deposits in scheduled commercial banks of up to 1 year duration" value="{!v.IPSRecord.Term_Deposit_in_scheduled_commrcial_bank__c}"/> <br/>
+     					</div>
+                	</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Equity And Equity Linked Mutual Fund </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="PSUfour" labelClass="slds-form-element__label" value="{!v.IPSRecord.Equity_and_Equity_Linked_Mutual_Fund__c}" required="false" />
+                            <ui:inputCheckbox aura:id="ChkEquitShares" label="Equity Shares" value="{!v.IPSRecord.Equity_Shares__c}"/> <br/>                       
+                       		<ui:inputCheckbox aura:id="ChkEquityLinkedMutualFund" label="Equity Linked Mutual Fund" value="{!v.IPSRecord.Equity_Linked_Mutual_Fund__c}"/> <br/>                     
+                        	<ui:inputCheckbox aura:id="ChkExchangeTradedFunds" label="Exchange Traded Funds" value="{!v.IPSRecord.Exchange_Traded_Funds__c}"/> <br/>                     
+                            <ui:inputCheckbox aura:id="ChkIndexFunds" label="Index Funds" value="{!v.IPSRecord.Index_Funds__c}"/> <br/>
+     					</div>
+                	</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Asset Backed Securities </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="PSUfive" labelClass="slds-form-element__label" value="{!v.IPSRecord.Asset_Backed_Securities__c}" required="false" />
+                            <ui:inputCheckbox aura:id="ChkCMBSRMBS" label="CMBS, RMBS" value="{!v.IPSRecord.CMBS_RMBS__c}"/> <br/>                       
+                       		<ui:inputCheckbox aura:id="ChkUnitsofREITs" label="Units of REITs" value="{!v.IPSRecord.Units_of_REITs__c}"/> <br/>                     
+                        	<ui:inputCheckbox aura:id="ChkAssetBackedSecurities" label=" Asset Backed Securities" value="{!v.IPSRecord.Asset_Backed_Securities_chk__c}"/> <br/>                     
+                            <ui:inputCheckbox aura:id="ChkInfraindex" label=" Units of Infrastructure Investment Trusts" value="{!v.IPSRecord.Units_of_Infra_Inv_Trusts__c}"/> <br/>
+     					</div>
+                	</div> 
+                </div> 
+            </div>
+           		 
+                <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">VI. Risk Management Framework </h2>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="riskmgmtframework" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">                        
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Instrument Wise Limits: </b></label>
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Note: Sum Of % Input In Instruments Should Not Be More Than Total Value Input In Above Category </b></label>
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Central And State Government Category</b> </label><br/>
+                        <label class="slds-form-element__label" for="textareaSample2">GOI Dated Securities </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="GOIDatedSecurities" labelClass="slds-form-element__label" value="{!v.IPSRecord.GOI_Dated_Securities_Per__c}" disabled="{!!v.IPSRecord.GOI_Dated_Securities__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Treasury Bills </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="TreasuryBills" labelClass="slds-form-element__label" value="{!v.IPSRecord.Treasury_Bills_per__c}" disabled="{!!v.IPSRecord.Treasury_Bills__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">GOI Special Bonds </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="GOISpecialBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.GOI_Special_Bonds_per__c}" disabled="{!!v.IPSRecord.GOI_Special_Bonds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">State Development Loans </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="StateDevelopmentLoans" labelClass="slds-form-element__label" value="{!v.IPSRecord.State_Development_Loans_per__c}" disabled="{!!v.IPSRecord.State_Development_Loans__c}" required="false" />
+                        </div>
+					</div> 
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Gilt Mutual Fund</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="GiltMutualFund" labelClass="slds-form-element__label" value="{!v.IPSRecord.Gilt_Mutual_Fund_Per__c}" disabled="{!!v.IPSRecord.Gilt_Mutual_Funds__c}" required="false" />
+                        </div>
+					</div> 
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">State Guaranteed Papers</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="StateGuaranteedPapers" labelClass="slds-form-element__label" value="{!v.IPSRecord.State_Guaranteed_Papers_Per__c}" disabled="{!!v.IPSRecord.State_Guaranteed_Papers__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Corporate Bonds Category</b> </label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">PSU Bonds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="PSUBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.PSU_Bonds_Per__c}" disabled="{!!v.IPSRecord.PSU_Bonds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">PFI Bonds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="PFIBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.PFI_Bonds_Per__c}" disabled="{!!v.IPSRecord.PFI_Bonds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Private Sector Bonds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="PrivateSectorBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Private_Sector_Bonds_per__c}" disabled="{!!v.IPSRecord.Private_Sector_Bonds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Basel III Bonds </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="BASELIIIBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.BASEL_III_Bonds_Per__c}" disabled="{!!v.IPSRecord.BASEL_III_Bonds__c}" required="false" />
+                        </div>
+					</div>
+                    <!--
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Debt Mutual Funds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="DebtMutualFunds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Debt_Mutual_Funds_Per__c}" required="false" />
+                        </div>
+					</div> 
+					--> 
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Term Deposits Of More Than 1 Year </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="TermDepositsone" labelClass="slds-form-element__label" value="{!v.IPSRecord.Term_Deposits_of_more_than_1_year_per__c}" disabled="{!!v.IPSRecord.Term_Deposits_of_more_than_1_year__c}" required="false" />
+                        </div>
+					</div>
+                    
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2"><b>Money Market Category</b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">Certificate Of Deposits</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="CertificateDeposits" labelClass="slds-form-element__label" value="{!v.IPSRecord.Certificate_of_Deposits_Per__c}" disabled="{!!v.IPSRecord.Certificate_of_Deposits__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Commercial Papers</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="CommercialPapers" labelClass="slds-form-element__label" value="{!v.IPSRecord.Commercial_Papers_per__c}" disabled="{!!v.IPSRecord.Commercial_Papers__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Liquid Mutual Funds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="LiquidMutualFunds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Units_of_Liquid_Mutual_Funds_Per__c}" disabled="{!!v.IPSRecord.Units_of_Liquid_Mutual_Funds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Term Deposits In Scheduled Commercial Banks Of Up To 1 Year Duration </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Term_Deposits_in_scheduledBank" labelClass="slds-form-element__label" value="{!v.IPSRecord.Term_Deposits_in_scheduled_commercial_ba__c}" disabled="{!!v.IPSRecord.Term_Deposit_in_scheduled_commrcial_bank__c}" required="false" />
+                        </div>
+					</div>
+                    
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2"><b>Equity And Equity MF </b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">Equity Shares</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="EquityShares" labelClass="slds-form-element__label" value="{!v.IPSRecord.Equity_Shares_per__c}" disabled="{!!v.IPSRecord.Equity_Shares__c}" required="false" />
+                        </div>
+                        
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Equity Linked Mutual Fund </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="EquityLinkedMutualFund" labelClass="slds-form-element__label" value="{!v.IPSRecord.Equity_Linked_Mutual_Fund_per__c}" disabled="{!!v.IPSRecord.Equity_Linked_Mutual_Fund__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Exchange Traded Funds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="ExchangeTradedFunds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Exchange_Traded_Funds_per__c}" disabled="{!!v.IPSRecord.Exchange_Traded_Funds__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Index Funds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="IndexFunds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Index_Funds_per__c}" disabled="{!!v.IPSRecord.Index_Funds__c}" required="false" />
+                        </div>
+					</div>
+                    
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2"><b>Asset Backed Securities</b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">CMBS, RMBS</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="CMBSRMBS" labelClass="slds-form-element__label" value="{!v.IPSRecord.CMBS_RMBS_per__c}" disabled="{!!v.IPSRecord.CMBS_RMBS__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Units Of REITs</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="UnitsREITs" labelClass="slds-form-element__label" value="{!v.IPSRecord.Units_of_REITs_per__c}" disabled="{!!v.IPSRecord.Units_of_REITs__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Asset Backed Securities</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="AssetBackedSecurities" labelClass="slds-form-element__label" value="{!v.IPSRecord.Asset_Backed_Securities_per__c}" disabled="{!!v.IPSRecord.Asset_Backed_Securities_chk__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Units Of Infrastructure Investment Trusts</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="UnitInfraInvst" labelClass="slds-form-element__label" value="{!v.IPSRecord.Units_of_Infra_Inv_Trusts_Per__c}" disabled="{!!v.IPSRecord.Units_of_Infra_Inv_Trusts__c}" required="false" />
+                        </div>
+					</div>
+                    <br/>
+                    
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Rating Wise Limits: (Excluding GOI Bonds, SDLs, Mutual Fund And Money Market Instruments)</b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">AAA</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="AAA" labelClass="slds-form-element__label" value="{!v.IPSRecord.AAA_per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">AA+</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="AAplus" labelClass="slds-form-element__label" value="{!v.IPSRecord.AA_Plus_per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">AA</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="AA" labelClass="slds-form-element__label" value="{!v.IPSRecord.AA_Per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">AA- and Below </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="AABelow" labelClass="slds-form-element__label" value="{!v.IPSRecord.AA_Below_Per__c}" required="false" />
+                        </div>
+					</div>
+                    
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Sector-Wise Limits (Excluding Sovereign Rated Securities And MFs)</b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">Banking</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Banking" labelClass="slds-form-element__label" value="{!v.IPSRecord.Banking_per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                       <label class="slds-form-element__label" for="textareaSample2">Finance</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Finance" labelClass="slds-form-element__label" value="{!v.IPSRecord.Finance_Per__c}" required="false" />
+                        </div>
+					</div>
+                     <div class="slds-form-element">
+                       <label class="slds-form-element__label" for="textareaSample2">Power</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Power" labelClass="slds-form-element__label" value="{!v.IPSRecord.Power_per__c}" required="false" />
+                        </div>
+					</div>
+                     <div class="slds-form-element">
+                       <label class="slds-form-element__label" for="textareaSample2">Housing</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Housing" labelClass="slds-form-element__label" value="{!v.IPSRecord.Housing_per__c}" required="false" />
+                        </div>
+					</div>
+                     <div class="slds-form-element">
+                       <label class="slds-form-element__label" for="textareaSample2">Manufacturing</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Manufacturing" labelClass="slds-form-element__label" value="{!v.IPSRecord.Manufacturing_Per__c}" required="false" />
+                        </div>
+					</div>
+                     <div class="slds-form-element">
+                       <label class="slds-form-element__label" for="textareaSample2">Others</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="Others" labelClass="slds-form-element__label" value="{!v.IPSRecord.Others_Per__c}" required="false" />
+                        </div>
+					</div>
+                    
+                     <div class="slds-form-element">                        
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Instrument Wise Limits Issuer- Rating Wise Limits:</b> </label>
+                        <label class="slds-form-element__label" for="textareaSample2"><b>These Limits Ensure That The Entity Is Not Over-Exposed To A Particular Issuer Or Group Of Issuers. The Credit Risk Arising From Issuers Is Thus Mitigated To A Certain Extent</b></label>
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Central And State</b></label><br/>
+                        <label class="slds-form-element__label" for="textareaSample2">GOI Dated Securities </label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="IssueGOIDatedSecurities" labelClass="slds-form-element__label" value="{!v.IPSRecord.GOI_Dated_Securities_Issue_Per__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Treasury Bills</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="IssueTreasuryBills" labelClass="slds-form-element__label" value="{!v.IPSRecord.Treasury_Bills_issue_per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">GOI Special Bonds</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueGOISpecialBonds" labelClass="slds-form-element__label" value="{!v.IPSRecord.GOI_Special_Bonds_issue_per__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">State Development Loans </label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueStateDevelopmentLoans" labelClass="slds-form-element__label" value="{!v.IPSRecord.State_Development_Loans_issue_per__c}" required="false" />
+                        </div>
+					</div> 
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">State Guaranteed Papers</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueStateGuaranteedPapers" labelClass="slds-form-element__label" value="{!v.IPSRecord.State_Guaranteed_Papers_issue_Per__c}" required="false" />
+                        </div>
+					</div>
+                      <div class="slds-form-element">
+                          <label class="slds-form-element__label" for="textareaSample2"><b>Corporate Bond</b></label><br/>
+						<label class="slds-form-element__label" for="textareaSample2">AAA Rated Each Issuer</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueAAA" labelClass="slds-form-element__label" value="{!v.IPSRecord.AAA_Rated_Each_Issuer__c}" required="false" />
+                        </div>
+					</div> 
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">AA+ Rated Each Issuer</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueAA+" labelClass="slds-form-element__label" value="{!v.IPSRecord.AA_Plus_Rated_Each_Issuer__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">AA Rated Each Issuer</label>
+						<div class="slds-form-element__control">
+							<ui:inputNumber aura:id="issueAA" labelClass="slds-form-element__label" value="{!v.IPSRecord.AA_Rated_Each_Issuer__c}" required="false" />
+                        </div>
+					</div>
+                    
+                    <div class="slds-form-element">
+						<label class="slds-form-element__label" for="textareaSample2">Notes / Remarks:</label>
+						<div class="slds-form-element__control">
+							<ui:inputText aura:id="NotesRemarks" labelClass="slds-form-element__label" value="{!v.IPSRecord.Notes_Remarks__c}" required="false" />
+                        </div>
+					</div>
+                </div>
+
+            </div>
+                
+                <aura:set attribute="else">
+            	</aura:set>           
+			</aura:renderIf>
+            
+            		<div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+
+                <div class="slds-card__header slds-grid" style="margin-bottom:0; text-align: left;">
+                    <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <div style="display: inline-block; width: 90%;">
+                                <h2 class="slds-text-heading--small slds-truncate fieldSetName">System Information</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="SystemInformation" onclick="{!c.ToggleCollapse}">
+                        <div class="show">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+                        </div>
+                        <div class="hide">
+                            <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">                        
+                        <label class="slds-form-element__label" for="textareaSample2">IPS Number:</label>
+                        <div class="slds-form-element__control">
+                            <ui:outputText aura:id="IPSNumber"  value="{!v.IPSRecord.Name}" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Last Modified Date:</label>
+                        <div class="slds-form-element__control">
+                            <ui:outputDateTime aura:id="LastModifieddate" value="{!v.IPSRecord.LastModifiedDate}"/>
+                            <!--<ui:outputText aura:id="LastModifieddate" value="{!v.IPSRecord.LastModifiedDate}" />-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="errorDiv">
+					<div>{!v.messageBody}</div>
+        		</div>
+			<div style="text-align: center;">
+				 <ui:button label="Save All Data" press="{!c.save}" />
+                 <ui:button label="Review" press="{!c.review}" />
+                 <ui:button label="Cancel" press="{!c.cancel}" />
+			</div>
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,33 @@
+.THIS .customIcon div{
+    vertical-align: top !important;
+}
+ 
+.THIS.customIcon div{
+    vertical-align: top !important;
+}
+.THIS .uiInput--select .select	{
+    height:35px !important;
+}
+.THIS.select{
+    height:35px !important;
+}
+.THIS .uiInput--select{
+    height:35px !important;
+}
+.THIS.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.THIS.tooltip:hover{
+  visibility: visible;
+}

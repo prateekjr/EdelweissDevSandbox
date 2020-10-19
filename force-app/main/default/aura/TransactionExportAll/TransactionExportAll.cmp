@@ -1,0 +1,32 @@
+<aura:component implements ="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" controller="TransactionExportAllController" access="global">          
+    <!--aura init handler , call js "loadDummyList" function on component load, and display contact data on table-->   
+    <!--<aura:handler name="init" value="{!this}" action="{!c.loadDummyList}"/> -->
+    <aura:attribute name="isProcessing" type="boolean" default="false"/> 
+    <aura:attribute name="successMsg" type="String"/>
+    <aura:attribute name="showErrorForPurRedN" type="boolean" default="false"/> 
+    <aura:attribute name="showErrorForSwitchN" type="boolean" default="false"/> 
+    <aura:attribute name="showErrorForPurRedD" type="boolean" default="false"/> 
+    <aura:attribute name="showErrorForSwitchD" type="boolean" default="false"/> 
+    
+    <!--Declare Attribute for store Contact Records List-->  
+    <aura:attribute name="ListOfSchema" type="Order_Entry__c[]"/> 
+    <div style="margin-top: 150px;margin-left: 550px;">
+        <!--Use "slds-m-around- -xx-large" class to add standard Large padding to the component--> 
+        <div stye=" margin-left: 600px;">
+       	<ui:outputText value="Download BSE Star Feed" ></ui:outputText>
+		</div>
+            <div class="slds-m-around--xx-large">   
+            <button class="slds-button slds-button--brand" onclick="{!c.downloadTxt}">Download</button> <br/><br/>
+        </div>
+    </div>
+  
+  <aura:if isTrue="{!v.isProcessing}"> 
+    <center>
+        <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+            	<ui:spinner aura:id="spinner"/>
+            </div>
+        </div>       
+    </center>
+    </aura:if>
+</aura:component>

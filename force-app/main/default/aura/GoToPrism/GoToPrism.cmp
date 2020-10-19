@@ -1,0 +1,7 @@
+<aura:component controller="gotoPrismController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" >
+<aura:attribute name="recordId" type="String" />
+<aura:attribute name="message" type="string" default="Processing..."/>
+<aura:attribute name="objcallBack" type="gotoPrismController.lightingCallBackPrism" default="{'sobjectType':'gotoPrismController.lightingCallBackPrism'}" />
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<button class="slds-button slds-button_brand slds-align_absolute-center " style="width: 110px; " onclick="{!c.GoToPrism}" >GoToPrism</button>
+</aura:component>

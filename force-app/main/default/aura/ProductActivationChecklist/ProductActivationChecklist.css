@@ -1,0 +1,43 @@
+.THIS #ChecklistField label.slds-checkbox {
+    padding-top: 10px;
+}
+.THIS #ChecklistField .slds-card {
+    padding-bottom: 10px !important;
+}
+
+.THIS div.Message {            
+    font-weight : bold;            
+    padding : 25px;
+}
+
+.THIS div.container {
+    margin: 0px 20px 0px 40px;
+}
+
+.THIS div.expandCollapse{
+    cursor : pointer;           
+}
+.THIS .show{
+    display:block;
+}
+.THIS .hide{
+    display:none;
+}
+.THIS .svgSet{
+    width : 15px;
+    height : 15px;
+}
+.THIS .checklistheader{
+    box-sizing: border-box;
+    color: rgb(22, 50, 92);
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.875px;
+    text-transform: uppercase;
+    border-bottom: 2px solid transparent;
+    border-color: rgb(0, 112, 210);
+    width: 150px;
+    padding-left: 5px;
+    padding-bottom: 7px;
+    margin-bottom: 10px;
+}

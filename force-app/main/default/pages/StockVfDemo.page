@@ -1,0 +1,6 @@
+<apex:page > 
+
+    <!--<iframe src="https://indianotes.com/en/widgets-offerings/widgets/world-indices/?h=300&w=300" height="300" width="300" scrolling="no" style="overflow:scroll !important; -webkit-overflow-scrolling:touch !important;"></iframe> 
+-->
+     <apex:iframe src="https://indianotes.com/en/widgets-offerings/widgets/world-indices/?h=300&w=300" height="300px" width="300px" scrolling="true"/>
+    </apex:page>

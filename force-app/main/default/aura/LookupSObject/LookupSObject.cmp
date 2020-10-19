@@ -1,0 +1,109 @@
+<!--
+(c) Tony Scott. This code is provided as is and without warranty of any kind.
+
+This work by Tony Scott is licensed under a Creative Commons Attribution 3.0 Unported License.
+http://creativecommons.org/licenses/by/3.0/deed.en_US
+-->
+<aura:component controller="LookupSObjectController" >
+    <aura:attribute name="parentAccountId" type="String"/>
+    <aura:attribute name="fieldAPIName" type="String" required="true" 
+        description="The API name of the SObject to search" />
+    <!-- Attributes -->
+    <aura:attribute name="sObjectAPIName" type="String" required="true" 
+        description="The API name of the SObject to search" />
+    <aura:attribute name="instanceId" type="String" required="true" 
+        description="An id to identify the instance the component" />
+    <aura:attribute name="label" type="String" required="true" 
+        description="The label to assign to the lookup, eg: Account" />
+    <aura:attribute name="pluralLabel" type="String" required="true" 
+        description="The plural label to assign to the lookup, eg: Accounts" />
+    <aura:attribute name="listIconSVGPath" type="String" default="/assets/icons/custom-sprite/svg/symbols.svg#custom11" 
+        description="The static resource path to the svg icon to use." />
+    <aura:attribute name="listIconClass" type="String" default="slds-icon-custom-11" 
+        description="The SLDS class to use for the icon." />
+    <aura:attribute name="searchString" type="String" 
+        description="The search string to find." />
+     <aura:attribute name="selSearchString" type="String" 
+        description="The search string to find." />
+    <aura:attribute name="matches" type="LookupSObjectController.Result[]"
+        description="The resulting matches returned by the Apex controller." />
+    <aura:attribute name="loggedInUserDetails" type="LookupSObjectController.Result[]" />
+    <aura:attribute name="RefId" type="String"/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="false" />
+    <aura:attribute name="ChildObject" type="String" />
+    <aura:attribute name="filter" type="String" default=""/>
+
+    <!-- Events -->
+   <aura:handler name="init" action="{!c.doInitLkup}" value="{!this}"/>
+    <!-- Lookup Markup : See https://www.lightningdesignsystem.com/components/lookups -->
+    <div class="slds"> 
+        <aura:renderIf isTrue="{!v.isReadOnly}">
+        	<div aura:id="LookupLinkDiv">
+            	<a id="refLink" onclick="{!c.navigateToRecord}" data-recordId="{!v.RefId}">{!v.label}</a>
+            </div>
+             <aura:set attribute="else">
+        <div aura:id="lookup-div" class="slds-lookup" data-select="single" data-scope="single" data-typeahead="true">
+            <!-- This is the Input form markup -->
+            <div class="slds-form-element">
+            
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                  
+                    <!-- This markup is for when an item is currently selected -->
+                    <aura:if isTrue="{!v.selSearchString != ''}">
+                       
+                     	<div aura:id="lookup-pill" class="slds-pill-container inputCls">
+                          <span class="slds-pill slds-size--1-of-1">
+                             <span class="slds-pill__label">
+                                 <lightning:icon iconName="standard:account" size="xx-small"/>&nbsp;&nbsp;{!v.selSearchString}
+                            </span>
+                            <button class="slds-button slds-button--icon-bare" onclick="{!c.clear}">
+                                <lightning:icon iconName="utility:clear" size="xx-small" alternativeText="Remove"/>
+                            </button> 
+                          </span>
+                        </div>
+                    </aura:if>
+                    <!-- This markup is for when searching for a string -->
+                     <aura:if isTrue="{!v.selSearchString == ''}">
+                   		 <ui:inputText placeholder="{! 'Search '+v.pluralLabel}" aura:id="lookup" value="{!v.searchString}" class="slds-input" updateOn="keyup" keyup="{!c.search}" focus="{!c.hideErrDiv}"/>
+                    </aura:if>
+                  
+                     <div aura:id="errorSearchDiv" class="slds-hide" style="font-size: 12px;color: rgb(194, 57, 52);">
+                   		  An invalid option has been chosen.
+                     </div>
+                </div>
+            </div>
+            <!-- This is the lookup list markup. Initially it's hidden -->
+            <div aura:id="lookuplist" class="slds-lookup__menu slds-hide" role="listbox" style="width:95%">
+				<ul aura:id="loggedInUserDiv" class="slds-lookup__list slds-hide" role="presentation" style="max-height:245px;">
+                    <aura:iteration items="{!v.loggedInUserDetails}" var="match">
+                        <li class="slds-lookup__item">
+                            <a id="{!globalId + '_id_' + match.SObjectId}" role="option" onclick="{!c.select}" data-label="{!match.SObjectLabel}">
+                                <lightning:icon iconName="standard:account" size="xx-small"/>&nbsp;&nbsp;{!match.SObjectLabel}
+                                <span class="slds-lookup__result-meta slds-text-body--small" style="margin-left: 2.75em;">{!match.subHeaderText}</span>
+                            </a>
+                            
+                        </li>
+                    </aura:iteration>
+                </ul>
+                <div class="slds-lookup__item">
+                    <button class="slds-button">
+                        &quot;{!v.searchString}&quot; in {!v.pluralLabel}
+                    </button>
+                </div>
+                <ul aura:id="lookuplist-items" class="slds-lookup__list" role="presentation" style="max-height:245px;">
+                    <aura:iteration items="{!v.matches}" var="match">
+                        <li class="slds-lookup__item">
+                            <a id="{!globalId + '_id_' + match.SObjectId}" role="option" onclick="{!c.select}" data-label="{!match.SObjectLabel}">
+                                <lightning:icon iconName="standard:account" size="xx-small"/>&nbsp;&nbsp;{!match.SObjectLabel}
+                                <span class="slds-lookup__result-meta slds-text-body--small" style="margin-left: 2.75em;">{!match.subHeaderText}</span>
+                            </a>
+                            
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </div>
+            </aura:set>    
+    	</aura:renderIf>
+    </div>
+</aura:component>

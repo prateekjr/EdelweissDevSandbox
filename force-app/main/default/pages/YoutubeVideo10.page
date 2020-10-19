@@ -1,0 +1,8 @@
+<apex:page controller="VideoPlayController" docType="html-5.0" sidebar="false" standardStylesheets="false" showHeader="false" lightningStylesheets="true">
+    <head>
+        <apex:slds /> 
+    </head> 
+    <body> 
+        <iframe width="370" height="250" src="{!VideoURL10}" frameborder="0" allowfullscreen="allowfullscreen" ></iframe>
+    </body>
+</apex:page>

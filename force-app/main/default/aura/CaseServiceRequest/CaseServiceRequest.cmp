@@ -1,0 +1,142 @@
+<aura:component controller="CaseServiceRequestController" implements="flexipage:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" >
+    <aura:attribute name="recordTypeId" type="string" />
+    <aura:attribute name="RecordTypeMap" type="object" />
+    <aura:attribute name="products" type="String[]" />
+    <aura:attribute name="requestType" type="String[]" />
+    <aura:attribute name="subType" type="String[]" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="IsServiceRequest" type="boolean" default="false"/>
+    <aura:attribute name="showProduct" type="boolean" default="false"/>
+    <aura:attribute name="showRequestType" type="boolean" default="false"/>
+    <aura:attribute name="showSubType" type="boolean" default="false"/>
+    <aura:attribute name="selectedNatureOfRequest" type="String" default=""/>
+    <aura:attribute name="selectedProduct" type="String" default=""/>
+    <aura:attribute name="selectedRequestType" type="String" default=""/>
+    <aura:attribute name="selectedSubType" type="String" default=""/>
+     <aura:attribute name="hideSubType" type="boolean" default="true"/>
+    
+    <aura:renderIf isTrue="{!v.IsServiceRequest}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                X
+                    <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Nature</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <lightning:select name="NatureOfRequest" label="Nature of Request" value="{!v.selectedNatureOfRequest}" onchange="{!c.doSomething}">
+                            <option value="">-- None --</option>
+                            <option value="Request">Request</option>
+                            <option value="Query">Query</option>
+                            <option value="Complaint">Complaint</option>
+                        </lightning:select>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.showProduct}">Next</button>
+                    </footer>
+                </div>
+            </section>
+              <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    <aura:renderIf isTrue="{!v.showProduct}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                                 <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                X
+                    <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Product</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <lightning:select name="Product" label="Product"  value="{!v.selectedProduct}" onchange="{!c.getRequestType}">
+                            <!-- <option value="">None</option>
+        <option value="AIF">AIF</option>
+        <option value="Bank POA">Bank POA</option>
+        <option value="Client Engagement">Client Engagement</option> -->
+                            <option value="">-- None --</option>
+                            <aura:iteration items="{!v.products}" var="product">
+                                <option value="{!product}">{!product}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand" onclick="{!c.showNature}">Back</button>
+                        <button class="slds-button slds-button_neutral" onclick="{!c.showRequestType}">Next</button>
+                    </footer>
+                </div>
+            </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    
+    
+    
+    <aura:renderIf isTrue="{!v.showRequestType}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                X
+                    <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Request Type</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <lightning:select name="RequestType" label="Request Type"  value="{!v.selectedRequestType}" onchange="{!c.getSubType}">
+                            <option value="">-- None --</option>
+                            <aura:iteration items="{!v.requestType}" var="requestTypeVal">
+                                <option value="{!requestTypeVal}">{!requestTypeVal}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand" onclick="{!c.showProduct}">Back</button>
+                         <aura:renderIf isTrue="{!v.hideSubType}">   
+                             <button class="slds-button slds-button_neutral" onclick="{!c.showSubType}">Next</button>
+                        </aura:renderIf>
+                         <aura:renderIf isTrue="{!!v.hideSubType}">   
+                             <button class="slds-button slds-button_neutral" onclick="{!c.newCase}">Next</button>
+                        </aura:renderIf>
+                    </footer>
+                </div>
+            </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    <aura:renderIf isTrue="{!v.showSubType}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                   <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                X
+                    <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Sub Type</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <lightning:select name="SubType" label="Sub Type"  value="{!v.selectedSubType}">
+                            <option value="">-- None --</option>
+                            <aura:iteration items="{!v.subType}" var="subTypeVal">
+                                <option value="{!subTypeVal}">{!subTypeVal}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand" onclick="{!c.showRequestType}">Back</button>
+                        <button class="slds-button slds-button_neutral" onclick="{!c.newCase}">Next</button>
+                        
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+</aura:component>

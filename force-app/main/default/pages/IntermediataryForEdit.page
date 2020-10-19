@@ -1,0 +1,20 @@
+<apex:page standardController="Investment_Policy_Statement_IPS__c" extensions="IntermediateController" >
+
+<script>
+
+var RecordTypeName='{!RecordTypeName }';
+var IpsId='{!IpsId}';
+//alert(' stringvalue '+RecordTypeName+' integervalue '+IpsId);
+if(RecordTypeName=='Individual')
+{
+    window.location.href='/apex/IPS_Individual?id='+IpsId;
+}
+else
+{
+    window.location.href='/apex/IPSCorporate?id='+IpsId;
+}
+
+</script>
+<apex:pageBlock >Redirecting....</apex:pageBlock>
+ 
+</apex:page>

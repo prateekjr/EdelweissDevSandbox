@@ -1,0 +1,14 @@
+<apex:page >
+    <script>
+        var strWindowFeatures = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
+        
+        //URL Goes Here
+        var URL = "https://prism.edelweiss.in/Prism";
+        
+        //Call Function
+        var win = window.open(URL, '_blank');  
+        
+        
+        
+    </script>
+</apex:page>

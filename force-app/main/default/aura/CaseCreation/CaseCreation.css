@@ -1,0 +1,28 @@
+.THIS.slds-form-element__label {
+    display: inline-block;
+    color: rgb(112, 110, 107);
+    font-size: .75rem;
+    line-height: 1.5;
+    margin-right: .75rem;
+    margin-bottom: .125rem;
+    margin-left: 50px;
+}
+.THIS .errorRow {
+  -webkit-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Safari 4+ */
+  -moz-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Fx 5+ */
+  -o-animation: NAME-YOUR-ANIMATION 1s infinite;  /* Opera 12+ */
+  animation: NAME-YOUR-ANIMATION 1s infinite;  /* IE 10+, Fx 29+ */
+}
+
+.THIS.normal{
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    border: 0px solid rgb(221, 219, 218);
+    -webkit-transition: border .15s linear;
+    transition: border .15s linear;
+    border-color: rgb(221, 219, 218);
+    background-color: rgb(175, 197, 222);
+    margin-top:200px;
+}

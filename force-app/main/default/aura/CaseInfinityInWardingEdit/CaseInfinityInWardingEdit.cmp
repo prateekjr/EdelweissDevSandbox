@@ -1,0 +1,108 @@
+<aura:component controller="CaseInfinityInWardingEditController" implements="flexipage:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId,lightning:actionOverride" access="global" >
+    
+     <ltng:require styles="{!$Resource.ModelWidthCSS}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="selectedClientLeadRecord" type="sObject" default="{}"/>
+    <!-- <aura:handler name="change" value="{!v.selectedClientLeadRecord}" action="{!c.setValuesToFieldName}"/> -->
+    <aura:attribute name="case" type="Case" 
+                    default="{ 'sobjectType': 'Case' }"/>	
+    
+     <aura:attribute name="listOfPicklistValues" type="list" default="[]" description="to store Picklist values"/>
+    
+    <aura:attribute name="selectedStatus" type="string"/>
+    <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.handleComponentEvent}"/>
+    <aura:html tag="style">
+        .cuf-content {
+        padding: 0 0rem !important;
+        }
+        .slds-p-around--medium {
+        padding: 0rem !important;
+        }       
+        .slds-modal__content{
+        overflow-y:hidden !important;
+        height:unset !important;
+        max-height:unset !important;
+        }
+    </aura:html>
+    
+    
+    <header class="slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Case : Wealth Inwarding</h2>
+    </header>
+    <div class="slds-modal__content slds-p-around_medium slds-align_absolute-center slds-size_1-of-1 slds-is-relative">
+
+            <div class="slds-form slds-form_compound" style="text-align: left;">
+                <div class="slds-form-element__group">
+                    
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2" id="modal-content-id-1" >
+                           <!-- <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>  -->
+                           <!-- <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client/Lead</label> -->
+                       
+                               <!-- <force:inputField required="true"  value="{!v.case.Client_Lead__c}" change="{!c.handleClientLeadChange}" html-disabled="true"/> -->
+                                <lightning:input  value="{!v.case.Client_Lead__c}" label="Client/Lead" disabled="true"/>
+                     
+                        </div> 
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2" id="modal-content-id-1" >
+                            <lightning:input  value="{!v.case.ClientLead_Name_Display__c}" label="Name" disabled="true"/>
+                        </div> 
+                    </div>
+                    
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2"  id="modal-content-id-1" >
+                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >PAN</label>
+                            <div style="margin-top: -14px;">
+                                <lightning:input   value="{!v.case.PAN__c}" />
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2"  id="modal-content-id-1" >
+                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Email</label>
+                            <div style="margin-top: -14px;">
+                                <lightning:input   value="{!v.case.Email__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-form-element__row">
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2"  id="modal-content-id-1" >
+                         <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Status of Corpus</label> 
+                            <div style="margin-top: -14px;">
+                               <force:inputField   value="{!v.case.Status_of_Corpus__c}"/>
+                                
+                              <!--  <force:inputField   value="{!v.case.Status}"/> -->
+                            <!--    <lightning:select name="controllerFld"
+                                                  value="{!v.selectedStatus}"
+                                                  label="Status Of Corpus"
+                                                  onchange="{!c.handleStatusChange}" required="true" >
+                                    <aura:iteration items="{!v.listOfPicklistValues}" var="val">
+                                        <option value="{!val}">{!val}</option>
+                                    </aura:iteration>
+                                </lightning:select> 
+                                <div style="margin-top:7px;">
+                                <ui:inputSelect aura:id="folio" label="" value="{!v.selectedStatus}" change="{!c.handleStatusChange}" >
+                                    <aura:iteration items="{!v.listOfPicklistValues}" var="folio">
+                                        <ui:inputSelectOption text="{!folio}" label="{!folio}" value="{!v.selectedStatus == folio}"/>
+                                    </aura:iteration>
+                                </ui:inputSelect>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-wrap slds-col slds-p-around_small slds-size_1-of-2"  id="modal-content-id-1" >
+                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Expected Corpus Amount(INR)</label>
+                            <div style="margin-top: -14px;">
+                                <lightning:input   value="{!v.case.Expected_Corpus_Amount__c}"/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+
+    </div>
+    <div class="modal-footer slds-modal__footer slds-size_1-of-1">
+        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+        <button class="slds-button slds-button_brand" onclick="{!c.saveRec}">Proceed</button>
+    </div>
+</aura:component>

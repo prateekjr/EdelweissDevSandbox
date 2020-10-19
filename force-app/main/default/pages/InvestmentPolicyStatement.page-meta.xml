@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>39.0</apiVersion>
+    <availableInTouch>false</availableInTouch>
+    <confirmationTokenRequired>false</confirmationTokenRequired>
+    <description>This VF page generates the PDF of IPS for a record of Leads&amp;Families&amp;Clients when Print IPS quick action is triggered.</description>
+    <label>InvestmentPolicyStatement</label>
+</ApexPage>

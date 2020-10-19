@@ -1,0 +1,12 @@
+<aura:component controller="CancelTravelRequest" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+ 	 <aura:attribute name="isSuccess" type="boolean"/>
+     <aura:attribute name="ErrorMsg" type="String" default=''/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />	
+
+    <aura:renderIf isTrue="{!v.isSuccess}"> 
+        <Div Style="Color:Green;font-size: 20px;margin-top: 80px;margin-left: 135px;">Your Travel Request has been Cancelled Successfully !!</Div>
+    </aura:renderIf>
+    <aura:renderIf isTrue="{!!v.isSuccess}"> 
+        <Div Style="Color:Red;font-size: 15px;margin-top: 80px;">{!v.ErrorMsg}</Div>
+    </aura:renderIf>
+</aura:component>

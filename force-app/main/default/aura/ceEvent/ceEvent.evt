@@ -1,0 +1,5 @@
+<!--c:ceEvent-->
+<aura:event type="COMPONENT">
+    <aura:attribute name="caseobj" type="SObject"/>
+    <aura:attribute name="accobj" type="SObject"/>
+</aura:event>

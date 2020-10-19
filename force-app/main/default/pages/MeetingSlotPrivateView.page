@@ -1,0 +1,13 @@
+<apex:page standardController="Meeting_Slot__c">
+<apex:pageBlock ><b>Redirecting......</b></apex:pageBlock>
+
+<script>
+if('{!Meeting_Slot__c.Meeting_Status__c}' == "Booked" && '{!$User.Id}' != '{!Meeting_Slot__c.Record_Owner__c}' && '{!$Profile.Name}' != "Product Manager"){
+    alert('You are not an authorized user to view this record.');
+    window.location.href='/{!Meeting_Slot__c.Meeting_Number__c}?nooverride=true}';
+}else{
+    window.location.href='/{!Meeting_Slot__c.id}/e?nooverride=true&retURL=/{!Meeting_Slot__c.Meeting_Number__c}';
+}
+</script>
+
+</apex:page>

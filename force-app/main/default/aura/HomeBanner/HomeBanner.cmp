@@ -1,0 +1,8 @@
+<aura:component controller="HomeBannerController" implements="flexipage:availableForAllPageTypes,force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickActionWithoutHeader" access="global" >
+	
+<aura:attribute name="customAttachmentId" type="String" default="SomeTestID"/>
+<aura:attribute name="attachmentUrl" type="String" default="https://edelweisspwm--edeldev.cs57.my.salesforce.com/_swf/196007/sfc/flex/DocViewer.swf"/>
+<aura:attribute name="attId" type="String"/>
+ <aura:attribute name="fileString" type="String"/>
+<aura:handler name="init" value="{!this}" action="{!c.openSingleFile}" /> 
+</aura:component>

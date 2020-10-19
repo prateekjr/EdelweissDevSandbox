@@ -1,0 +1,87 @@
+.THIS .slds-input {
+       width :95% !important;
+}
+.THIS .rowPadding{
+    padding-right:70px;
+}
+.THIS .MinHtCls{
+	min-height: 25px!important;
+}
+.THIS .slds-icon{
+	fill: rgb(224, 229, 238) !important;
+	font-size: 1rem !important;
+    height: 1rem !important;
+    width: 1rem !important;
+}
+
+.THIS .slds-icon:focus, .THIS .slds-icon:hover{
+    fill: rgb(0, 112, 210) !important;
+}
+.THIS .InlineBlockDiv{
+    display:inline-block !important;
+}
+
+.THIS.DummyClass{
+    visibility: hidden !important;
+}
+.THIS .MultiSelCls{
+    height: 75px !important; 
+}
+.THIS .StatusImgClass{
+    height: 17px !important;
+    width: 110px !important;
+}
+.THIS .StatusColorCodeCls{
+    display:inline-table !important;
+}
+.THIS .elementDivCls{
+    display:inline-block !important;
+    width: 40% !important;
+}
+.THIS .infoCls{
+    fill: rgb(159, 170, 181) !important;
+    width: 0.85rem !important;
+    height: 0.85rem !important;
+    margin-left: 10px !important;
+    margin-top: -10px !important;
+}
+.THIS .helpBtn{
+    display: inline-block !important;
+    position: relative;
+    text-align: left !important;
+}
+
+.THIS .helpDiv{   
+    display: inline-block;
+}
+
+.THIS .helpBtn #help{
+    display: none !important;
+    opacity: 0; 
+    position:absolute;
+    background: rgb(22, 50, 92) !important;
+    left: -25px;
+    margin-bottom: 15px;
+  	bottom : 100%;
+    min-width: 230px !important; 
+}
+.THIS .helpBtn:hover #help{  
+   opacity: 1 !important;
+   display:inline-block !important; 
+}
+.THIS .helpBtn{
+	border: none !important;
+    background: none !important;
+    height: 0px !important;
+    padding: 0px !important;
+}
+.THIS.fieldset {
+  padding: 1em;
+  font:80%/1 sans-serif;
+  }
+.THIS.label {
+  }
+
+.THIS .slds-nubbin--bottom-left:before,.THIS .slds-nubbin--bottom-left:after{
+   left: 2.5rem !important; 
+}

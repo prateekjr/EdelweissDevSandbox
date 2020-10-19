@@ -1,0 +1,135 @@
+<aura:component controller="FundTranferController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,flexipage:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="CaseRec" type="Case" 
+                    default="{ 'sobjectType': 'Case' }"/>
+    <aura:attribute name="ShowQuestionnaire" type="boolean" default="false"/>
+    <aura:attribute name="isValid" type="boolean" default="true"/>
+    <aura:attribute name="Others" type="boolean" default="false"/>
+    <aura:attribute name="Is_portfolio_In_Sync__c" type="boolean" default="false"/>
+    <aura:attribute name="scrutiny__c" type="boolean" default="false"/>
+    <aura:attribute name="Is_Client_Satisfied_On_Portfolio_Review__c" type="boolean" default="false"/>
+    <aura:attribute name="errorField" type="String" default=''/>
+    <aura:attribute name="How_Often_Does_Client_Monitor_Portfolio__c" type="String" default=''/>
+    <aura:attribute name="Client_Monitor_Portfolio__c" type="boolean" default="false"/>
+    <aura:attribute name="isValidAnswer" type="boolean" default="false"/>
+    <aura:attribute name="showTransferTo" type="boolean" default="false"/>
+    <aura:attribute name="showBenificiaryDetails" type="boolean" default="false"/>
+    <aura:attribute name="showClientAccount" type="boolean" default="true"/>
+    <aura:attribute name="showRemitterAccounts" type="boolean" default="false"/>
+    <aura:attribute name="listOfBeneficiaryDetails" type="String[]" />
+    <aura:attribute name="listOfRemitterAccounts" type="String[]" />
+    <aura:attribute name="myMap" type="Map" />
+     <aura:attribute name="FundTransferId" type="String" default=""/>
+    <aura:attribute name="Remitter_Account_No__c" type="String" default=""/>
+      <aura:attribute name="remitterWithoutPadding" type="String" default=""/>
+     <aura:attribute name="Backoffice_Code_Equity__c" type="String" default=""/>
+    <aura:attribute name="Client__c" type="String" default=""/>
+     <aura:attribute name="GWM_Client_Account_Id__c" type="String" default=""/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+     <aura:renderIf isTrue="{!v.showClientAccount}"> 
+    <div class="demo-only" style="height: 640px;width:30%">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container" >
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                        X
+                        <span class="slds-assistive-text">Close</span></button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Client Account</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Account</label>
+                    <force:inputField required="true"  value="{!v.CaseRec.Client_Account__c}"/>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.showTransferTo}">Next</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+    </aura:renderIf> 
+    
+    <aura:renderIf isTrue="{!v.showTransferTo}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Transfer To Details</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transfer To</label>
+                        <force:inputField required="true"  value="{!v.CaseRec.Transfer_To__c}"/>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.backShowClientAccount}">Back</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.showRemitterAccounts}">Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    <aura:renderIf isTrue="{!v.showRemitterAccounts}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Transfer To Details</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                         <lightning:select aura:id="remitterId" label="Remitter Account Number">
+                            <aura:iteration items="{!v.listOfRemitterAccounts}" var="listRA">
+                                <option  value="{!listRA}">{!listRA}</option	>    
+                            </aura:iteration>         
+                        </lightning:select>
+                        
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.backShowTransferTo}">Back</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.showBenificiaryDetails}">Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    <aura:renderIf isTrue="{!v.showBenificiaryDetails}"> 
+        <div class="demo-only" style="height: 640px;width:30%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Transfer To Details</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" >
+                        <lightning:select aura:id="BeneficiaryDetails" label="Account Number">
+                            <aura:iteration items="{!v.listOfBeneficiaryDetails}" var="listBD">
+                                <option  value="{!listBD}">{!listBD}</option	>    
+                            </aura:iteration>         
+                             <option  value="New">New</option> 
+                        </lightning:select>
+                        
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.backShowRemitterAccounts}">Back</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.createCase}">Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+</aura:component>

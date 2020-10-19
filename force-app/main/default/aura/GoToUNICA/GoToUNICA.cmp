@@ -1,0 +1,7 @@
+<aura:component controller="gotoUNICA" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="message" type="string" default="Processing..."/>
+    <aura:attribute name="objcallBack" type="gotoUNICA.lightingCallBack" default="{'sobjectType':'gotoUNICA.lightingCallBack'}" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    {!v.message}
+</aura:component>

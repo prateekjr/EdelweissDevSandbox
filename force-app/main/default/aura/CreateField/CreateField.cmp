@@ -1,0 +1,110 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <aura:attribute name="label" type="String" default=""/>
+    <aura:attribute name="inputType" type="String" default=""/>
+    <aura:attribute name="fieldName" type="String" default=""/>
+    <aura:attribute name="referenceObjName" type="String" default=""/>
+    <aura:attribute name="isRequired" type="Boolean" default=""/>
+    <aura:attribute name="dbRequired" type="Boolean" default=""/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="true"/>
+    <aura:attribute name="isEnabledTradingFeilds" type="Boolean" default="false"/>
+    <aura:attribute name="isRTF" type="Boolean" default="false"/>
+    <aura:attribute name="maxLength" type="Integer"/>
+    <aura:attribute name="record" type="Sobject" />
+    <aura:attribute name="BooleanValue" type="Boolean" />
+    <aura:attribute name="CompSource" type="String" />
+    <aura:attribute name="isObjUpdateable" type="Boolean" default="" />
+    <aura:attribute name="isFormula" type="Boolean" default="false"/>
+	<aura:attribute name="DecimalDigits" type="Integer"/>
+    <aura:attribute name="isEditable" type="Boolean" default="false"/>
+    <aura:attribute name="ReadOnlyAtPageLayout" type="Boolean" default="false"/>
+    <aura:attribute name="pickListValues" type="String[]" default=""/>
+    <aura:attribute name="value" type="Object"/>
+    <aura:attribute name="accRecordType" type="String"/>
+	<aura:attribute name="isIE" type="Boolean"/>
+	<aura:attribute name="parentAccountId" type="String" default="" />
+    <aura:attribute name="helpText" type="String" default="" />
+    <aura:attribute name="lookupFilter" type="String" default="NewFamily" />
+    <aura:attribute name="FamilyType" type="Object" default="{}" />
+    <aura:handler event="c:ClearLookupId" action="{!c.handleAccountIdClear}"/>
+    <aura:registerEvent name="inlineEditEvent" type="c:InlineEditingEvent"/>
+    <aura:handler event="c:UpdateLookupId" action="{!c.handleAccountIdUpdate}"/>
+    <aura:handler name="init" action="{!c.createCmp}" value="{!this}"/>
+    
+    <aura:handler name="change" value="{!v.value}" action="{!c.itemsChange}"/>
+    <aura:registerEvent name="TradingDefault" type="c:TradingDefault"/>
+    
+  
+    <div class="slds-form-element" aura:id="CreateFieldDiv">
+      <label class="slds-form-element__label labelMargin" for="inputSample2">
+            <aura:if isTrue="{!v.isRequired || v.dbRequired}">
+                <span style="color:red">*</span>
+            </aura:if>
+           {!v.label}
+			<aura:if isTrue="{!v.helpText != null}"> 
+				<div class="helpDiv" id="helpDivId">
+					<button class="helpBtn" aria-describedby="help">
+					<aura:if isTrue="{!!v.isIE}">
+						<lightning:icon class="infoCls" iconName="utility:info"/>
+						<aura:set attribute="else">
+							<img class="infoCls" src="/assets/icons/utility/info_60.png"/>
+						</aura:set>	
+					</aura:if>
+						<span class="slds-assistive-text">Help</span>
+						<div class="slds-popover slds-popover--tooltip slds-nubbin--bottom-left" role="tooltip" id="help" >
+                        <div class="slds-popover__body">{!v.helpText}</div>
+                        </div>  
+					</button>
+				</div>
+			</aura:if>
+        </label>
+        <div class="slds-form-element__control" aura:id="InputCreateFieldDiv">
+			<aura:if isTrue="{!v.inputType == 'BOOLEAN'}"> 
+                <label class="slds-checkbox">
+                    <aura:if isTrue="{!v.isReadOnly}">
+                        <aura:if isTrue="{!v.isObjUpdateable}">
+                            <aura:if isTrue="{!!v.isEditable}">
+	                            <div aura:id="BooleanInlineDiv" style="cursor:pointer !important;" onclick="{!c.CallInlineEdit}">
+                                    <aura:if isTrue="{!!v.isIE}">
+									<lightning:icon class="slds-input__icon slds-icon-text-default InlineEditClass" iconName="utility:edit"/>
+										<aura:set attribute="else">
+                                            <img class="slds-input__icon slds-icon-text-default InlineEditClass" src="/assets/icons/utility/edit_60.png"/>
+										</aura:set>	
+									</aura:if>
+	                            </div>    
+                        	</aura:if>    
+                        </aura:if>    
+						<ui:inputCheckBox value="{!v.BooleanValue}" disabled="true"></ui:inputCheckBox>
+                    	<aura:set attribute="else"> 
+                            <aura:if isTrue="{!!v.isEditable}">
+                            	<ui:inputCheckbox class="slds-input"  value="{!v.BooleanValue}" name="{!v.fieldName}" change="{!c.handleCheckBxValueChange}"/>
+                                <aura:set attribute="else">
+                                    <ui:inputCheckBox class="slds-input" value="{!v.BooleanValue}" disabled="true"></ui:inputCheckBox>
+                                </aura:set>
+                            </aura:if>   
+                        </aura:set>
+                    </aura:if>
+                    <span class="slds-checkbox--faux"></span>
+                </label> 
+            </aura:if> 
+            <aura:if isTrue="{!v.inputType != 'BOOLEAN'}">
+                <aura:if isTrue="{!v.isReadOnly}">
+                    <aura:if isTrue="{!v.isObjUpdateable}">
+                        <aura:if isTrue="{!!v.isEditable}">
+                            <aura:if isTrue="{!!v.ReadOnlyAtPageLayout}">
+                            	<div aura:id="OtherInlineDiv" style="cursor:pointer !important;" onclick="{!c.CallInlineEdit}">
+                                    <aura:if isTrue="{!!v.isIE}">
+                                        <lightning:icon class="slds-input__icon slds-icon-text-default InlineEditClass" iconName="utility:edit"/>
+										<aura:set attribute="else">
+											<img class="slds-input__icon slds-icon-text-default InlineEditClass" src="/assets/icons/utility/edit_60.png" />
+										</aura:set>	
+									</aura:if>
+								</div>
+                        </aura:if>
+                    </aura:if>      
+                </aura:if>
+                </aura:if>
+                <div aura:id="elementDiv"/>
+			</aura:if>	
+        </div>
+    </div>
+</aura:component>

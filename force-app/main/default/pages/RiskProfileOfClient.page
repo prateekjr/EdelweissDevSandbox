@@ -1,0 +1,204 @@
+<apex:page standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false" standardController="Investment_Policy_Statement_IPS__c" extensions="RiskProfileOfClient" renderAs="pdf">
+ 
+    <apex:stylesheet value="{! $Resource.RiskProfileOfClient}" />
+
+    <html>
+        
+        <head>
+            <title> Risk Profile of Client </title>
+            <style type="text/css" media="print">
+            
+                @page{
+                    size: portrait;
+                    margin: 96px;
+                    @top-center {
+                        content: element(header);
+                    } 
+                    @bottom-center {
+                        content: element(footer);
+                    }
+                }
+                
+                div.header{
+                    padding: 5px 0px;
+                    position: running(header);
+                    margin: 0px -300px;
+                }
+                
+                div.footer{
+                    margin: 0px -300px;
+                    position: running(footer);
+                }
+                
+            </style>
+        </head>
+        
+        <body>
+            <div class="header">
+            
+                <div class="leftHalf">
+                    <p class="textHeader"> <i> Risk Profiler </i> </p>
+                </div>
+    
+                <div class="rightHalf">
+                    <span class="pageNumber"> </span>
+                </div>
+    
+                <div class="bottomDiv"></div>
+           
+            </div>
+
+            <div class="footer"> <img src="{! $Resource.IPSFooterFirstPage}" width="100%" /> </div>
+
+            <div class="content">
+            
+                <div class="innerdiv1"></div>
+
+                <div class="heading1">
+                    <p class="heading"> Risk Profile of Client </p>
+                </div>
+    
+                <div class="innerdiv2"></div>
+    
+                <div class="heading2">
+                    <p class="heading" style="line-height:40%; margin-top:30px;"> Edelweiss Global Wealth </p>
+                    <p class="heading" style="line-height:40%;"> Management Limited </p>
+                </div>
+    
+                <div class="innerdiv3"></div>
+    
+                <div class="heading3">
+                    <p class="heading"> 
+                        {!Investment_Policy_Statement_IPS__c.Client_Name__r.Name}
+                    </p>
+                </div>
+               
+               <div class="innerdiv4"></div>
+               
+               <div class="pageBreak"></div>
+
+                <h1> I.&nbsp; General Information </h1>
+    
+                <table class="page1">
+                    <tr style="background-color: #eaeedd;">
+                        <th class="page1">Name of Client(s):</th>
+                        <td class="page1">{!Investment_Policy_Statement_IPS__c.Client_Name__r.Name}</td>
+                    </tr>
+    
+					<!--
+                    <tr style="background-color: #f2f2f2;">
+                        <apex:outputText rendered="{!isIndividual}"><th class="page1">Date of Birth: </th></apex:outputText>
+                        <apex:outputText rendered="{! NOT(isIndividual)}"><th class="page1">Date of Incorporation: </th></apex:outputText>
+                        <td class="page1">{!birthDate}</td>
+                    </tr>
+					-->
+    
+                    <tr style="background-color: #eaeedd;">
+                        <apex:outputText rendered="{! Investment_Policy_Statement_IPS__c.ResidentialStatus__c != NULL && isIndividual}">
+                            <th class="page1">Residential Status:</th>
+                        <td class="page1">{!Investment_Policy_Statement_IPS__c.ResidentialStatus__c}</td>
+                        </apex:outputText>
+                        <apex:outputText rendered="{! Investment_Policy_Statement_IPS__c.entity__c != NULL && NOT(isIndividual)}">
+                            <th class="page1">Type of Entity:</th>
+                            <td class="page1">{!Investment_Policy_Statement_IPS__c.entity__c}</td>
+                        </apex:outputText>                    
+                    </tr>
+    
+                    <tr style="background-color: #f2f2f2;">
+                        <apex:outputText rendered="{! Investment_Policy_Statement_IPS__c.TaxStatusforInvestments__c != NULL &&  NOT(isIndividual)}">
+                            <th class="page1">Tax Status for investments:</th>
+                            <td class="page1"> {!Investment_Policy_Statement_IPS__c.TaxStatusforInvestments__c} </td>
+                        </apex:outputText>
+                    </tr>
+                    
+					<apex:outputText rendered="{! Investment_Policy_Statement_IPS__c.Current_Investment_Advisors__c != NULL && isIndividual}">
+                    <tr style="background-color: #eaeedd;">
+                        <th class="page1">Current Investment Advisor(s):</th>
+                        <td class="page1">{!Investment_Policy_Statement_IPS__c.Current_Investment_Advisors__c}</td>
+                    </tr>
+					</apex:outputText>
+                </table>
+        
+                <div class="pageBreak"></div>
+
+                <h1> II. &nbsp; Risk Profile of Client </h1>
+
+                <div class="quesAns">
+                    <apex:outputText rendered="{! NOT(isIndividual)}">
+                        <p class="question"> 1. &nbsp; Please indicate experience in Equity Markets. </p>
+                        <p class="answer"> {!ips.Equity_Markets__c} </p>
+                    </apex:outputText>
+                    <apex:outputText rendered="{! isIndividual}">
+                        <p class="question"> 1. &nbsp; Please Indicate Your Age Below. </p>
+                        <p class="answer"> {!ips.Age__c} </p>
+                    </apex:outputText>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 2. &nbsp; What best describes your investment philosophy? </p>
+                    <p class="answer"> {!ips.Investment_philosophy__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 3. &nbsp; What best describes your investment goal? </p>
+                    <p class="answer">  {!ips.Investment_goal__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 4. &nbsp; What is the horizon of your Financial Goals? </p>
+                    <p class="answer"> {!ips.Financial_Goals__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 5. &nbsp; Please indicate the worst and best one year return that suits you. </p>
+                    <p class="answer"> {!ips.worst_and_best_one_year_return__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 6. &nbsp; For a long term investment the amount of fluctuations that you tolerate in the short-term is </p>
+                    <p class="answer"> {!ips.Amount_of_fluctuations__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 7. &nbsp; How would you react if a well diversified portfolio fell by 20%, in line with the markets? </p>
+                    <p class="answer"> {!ips.Diversified_portfolio__c} </p>
+                </div>
+
+                <div class="bigQuesAns">
+                    <p class="bigQuestion"> 8. &nbsp; Please indicate your level of interest in leverage/borrowing products like Loan against Shares/Mutual Funds, IPO Funding, F&amp;O, Margin Funding. </p>
+                    <p class="answer"> {!ips.Interest_in_leverage_borrowing_products__c}</p>
+                </div>
+
+                <div class="pageBreak"></div>
+                
+                <div class="bigQuesAns">
+                    <p class="bigQuestion"> 9. &nbsp; Please indicate your level of interest in Alternative Investments like Real Estate Funds, PE Funds, Structured Products, Bonds, Gold etc. </p>
+                    <p class="answer"> {!ips.Alternative_Investments__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <p class="question"> 10. &nbsp; What does your current investment portfolio comprise of? </p>
+                    <p class="answer">  {!ips.Investment_portfolio__c} </p>
+                </div>
+
+                <div class="quesAns">
+                    <apex:outputText rendered="{! NOT(isIndividual)}">
+                        <p class="question"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Investment Style </p>
+                    <p class="answer"> {!Investment_Policy_Statement_IPS__c.Investment_Style__c} </p>
+                    </apex:outputText>
+                </div>
+                
+                <div class="signature"> 
+                    <p> Signature </p>
+                    <p> {!Investment_Policy_Statement_IPS__c.Client_Name__r.Name} </p>
+                </div>
+                
+                <div class="date"> Date: {! lastModifiedDate} </div>
+
+            </div>
+
+        </body>
+    
+    </html>
+
+</apex:page>

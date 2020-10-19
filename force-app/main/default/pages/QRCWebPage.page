@@ -1,0 +1,310 @@
+<apex:page showHeader="false" controller="SurveyController" cache="false">
+    
+    <apex:stylesheet value="{!URLFOR($Resource.QRCContent,'Content/bootstrap.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.QRCContent,'Content/bootstrap-responsive.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.QRCContent,'Content/style-new-client.css')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.QRCContent,'Scripts/jquery-1.7.1.js')}"/>
+    
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header"> <a class="navbar-brand" href="#"> <img alt="Brand" src="{!URLFOR($Resource.QRCContent, 'img/edelweiss-pwm-white-transparent-logo@300x-30.png')}"/> </a> </div>
+            </div>
+        </nav>
+        <apex:outputpanel id="surveyFilled" rendered="{!surveyFilled}" >
+            <div id="SurveyFilled" style="margin-top: 129px;color:RED;text-align:center;;font-size: 20px;">
+                Your feedback has already been submitted. <br/>Incase of any further assistance, kindly write back to us at WealthAssist@edelweissfin.com
+            </div>
+        </apex:outputpanel>
+        <apex:outputpanel id="surveySection" rendered="{!!surveyFilled}">
+            <apex:outputpanel id="temp" rendered="{!!successflag}" >
+                <span id="idSpan5">
+                    <div class="survey container">
+                        
+                        <form id="myForm">
+                            <div class="row" id="myForm">
+                                <div class="col-md-12 order-md-1">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <label>Q1. Based on your last interaction, has your query been resolved?</label>
+                                                <span id="display" style = "display:none;color:red;font-weight:bold">Please select Yes or No </span>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="btn-group btn-toggle btn-yes-no">
+                                                    <button type="button" id="yes" class="btn btn-default btn-yes" data-id="24" value="yes" onclick="ratingFunction(this)">YES</button>
+                                                    <button type="button" class="btn btn-default btn-no" data-id="24" id ="no" value="no" onclick="ratingFunction(this)">NO</button>
+                                                </div>
+                                                <textarea class="form-control" required = "required"   rows="5" id="comment1" placeholder="Comments" data-id="23" style="display: none;margin-top: 15px;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span id="idSpan" style = "display:none">
+                                <div class="row">
+                                    <div class="col-md-12 order-md-1">
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <label>Please let us know the reason</label>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <textarea required = "required" class="form-control" rows="5" id="rating" placeholder="Comments" data-id="23" ></textarea>
+                                                    <span id="ratingSpan" style = "display:none;color:red;font-weight:bold">Please fill required details here</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </span>
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <label>Q2. How satisfied are you with the overall experience while interacting with your Service Manager?</label>
+                                                <span id="displaySatisfaction" style = "display:none;color:red;font-weight:bold">Please select Good, Average or Bad</span>
+                                                
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="btn-group btn-toggle emoji-group">
+                                                    <button type="button" class="btn btn-default btn-excellent" id="Good" data-id="25" value="good" onclick="reasonForRating(this)"> Good</button>
+                                                    <button type="button" class="btn btn-default btn-good" id="Average" data-id="25" value="average" onclick="reasonForRating(this)"> Average</button>
+                                                    <button type="button" class="btn btn-default btn-improvement" value="improve" data-id="25" onclick="reasonForRating(this)"> Improve</button>
+                                                </div>
+                                                <textarea class="form-control" rows="5" id="comment2" placeholder="Comments" data-id="23" style="display: none;margin-top: 15px;"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span id="idSpan1" style = "display:none">
+                                <div class="row">
+                                    <div class="col-md-12 order-md-1">
+                                        <div class="panel-group">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <label>Please let us know the reason</label>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <textarea required = "required"  class="form-control" rows="5" id="Overall" placeholder="Comments" data-id="23"></textarea>
+                                                    <span id="OverallSpan" style = "display:none;color:red;font-weight:bold">Please fill required details here</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </span>
+                            <div class="row">
+                                <div class="col-md-12 order-md-1">
+                                    <div class="panel-group">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <label>Please feel free to provide any further feedback or suggestions you might have</label>
+                                            </div>
+                                            <div class="panel-body">
+                                                <textarea  class="form-control" rows="5" id="feedback" placeholder="Comments" data-id="23"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 order-md-1 btn-submit"> 
+                                    <apex:form >
+                                        <apex:commandButton id="editButton" value="Submit"  style="width: 150px;background: #034ea2;border: 0;	color: #fff;padding: 10px 0;border-radius: 7px;font-weight: bold;font-size: 15px;" onclick="callApex(); return false;"/>
+                                    </apex:form>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </span>
+            </apex:outputpanel>
+        </apex:outputpanel>
+        <apex:outputPanel id="actionFun" layout="block">
+            <apex:outputpanel id="dummy" rendered="{!successflag}">
+                <div id="div2" style="margin-top: 129px;color:green;text-align:center;;font-size: 25px;">
+                    {!result}
+                </div>
+            </apex:outputpanel> 
+        </apex:outputPanel>
+        
+        <apex:form >
+            <apex:actionFunction name="submitActionFunction2" action="{!saveSurvey}" reRender="actionFun,surveySection">
+                <apex:param name="Query_Resolution" assignTo="{!Query_Resolution}" value="" />
+                <apex:param name="Satisfaction" assignTo="{!Satisfaction}" value="" />
+                <apex:param name="feedback" assignTo="{!feedback}" value="" />
+                <apex:param name="overallRating" assignTo="{!overallRating}" value="" />
+                <apex:param name="Query_Resolution_Rating" assignTo="{!Query_Resolution_Rating}" value="" />
+            </apex:actionFunction>
+            <apex:actionFunction name="submitActionFunction3" action="{!saveSurvey}" reRender="actionFun,surveySection" >
+                <apex:param name="Query_Resolution" assignTo="{!Query_Resolution}" value="" />
+                <apex:param name="Satisfaction" assignTo="{!Satisfaction}" value="" />
+                <apex:param name="feedback" assignTo="{!feedback}" value="" />
+            </apex:actionFunction>
+        </apex:form>
+        
+        <script>
+        var Satisfaction_Value = "Zero";
+        var QueryResolution_Value = "Zero";
+        var buttonClick = 0;
+        var buttonClickYes = 0;
+        var satisfactionButtonClickGood = 0;
+        var satisfactionButtonClickAvg = 0;
+        var satisfactionButtonClickImp = 0;
+        $(function () {
+            $(".btn-toggle > button.btn").on("click", function () {
+                var btndata = $(this).attr('btn-data');			
+                if ($(this).hasClass("active")) {
+                    $(this).removeClass("active");
+                    $(this).removeAttr("data");
+                    
+                }
+                else {
+                    $(this).addClass("active");
+                    $(this).attr("data",btndata);
+                    $(this).siblings().removeClass("active");
+                    $(this).siblings().removeAttr("data");
+                }
+                if ($('#toggle_commentQ5').hasClass("active")) {
+                    $("#commentQ5").parent().show();
+                }
+                else {
+                    $("#commentQ5").parent().hide();
+                    $("#commentQ5").val("");
+                }
+            });
+            $(".btn-rating > button.btn").on("click", function () {
+                var datarate = $(this).attr('btn-data');				
+                $(this).attr("data",datarate);
+                $(this).siblings().removeAttr("data");
+                $(this).parent().children().removeClass("active");
+                $(this).parent().children().filter(function () {
+                    return $(this).attr('btn-data') <= parseInt(datarate);
+                }).addClass("active");
+            });
+        });
+        function ratingFunction(variable)
+        {
+            if(variable.value == "no"){
+                if(buttonClick == 1){
+                    buttonClick = 0; 
+                    document.getElementById('idSpan').style.display = 'none';}
+                else{
+                    buttonClick = buttonClick +1; 
+                    document.getElementById('idSpan').style.display = 'block';}
+                buttonClickYes = 0;
+                QueryResolution_Value = "no";
+            }else if(variable.value == "yes"){
+               
+                if(buttonClickYes == 1){buttonClickYes =0;}
+                else{buttonClickYes = buttonClickYes + 1;}
+                buttonClick = 0;
+                QueryResolution_Value = "yes";
+                document.getElementById('idSpan').style.display = 'none';
+            }
+        }
+        function reasonForRating(variable)
+        {
+            if(variable.value == "good"){
+                if(satisfactionButtonClickGood == 1){satisfactionButtonClickGood=0;}
+                else{
+                    satisfactionButtonClickGood = 1;
+                }
+                satisfactionButtonClickAvg = 0 ;
+                satisfactionButtonClickImp = 0;                    
+                Satisfaction_Value = "good";
+                document.getElementById('idSpan1').style.display = 'none';
+            }
+            if(variable.value == "average"){
+                
+                Satisfaction_Value = "average";
+                if(satisfactionButtonClickAvg == 1){
+                    satisfactionButtonClickAvg=0;}
+                else{
+                    satisfactionButtonClickAvg = 1;
+                }
+                satisfactionButtonClickGood = 0;
+                satisfactionButtonClickImp = 0;   
+                document.getElementById('idSpan1').style.display = 'none';
+            }
+            if(variable.value == "improve"){
+                Satisfaction_Value = "improve";
+                if(satisfactionButtonClickImp == 1){
+                    satisfactionButtonClickImp=0; 
+                    document.getElementById('idSpan1').style.display = 'none';}
+                else{
+                    satisfactionButtonClickImp = 1;document.getElementById('idSpan1').style.display = 'block';
+                }
+                satisfactionButtonClickGood = 0;
+                satisfactionButtonClickAvg = 0;
+                
+            }     
+            
+        }  
+        function callApex(){
+            var isValid = 0;
+            var isValidsec = 0;
+           
+            if((buttonClick == 1 || buttonClickYes == 1)){
+                document.getElementById('display').style.display = 'none';
+                isvalid = 0;
+            }else if((buttonClick == 0 && buttonClickYes == 0)){
+                document.getElementById('display').style.display = 'block';
+                document.getElementById('display').style.display = 'inline';
+                isvalid = 1;
+              
+            }
+            if((satisfactionButtonClickGood == 1 || satisfactionButtonClickAvg  == 1 || satisfactionButtonClickImp == 1)){
+                isValidsec = 0;
+                document.getElementById('displaySatisfaction').style.display = 'none';
+            }else if((satisfactionButtonClickGood == 0 && satisfactionButtonClickAvg  == 0 && satisfactionButtonClickImp == 0)){
+                document.getElementById('displaySatisfaction').style.display = 'block';
+                document.getElementById('displaySatisfaction').style.display = 'inline';
+                isValidsec = 1;
+            }
+            var v = document.getElementById('feedback').value;
+            var v1 = document.getElementById('Overall').value; 
+            var v2 = document.getElementById('rating').value;
+            
+            if(QueryResolution_Value == 'no'){
+                if(v2 == ''){
+                    isvalid = 1;
+                    document.getElementById('ratingSpan').style.display = 'block';
+                    document.getElementById('ratingSpan').style.display = 'inline';              
+                }else{
+                    document.getElementById('ratingSpan').style.display = 'none'; isvalid = 0;}
+            }
+            if(Satisfaction_Value == 'improve'){
+                if(v1 == ''){
+                    document.getElementById('OverallSpan').style.display = 'block';
+                    document.getElementById('OverallSpan').style.display = 'inline';
+                    isValidsec = 1;  
+                }else{ 
+                    document.getElementById('OverallSpan').style.display = 'none';
+                      isValidsec = 0;}
+            }   
+            if(isvalid == 0 && isValidsec == 0){
+                if(v1 == ''  && v2==''){
+                    submitActionFunction3(QueryResolution_Value,Satisfaction_Value,v);
+                }else{
+                    submitActionFunction2(QueryResolution_Value,Satisfaction_Value,v,v1,v2);
+                }
+            }                
+        }
+        function dddd(){
+            var result = '{!successFlag}';
+            console.log('sdfs'+result);
+            if({!successflag}){
+                document.getElementById('idSpan5').style.display = 'none';
+                document.getElementById('div2').style.display = 'block';//success
+            }
+            else{
+                document.getElementById('idSpan5').style.display = 'none';
+                document.getElementById('div1').style.display = 'block';//error
+            }
+        }
+        </script>
+    </body>    
+</apex:page>

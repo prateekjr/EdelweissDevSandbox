@@ -1,0 +1,5 @@
+<apex:page controller="HomeBannerController" sidebar="false" showHeader="false" >    
+    
+        <iframe name="Did You Know ??" src="data:application/pdf;base64,{!pdf}" width="100%" height="450" allowfullscreen="true"></iframe>
+        <!--apex:iframe src="data:application/pdf;base64,{!pdf}" scrolling="true" id="theIframe"/-->
+</apex:page>

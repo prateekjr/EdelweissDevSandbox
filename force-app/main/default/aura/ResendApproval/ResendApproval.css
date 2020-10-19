@@ -1,0 +1,19 @@
+.THIS .error{
+    background: rgb(194, 57, 52);
+    padding: 1rem;
+    color: rgb(255, 255, 255);
+    line-height: 1.25;
+    font-weight: 400;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.THIS .success{
+    background: green;
+    padding: 1rem;
+    color: rgb(255, 255, 255);
+    line-height: 1.25;
+    font-weight: 400;
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}

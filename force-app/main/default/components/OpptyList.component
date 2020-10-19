@@ -1,0 +1,15 @@
+<apex:component controller="acctTemplt" access="global">
+    <apex:attribute name="AcctId" type="Id" description="Id of the account" assignTo="{!accountId}"/>
+    <table border = "2" cellspacing = "5">
+        <tr>
+            <td>Client Name</td>
+            <td>Contact Number</td>               
+        </tr>
+        <apex:repeat value="{!AccountList}" var="acc">
+        <tr>
+            <td>{!acc.Name}</td>
+            <td>{!acc.Mobile_1__c}</td>             
+        </tr>
+        </apex:repeat>       
+    </table>
+</apex:component>

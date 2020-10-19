@@ -1,0 +1,239 @@
+<apex:page standardController="Product2" tabStyle="Product2" renderAs="pdf">
+
+    <apex:pageBlock title="Product Details">
+        <apex:outputPanel style="font-family: sans-serif; font-size:8px;">
+        <apex:pageBlockSection title="Product Information" columns="2">
+            <apex:outputField label="Product Name:" value="{!product2.name}"/>            
+            <apex:outputField label="Third Party Contact:" value="{!product2.TPP_Contact__c}"/>            
+            <apex:outputField label="Asset Class:" value="{!product2.Family}"/>
+            <apex:outputField label="Product Stage:" value="{!product2.Product_Stage__c}"/>
+            <apex:outputField label="Asset Class:" value="{!product2.Sub_Asset_Class__c}"/>
+            <apex:outputField label="Scrip Id:" value="{!product2.ProductCode}"/>
+            <apex:outputField label="Product Manager (Primary):" value="{!product2.Product_Manager_Primary_IAG__c}"/>
+            <apex:outputField label="Third Party Type:" value="{!product2.Type_of_TPP__c}"/>
+            <apex:outputField label="Product Manager (Secondry):" value="{!product2.Product_Manager_Secondary_IAG__c}"/>
+            <apex:outputField label="Manufacturer Name:" value="{!product2.Manufacturer_Name__c}"/>
+            <apex:outputField label="Minimum Investment:" value="{!product2.Minimum_Investment__c}"/>
+            <apex:outputField label="Risk Profile Of Product:" value="{!product2.Risk_Profile_of_Product__c}"/>
+            <apex:outputField label="Type Of Revenue:" value="{!product2.Type_of_Revenue__c}"/>
+            <apex:outputField label="Risk Profile Of Target Customers:" value="{!product2.Risk_Profile_of_Target_Customers__c}"/>
+            <apex:outputField label="Revenue Details:" value="{!product2.Revenue_Details__c}"/>
+            <apex:outputField label="Product Revenue:" value="{!product2.Product_Revenue__c}"/>
+            <apex:outputField label="Revenue Share of FA:" value="{!product2.Revenue_Share_of_FA__c}"/>
+            <apex:outputField label="Expected Return:" value="{!product2.Expected_Return__c}"/>
+        </apex:pageBlockSection>
+        </apex:outputPanel>
+        <apex:pageBlockSection title="Basic Product Performance" columns="2" >
+            <apex:outputField label="1st Month:" value="{!product2.X1_Month__c}"/>            
+            <apex:outputField label="1st Year:" value="{!product2.X1_Year__c}"/>            
+            <apex:outputField label="3rd Month:" value="{!product2.X3_Month__c}"/>
+            <apex:outputField label="2nd Year:" value="{!product2.X2_Year__c}"/>
+            <apex:outputField label="6th Month:" value="{!product2.X6_Month__c}"/>
+            <apex:outputField label="3rd Year:" value="{!product2.X3_Year__c}"/>
+        </apex:pageBlockSection>
+        <!-- Approvals and Uploads  -->
+        <apex:pageBlockSection title="Approvals and Uploads" columns="2" >
+            <apex:outputField label="Send For Approval To:" value="{!product2.Send_for_Approval_to__c}"/>            
+            <apex:outputLabel ></apex:outputLabel>            
+            <apex:outputField label="Approved By Business Head:" value="{!product2.Approved_by_Business_Head__c}"/>
+            <apex:outputField label="Approved by Business Head Date:" value="{!product2.Approved_by_Business_Head_Date__c}"/>
+            <apex:outputField label="Approved by Operations:" value="{!product2.Approved_by_Operations__c}"/>
+            <apex:outputField label="Approved by Operations Date:" value="{!product2.Approved_by_Operations_Date__c}"/>
+            <apex:outputField label="Approved by Technology:" value="{!product2.Approved_by_Technology__c}"/>
+            <apex:outputField label="Approved by Technology Date:" value="{!product2.Approved_by_Technology_Date__c}"/>
+            <apex:outputField label="Approved by Compliance:" value="{!product2.Approved_by_Compliance__c}"/>
+            <apex:outputField label="Approved by Compliance Date:" value="{!product2.Approved_by_Compliance_Date__c}"/>
+            <apex:outputField label="Approved by Risk:" value="{!product2.Approved_by_Risk__c}"/>
+            <apex:outputField label="Approved by Risk Date:" value="{!product2.Approved_by_Risk_Date__c}"/>
+            <apex:outputField label="Due Diligence Report Uploaded:" value="{!product2.Due_Diligence_Report_Uploaded__c}"/>
+            <apex:outputField label="Due Diligence Report Uploaded Date:" value="{!product2.Due_Diligence_Report_Uploaded_Date__c}"/>
+            <apex:outputField label="Product Note Uploaded:" value="{!product2.Product_Note_Uploaded__c}"/>
+            <apex:outputField label="Product Note Uploaded Date:" value="{!product2.Product_Note_Uploaded_Date__c}"/>            
+        </apex:pageBlockSection>
+        <!-- Training Confirmation -->
+        <apex:pageBlockSection title="Training Confirmation" columns="2" >
+            <apex:outputField label="FOIG Training Done:" value="{!product2.FOIG_Training_Done__c}"/>
+            <apex:outputField label="FOIG Training Date:" value="{!product2.FOIG_Training_Date__c}"/>
+            <apex:outputField label="Advisory Training Done:" value="{!product2.Advisory_Training_Done__c}"/>
+            <apex:outputField label="Advisory Training Date:" value="{!product2.Advisory_Training_Date__c}"/>
+            <apex:outputField label="CXO Training Done:" value="{!product2.CXO_Training_Done__c}"/>
+            <apex:outputField label="CXO Training Date:" value="{!product2.CXO_Training_Date__c}"/>
+            <apex:outputField label="Technology Training Done:" value="{!product2.Technology_Training_Done__c}"/>
+            <apex:outputField label="Technology Training Date:" value="{!product2.Technology_Training_Date__c}"/>
+            <apex:outputField label="Operations Training Done:" value="{!product2.Operations_Training_Done__c}"/>
+            <apex:outputField label="Operations Training Date:" value="{!product2.Operations_Training_Date__c}"/>        
+        </apex:pageBlockSection>
+        <!-- Salient Features of the Product -->
+        <apex:pageBlockSection title="Salient Features of the Product" columns="2" >
+            <apex:outputField label="Objectives (Background and Policies):" value="{!product2.Objectives_Background_and_Policies__c}"/>
+            <apex:outputField label="Multiple Entities Involved:" value="{!product2.Multiple_Entities_Involved__c}"/>
+            <apex:outputField label="Describe Markets and Competition Profile:" value="{!product2.Describe_Markets_and_Competition_Profile__c}"/>
+            <apex:outputField label="Process Flow of the Product:" value="{!product2.Target_Clients_Investors_in_Domestic_a__c}"/> 
+            <apex:outputField label="Target Clients / Investors:" value="{!product2.Target_Clients_Investors_in_Domestic_a__c}"/>        
+        </apex:pageBlockSection>
+        <!-- Roles and Responsibilities of Teams and SBUs/LOBs associated with the Product -->
+        <apex:pageBlockSection title="Roles and Responsibilities of Teams and SBUs/LOBs associated with the Product" columns="2" >
+            <apex:outputField label="Business:" value="{!product2.Business__c}"/>
+            <apex:outputField label="Risk:" value="{!product2.Risk__c}"/>
+            <apex:outputField label="Operations:" value="{!product2.Operations__c}"/>
+            <apex:outputField label="Information Technology:" value="{!product2.Information_Technology__c}"/>
+            <apex:outputField label="Finance & Accounts:" value="{!product2.Finance_Accounts__c}"/>
+            <apex:outputField label="Third Party Intermediaries Involved:" value="{!product2.Third_Party_Intermediaries_Involved__c}"/>
+            <apex:outputField label="Compliance:" value="{!product2.Compliance__c}"/>      
+        </apex:pageBlockSection>
+        <!-- Product Related Information  -->
+        <apex:pageBlockSection title="Product Related Information" columns="2" >
+            <apex:outputField label="Customer (Profile / Eligibility):" value="{!product2.Customer_Profile_Eligibility__c}"/>
+            <apex:outputField label="Closure:" value="{!product2.Closure__c}"/>
+            <apex:outputField label="Security Creation in Physical / Demat:" value="{!product2.Security_Creation_in_Physical_Demat__c}"/>
+            <apex:outputField label="Location (Domestic / International):" value="{!product2.Location_Domestic_International__c}"/>
+            <apex:outputField label="Margin Requirements:" value="{!product2.Margin_Requirements__c}"/>
+            <apex:outputField label="Channels (Direct / Intermediary):" value="{!product2.Channels_Direct_Intermediary__c}"/>
+            <apex:outputField label="Counter Party Documentation:" value="{!product2.Counter_Party_Documentation__c}"/>
+            <apex:outputField label="Mode:" value="{!product2.Mode__c}"/>
+            <apex:outputField label="Vendors / Alliances / Channel Partners:" value="{!product2.Vendors_Alliances_Channel_Partners__c}"/>
+            <apex:outputField label="Provide the Basis of Pricing the Product:" value="{!product2.Provide_the_Basis_of_Pricing_the_Product__c}"/>           
+        </apex:pageBlockSection>
+        <!-- P & L Potential -->
+        <apex:pageBlockSection title="P & L Potential" columns="2" >
+            <apex:outputField label="Details of Revenue and Cost:" value="{!product2.Details_of_Revenue_and_Cost__c}"/>
+            <apex:outputField label="Net Revenue (NR):" value="{!product2.Net_Revenue_NR__c}"/>
+            <apex:outputLabel ></apex:outputLabel>
+            <apex:outputField label="Net Contribution (NC):" value="{!product2.Net_Contribution_NC__c}"/>        
+        </apex:pageBlockSection>
+        
+        <!-- F & A and Taxation -->
+        <apex:pageBlockSection title="F & A and Taxation" columns="2" >
+            <apex:outputField label="Transnational Accounting, Reporting, MIS:" value="{!product2.Transnational_Accounting_Reporting_MIS__c}"/>
+            <apex:outputField label="Taxation Matters:" value="{!product2.Taxation_Matters__c}"/>     
+        </apex:pageBlockSection>
+        
+        <!-- Technology -->
+        <apex:pageBlockSection title="Technology" columns="2" >
+            <apex:outputField label="System Requirement (Hardware):" value="{!product2.System_Requirement_Hardware__c}"/>
+            <apex:outputField label="BCP Requirement:" value="{!product2.BCP_Requirement__c}"/>
+            <apex:outputField label="System Requirement (Software):" value="{!product2.System_Requirement_Software__c}"/>
+            <apex:outputField label="Maintenance Requirement:" value="{!product2.Maintenance_Requirement__c}"/> 
+            <apex:outputField label="Data Backup Requirement:" value="{!product2.Data_Backup_Requirement__c}"/>       
+        </apex:pageBlockSection>
+        <!-- Risk -->
+        <apex:pageBlockSection title="Risk" columns="2" >
+            <apex:outputField label="Risks and their Mitigants:" value="{!product2.Risks_and_their_Mitigants__c}"/>
+            <apex:outputField label="Risk Limits / Exposures:" value="{!product2.Risk_Limits_Exposures__c}"/>
+            <apex:outputField label="Hedge Limit:" value="{!product2.Hedge_Limit__c}"/>       
+        </apex:pageBlockSection>
+        
+        <!-- Evaluate the Product based on Risk / Return and decide following Limits -->
+        <apex:pageBlockSection title="Evaluate the Product based on Risk / Return and decide following Limits" columns="2" >
+            <apex:outputField label="Gross/Net Notional Exposures:" value="{!product2.Gross_Net_Notional_Exposures__c}"/>
+            <apex:outputField label="Risk Metrics and Risk Limits:" value="{!product2.Risk_Metrics_and_Risk_Limits__c}"/>
+            <apex:outputField label="Stop Loss:" value="{!product2.Stop_Loss__c}"/>       
+        </apex:pageBlockSection>
+        <!-- Compliance, Legal and Governance -->
+        <apex:pageBlockSection title="Compliance, Legal and Governance" columns="2" >
+            <apex:outputField label="Regulations Applicable and Road-Map:" value="{!product2.Regulations_Applicable_and_Road_Map__c}"/>
+            <apex:outputField label="Do Existing License Permit this Activity:" value="{!product2.Do_Existing_License_Permit_this_Activity__c}"/>
+            <apex:outputField label="Regulatory & Compliance Do’s and Don’ts:" value="{!product2.Regulatory_Compliance_Do_s_and_Don_ts__c}"/>
+            <apex:outputField label="Licensing / Qualification Requirements:" value="{!product2.Licensing_Qualification_Requirements__c}"/>
+            <apex:outputField label="Permission to do Business per Memorandum:" value="{!product2.Permission_to_do_Business_per_Memorandum__c}"/>
+            <apex:outputField label="Legal, Commercial, Counter Party Docs:" value="{!product2.Legal_Commercial_Counter_Party_Docs__c}"/>
+            <apex:outputField label="Legal Opinions Taken:" value="{!product2.Legal_Opinions_Taken__c}"/>
+            <apex:outputField label="Jurisdictions & Regulatory Do's & Don'ts:" value="{!product2.Jurisdictions_Regulatory_Dos_Don_ts__c}"/>
+            <apex:outputField label="Dispute Handling Jurisdiction:" value="{!product2.Dispute_Handling_Jurisdiction__c}"/>
+            <apex:outputField label="Operation, Scope and Coverage Limitation:" value="{!product2.Operation_Scope_and_Coverage_Limitation__c}"/>            
+            <apex:outputField label="Chinese Walls and Conflict Mgmt Issues:" value="{!product2.Chinese_Walls_and_Conflict_Mgmt_Issues__c}"/>
+            <apex:outputField label="Product Offering Comply with KYC / AML:" value="{!product2.Product_Offering_Comply_with_KYC_AML__c}"/>
+            <apex:outputField label="Compliance & Policies to Adopt or Amend:" value="{!product2.Compliance_Policies_to_Adopt_or_Amend__c}"/>         
+        </apex:pageBlockSection>
+        
+        <!-- Corporate Controller -->
+        <apex:pageBlockSection title="Risk" columns="2" >
+            <apex:outputField label="Control Framework:" value="{!product2.Control_Framework__c}"/>
+            <apex:outputField label="Internal / Concurrent Audits Required:" value="{!product2.Internal_Concurrent_Audits_Required__c}"/>
+            <apex:outputField label="Control Dashboards and Frequency:" value="{!product2.Control_Dashboards_and_Frequency__c}"/>       
+        </apex:pageBlockSection>
+        
+        <!-- Phases and Timelines in the Product Launch from Concept to Full Scale Roll Out -->
+        <apex:pageBlockSection title="Phases and Timelines in the Product Launch from Concept to Full Scale Roll Out" columns="2" >
+            <apex:outputField label="Product Creation (Start Date):" value="{!product2.Product_Creation_Start_Date__c}"/>
+            <apex:outputField label="Product Creation (End Date):" value="{!product2.Product_Creation_End_Date__c}"/>
+            <apex:outputField label="Product Testing (Start Date):" value="{!product2.Product_Testing_Start_Date__c}"/>
+            <apex:outputField label="Product Testing (End Date):" value="{!product2.Product_Testing_End_Date__c}"/>
+            <apex:outputField label="Proof of Concept (Start Date):" value="{!product2.Proof_of_Concept_Start_Date__c}"/>
+            <apex:outputField label="Proof of Concept (End Date):" value="{!product2.Proof_of_Concept_End_Date__c}"/>
+            <apex:outputField label="Final Product Launch (Start Date):" value="{!product2.Final_Product_Launch_Start_Date__c}"/>
+            <apex:outputField label="Final Product Launch (End Date):" value="{!product2.Final_Product_Launch_End_Date__c}"/>
+            <apex:outputField label="Revalidation (Start Date):" value="{!product2.Revalidation_Start_Date__c}"/>
+            <apex:outputField label="Revalidation (End Date):" value="{!product2.Revalidation_End_Date__c}"/>       
+        </apex:pageBlockSection>
+        
+        <!-- Product Note Lapse Date if not Traded within the Time -->
+        <apex:pageBlockSection title="Product Note Lapse Date if not Traded within the Time" columns="2" >
+            <apex:outputField label="Product Note Lapse Date:" value="{!product2.Product_Note_Lapse_Date__c}"/>                 
+        </apex:pageBlockSection>
+        
+        <!-- Summary Check List -->
+        <apex:pageBlockSection title="Summary Check List" columns="2" >
+            <apex:outputField label="Product Completeness - Status:" value="{!product2.Product_Completeness_Status__c}"/>
+            <apex:outputField label="Product Completeness - Conditions:" value="{!product2.Product_Completeness_Conditions__c}"/>
+            <apex:outputField label="Product Completeness - Signoff By:" value="{!product2.Product_Completeness_Signoff_By__c}"/>
+            <apex:outputField label="Product Completeness - Signoff Date:" value="{!product2.Product_Completeness_Signoff_Date__c}"/>
+            <apex:outputField label="Risk - Status:" value="{!product2.Risk_Status__c}"/>
+            <apex:outputField label="Risk - Conditions:" value="{!product2.Risk_Conditions__c}"/>
+            <apex:outputField label="Risk - Signoff By:" value="{!product2.Risk_Signoff_By__c}"/>
+            <apex:outputField label="Risk - Signoff Date:" value="{!product2.Risk_Signoff_Date__c}"/>
+            <apex:outputField label="Compliance and Legal - Status:" value="{!product2.Compliance_and_Legal_Status__c}"/>
+            <apex:outputField label="Compliance and Legal - Conditions:" value="{!product2.Compliance_and_Legal_Conditions__c}"/>            
+            <apex:outputField label="Compliance and Legal - Signoff By:" value="{!product2.Compliance_and_Legal_Signoff_By__c}"/>
+            <apex:outputField label="Compliance and Legal - Signoff Date:" value="{!product2.Compliance_and_Legal_Signoff_Date__c}"/>
+            <apex:outputField label="F&A,Taxation,Resource,MIS - Status:" value="{!product2.F_A_Taxation_Resource_MIS_Status__c}"/>             
+            <apex:outputField label="F&A,Taxation,Resource,MIS - Conditions:" value="{!product2.F_A_Taxation_Resource_MIS_Conditions__c}"/>
+            <apex:outputField label="F&A,Taxation,Resource,MIS - Signoff By:" value="{!product2.F_A_Taxation_Resource_MIS_Signoff_By__c}"/>
+            <apex:outputField label="F&A,Taxation,Resource,MIS - Signoff Date:" value="{!product2.F_A_Taxation_Resource_MIS_Signoff_Date__c}"/>             
+            <apex:outputField label="Technology - Status:" value="{!product2.Technology_Status__c}"/>
+            <apex:outputField label="Technology - Conditions:" value="{!product2.Technology_Conditions__c}"/>
+            <apex:outputField label="Technology - Signoff By:" value="{!product2.Technology_Signoff_By__c}"/>             
+            <apex:outputField label="Technology - Signoff Date:" value="{!product2.Technology_Signoff_Date__c}"/>
+            <apex:outputField label="Corporate Controller - Status:" value="{!product2.Corporate_Controller_Status__c}"/>
+            <apex:outputField label="Corporate Controller - Conditions:" value="{!product2.Corporate_Controller_Conditions__c}"/>            
+            <apex:outputField label="Corporate Controller - Signoff By:" value="{!product2.Corporate_Controller_Signoff_By__c}"/>
+            <apex:outputField label="Corporate Controller - Signoff Date:" value="{!product2.Corporate_Controller_Signoff_Date__c}"/>  
+        </apex:pageBlockSection>
+        
+        <!-- Description Information -->
+        <apex:pageBlockSection title="Description Information" columns="2" >
+            <apex:outputField label="Product Description:" value="{!product2.Description}"/>                 
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    <apex:pageBlock title="Follow Up Items">
+        <apex:pageBlockTable value="{!product2.Follow_Up_Items__r}" var="item">
+            <apex:column value="{!item.Pending_Item__c}"/>
+            <apex:column value="{!item.Pending_with_Name_Team__c}"/>
+            <apex:column value="{!item.Expected_Time_of_Completion__c}"/>
+            <apex:column value="{!item.Product__c}"/>
+            <apex:column value="{!item.Final_Completion__c}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    
+    <apex:pageBlock title="LOB Dependencies">
+        <apex:pageBlockTable value="{!product2.LOB_Dependencies__r}" var="item">
+            <apex:column value="{!item.Name}"/>
+            <apex:column value="{!item.Frequency__c}"/>
+            <apex:column value="{!item.Dependency_Details__c}"/>
+            <apex:column value="{!item.Product__c}"/>
+            <apex:column value="{!item.Service_Level_Agreement_SLA__c}"/>
+        </apex:pageBlockTable>
+    </apex:pageBlock>
+    <!--
+    <apex:pageBlock >
+        <apex:pageBlockSection >
+            <apex:relatedList list="Follow_Up_Items__r"/>
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+    
+    <apex:pageBlock >
+        <apex:pageBlockSection >
+            <apex:relatedList list="LOB_Dependencies__r"/>
+        </apex:pageBlockSection>
+    </apex:pageBlock> -->
+</apex:page>

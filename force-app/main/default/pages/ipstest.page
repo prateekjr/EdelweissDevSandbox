@@ -1,0 +1,7 @@
+<apex:page renderAs="pdf" standardController="Investment_Policy_Statement_IPS__c">
+  <!-- Begin Default Content REMOVE THIS -->
+  <h1>Congratulations</h1>
+  This is your new Page
+  ID - {!Investment_Policy_Statement_IPS__c.Name}
+  <!-- End Default Content REMOVE THIS -->
+</apex:page>

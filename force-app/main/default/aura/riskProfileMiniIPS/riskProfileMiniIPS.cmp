@@ -1,0 +1,232 @@
+<aura:component controller="riskProfileMiniIPS1"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+   	<aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+   	<aura:attribute name="isValid" type="Boolean" default="false"/>
+   	<aura:attribute name="recordId" type="String" default="" />
+    <aura:attribute name="isCorporate" type="Boolean" default="false" />
+   	<aura:attribute name="IPSRecord" type="Investment_Policy_Statement_IPS__c" default="{ 'sobjectType': 'Investment_Policy_Statement_IPS__c' }" />
+	<aura:attribute name="isProcessing" type="boolean" default="false"/>
+    <aura:attribute name="subject" type="boolean" default="false"/>
+     <aura:attribute name="messageBody" type="String"/>
+    <aura:if isTrue="{!v.isProcessing}"> 
+    <center>
+        <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+            	<ui:spinner aura:id="spinner"/>
+            </div>
+        </div>
+    </center>
+    </aura:if> 
+         <div class="slds-form-element">
+                      <aura:if isTrue="{!v.isCorporate}">
+						<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                            <label class="slds-form-element__label" for="textareaSample2">Please Indicate Experience In Equity Markets </label>
+                            <div class="slds-form-element__control">
+                                <ui:inputSelect aura:id="EquityMarkets" value="{!v.IPSRecord.Equity_Markets__c}">
+                                    <ui:inputSelectOption label="---None---" text="---None---"/>
+                                    <ui:inputSelectOption label="0 – 3 years" text="4" />
+                                    <ui:inputSelectOption label="3 – 5 years" text="3" />
+                                    <ui:inputSelectOption label="3 – 5 years" text="2" />
+                                    <ui:inputSelectOption label="> 10 years" text="1" />
+                                </ui:inputSelect>
+                            </div>
+                            <aura:set attribute="else">
+							<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+								<label class="slds-form-element__label" for="textareaSample2">Please Indicate Your Age Below? </label>
+								<div class="slds-form-element__control">
+									 <ui:inputSelect aura:id="Age" value="{!v.IPSRecord.Age__c}">
+										<ui:inputSelectOption label="---None---" text="---None---"/>
+										<ui:inputSelectOption label="0 – 25 years" text="4"/>
+										<ui:inputSelectOption label="25 – 40 years" text="3"/>
+										<ui:inputSelectOption label="40 – 60 years" text="2"/>
+										 <ui:inputSelectOption label="> 60 years" text="1"/>
+									</ui:inputSelect>
+								</div>
+                            </aura:set>
+                        </aura:if>
+                    </div> 
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Best Describes Your Investment Philosophy?</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="investmentphilosophy" value="{!v.IPSRecord.Investment_philosophy__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Aggressive Capital growth" text="4" />
+                                <ui:inputSelectOption label="High Capital growth with some regular income" text="3" />
+                                <ui:inputSelectOption label="Some capital growth and high fixed income" text="2" />
+                                <ui:inputSelectOption label="Preserve Wealth and Regular Income" text="1" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Investment_philosophy__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Best Describes Your Investment Goal?</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="investmentgoal" value="{!v.IPSRecord.Investment_goal__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Accumulate long term wealth over a period of 5 years through market investment" text="5" />
+                                <ui:inputSelectOption label="To provide a regular income stream with total protection of capital" text="4" />
+                                <ui:inputSelectOption label="To invest lump-sum amount (inheritance/salary bonus)and uncertain about what/where to invest in" text="3" />
+                                <ui:inputSelectOption label="To meet some specific objectives within the next five years" text="2" />
+                                <ui:inputSelectOption label="To ensure sufficient funds available for nearing retirement" text="1" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Investment_goal__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Is The Horizon Of Your Financial Goals:</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="FinancialGoals" value="{!v.IPSRecord.Financial_Goals__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Short Term (0 to 1 years)" text="2" />
+                                <ui:inputSelectOption label="Medium Term (1 to 3 years)" text="3" />
+                                <ui:inputSelectOption label="Long Term (3+ years)" text="4" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Financial_Goals__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Please Indicate The Worst And Best One Year Return That Suits You</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="worstbestreturn" value="{!v.IPSRecord.worst_and_best_one_year_return__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Best Returns 5% and Worst Returns 1%" text="1" />
+                                <ui:inputSelectOption label="Best Returns 15% and Worst Returns -5%" text="2" />
+                                <ui:inputSelectOption label="Best Returns 25% and Worst Returns -15%" text="3" />
+                                <ui:inputSelectOption label="Best Returns 35% and Worst Returns -20%" text="4" />
+                                <ui:inputSelectOption label="Best Returns 40% and Worst Returns -20%" text="5" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.worst_and_best_one_year_return__c}"/>-->
+                        </div>
+                    </div>
+					<div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+						<label class="slds-form-element__label" for="textareaSample2">For A Long Term Investment The Amount Of Fluctuations Tat You Tolerate In The Sort-Term Is</label>
+						<div class="slds-form-element__control">
+							<ui:inputSelect aura:id="amountoffluctuations" value="{!v.IPSRecord.Amount_of_fluctuations__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+								<ui:inputSelectOption label="less than 0% And greater than -5%" text="1" />
+								<ui:inputSelectOption label="less than-5% And greater than -10%" text="2" />
+								<ui:inputSelectOption label="less than-10% And greater than -20%" text="3" />
+								<ui:inputSelectOption label="less than-20% And greater than-25%" text="4" />
+								<ui:inputSelectOption label="-25% or Less" text="5" />
+							</ui:inputSelect>
+							<!--<force:inputField value="{!v.IPSRecord.Amount_of_fluctuations__c}"/>-->
+						</div>
+					</div>
+					<div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+						<label class="slds-form-element__label" for="textareaSample2">How Would You React If A well Diversified Portfolio Fell By 20%, In Line With The Markets?</label>
+						<div class="slds-form-element__control">
+							<ui:inputSelect aura:id="diversifiedportfolio" value="{!v.IPSRecord.Diversified_portfolio__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+								<ui:inputSelectOption label="Accumulate" text="4" />
+								<ui:inputSelectOption label="Hold" text="3" />
+								<ui:inputSelectOption label="Reduce" text="2" />
+								<ui:inputSelectOption label="Exit Position" text="1" />
+							</ui:inputSelect>
+							<!--<force:inputField value="{!v.IPSRecord.Diversified_portfolio__c}"/>-->
+						</div>
+					</div>
+                    
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Please Indicate Your Level Of Interest In Leverage/Borrowing Products Like Loan Against Shares/Mutual Funds, IPO Funding, F And O, Margin Funding.</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="leverageborrowingproducts" value="{!v.IPSRecord.Interest_in_leverage_borrowing_products__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Very Interested" text="4" />
+                                <ui:inputSelectOption label="Indifferent" text="3" />
+                                <ui:inputSelectOption label="Not Interested" text="1" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Interest_in_leverage_borrowing_products__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Please Indicate Your Level Of Interest In Alternative Investments like Real Estate Funds, PE Funds, Structured Products, Bonds, Gold etc.</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="AlternativeInvestments" value="{!v.IPSRecord.Alternative_Investments__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Very Interested" text="3" />
+                                <ui:inputSelectOption label="Indifferent" text="2" />
+                                <ui:inputSelectOption label="Not Interested" text="1" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Alternative_Investments__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">What Does Your Current Investment Portfolio Comprise Of?</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="investmentportfolio" value="{!v.IPSRecord.Investment_portfolio__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption label="Mainly cash/bank deposits with a small portion investment in low risk bonds" text="1" />
+                                <ui:inputSelectOption label="A mix of debt instruments, blue chip and aggressive stocks" text="2" />
+                                <ui:inputSelectOption label="Mainly debt market investments and some portion of blue chip stocks" text="3" />
+                                <ui:inputSelectOption label="Mostly speculative or high risk investments (aggressive stocks, high risk funds, options, leverage positions etc.)" text="4" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Investment_portfolio__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<img src="{! $Resource.IPSMandatoryIcon}" height="20" width="20"/>
+                        <label class="slds-form-element__label" for="textareaSample2">Investment Style</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="InvestmentStyle" value="{!v.IPSRecord.Investment_Style__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption text="Active" value="Active" />
+                                <ui:inputSelectOption text="Passive" value="Passive" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Investment_Style__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+					<label class="slds-form-element__label" for="textareaSample2">Time Line For Trading</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputSelect aura:id="Trading" value="{!v.IPSRecord.Time_line_for_Trading__c}">
+                                <ui:inputSelectOption label="---None---" text="---None---"/>
+                                <ui:inputSelectOption text="1 week" value="1 week" />
+                                <ui:inputSelectOption text="1 month" value="1 month" />
+                                <ui:inputSelectOption text="3 months" value="3 months" />
+                                <ui:inputSelectOption text="6 months" value="6 months" />
+                                <ui:inputSelectOption text="1 year" value="1 year" />
+                            </ui:inputSelect>
+                            <!--<force:inputField value="{!v.IPSRecord.Time_line_for_Trading__c}"/>-->
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Stop Loss %</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="stopLoss" labelClass="slds-form-element__label" value="{!v.IPSRecord.Stop_Loss__c}" required="false" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2"><b>Investment Experience (Yrs.) in </b></label><br/>
+                        <label class="slds-form-element__label" for="textareaSample2">Direct Equity</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="Direct_Equity" labelClass="slds-form-element__label" value="{!v.IPSRecord.Direct_Equity__c}" required="false" />
+                        </div>
+					</div>
+					<div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Derivative</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="Derivative" labelClass="slds-form-element__label" value="{!v.IPSRecord.Derivative__c}" required="false" />
+                        </div>
+					</div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="textareaSample2">Mutual Funds</label>
+                        <div class="slds-form-element__control">
+                            <ui:inputNumber aura:id="MutualFunds" labelClass="slds-form-element__label" value="{!v.IPSRecord.Mutual_Funds__c}" required="false" />
+                        </div>
+                    </div>
+                <div class="errorDiv" style="color: red;text-align: center;font-weight: bold;">
+					<div>{!v.messageBody}</div>
+        		</div>
+			<div style="text-align: center;">
+				 <ui:button label="Save" press="{!c.save}" />
+                 <ui:button label="Cancel" press="{!c.cancel}" />
+			</div>
+</aura:component>

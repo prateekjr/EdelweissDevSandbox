@@ -1,0 +1,123 @@
+<apex:page standardStylesheets="false" applyHtmlTag="false" applyBodyTag="false" showHeader="false" standardController="Investment_Policy_Statement_IPS__c" extensions="SummaryIPS" renderAs="pdf">
+ 
+    <!--apex:stylesheet value="{! $Resource.RiskProfileOfClient}" /-->
+
+    <html>
+        
+        <head>
+            <style type="text/css" media="print">
+            
+                @page{
+                    size: portrait;
+                    margin: 96px;
+                    font-family: Calibri;
+                    font: 15px;
+                    @bottom-center {
+                        content: element(footer);
+                    }
+                }
+                
+                div.footer{
+                    margin: 0px -300px;
+                    position: running(footer);
+                }
+
+                div.signature {
+                    float: left;
+                    padding: 80px 15px 0px 0px;
+                }
+             
+                div.date {
+                    float: right;
+                    padding: 100px 80px 40px 10px;
+                }
+ 
+                .para,
+                .points{
+                    line-height: 140%;
+                }
+                
+                .para{
+                    text-align: justify;
+                }
+                
+            </style>
+        </head>
+        
+        <body>
+            <div class="footer"> <img src="{! $Resource.IPSFooterFirstPage}" width="100%" /> </div>
+
+            <div class="content">
+            
+                <p class="para"> Dear {!Investment_Policy_Statement_IPS__c.Client_Name__r.Name}, </p>
+                
+                <p class="para">
+                    Based on the risk profile, you are a <b> {!Investment_Policy_Statement_IPS__c.Risk_Rating__c} </b> investor. 
+                    You believe in <b> {!Investment_Policy_Statement_IPS__c.Investment_Style__c} </b> investment philosophy with the horizon of 
+                    <b> {!ips.Financial_Goals__c} </b> to achieve the financial goals.
+                </p>
+                
+                <p class="para">
+                    <apex:outputText rendered="{!Investment_Policy_Statement_IPS__c.Risk_Rating__c == 'Conservative'}">
+                        As a conservative investor, you prefer to take on calculated amounts of risk to try and earn a little extra. 
+                        Preservation of capital is your primary and most important objective. 
+                        You are unwilling to take risk and are comfortable with returns that are commensurate with bank deposits and 
+                        other high rated debt instruments.
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!Investment_Policy_Statement_IPS__c.Risk_Rating__c == 'Aggressive'}">
+                        As an aggressive investor, your primary objective are grow your capital very aggressively, over the medium to long term. 
+                        You would not mind take on additional risks for potential of substantially higher long-term capital growth,
+                        and would not be affected by short term volatility.
+                    </apex:outputText>
+                    
+                    <apex:outputText rendered="{!Investment_Policy_Statement_IPS__c.Risk_Rating__c == 'Balanced'}">
+                        As a balanced investor, your primary objectives are moderate capital growth over long term and are cautious towards 
+                        taking high levels of risk. You are comfortable with short-term fluctuations in returns and may accept moderate risks 
+                        for potentially higher returns, but you would not want to take large swings in the value of your investments.
+                    </apex:outputText>
+                </p>
+                
+                <p class="para">
+                    The investment recommendations made by us will be based on your current portfolio, your available resources and your goals. 
+                    In addition, it is based on our current expectations of the behavior of asset classes included in your asset allocation. 
+                    Your situation and goals may change over time, as will reasonable performance projections. 
+                    Your portfolio should be re-evaluated at least annually to ensure that you are making good progress towards your goals. 
+                    Please make every effort to update your advisor and the organization when substantial changes in your goals and situations take place.
+                </p>
+                
+                <p class="para">
+                    The performance of the portfolio should be monitored on an on-going basis. 
+                </p>
+                
+                <p class="points">
+                    The intent in monitoring performance is to ensure that: <br/>
+                    1)&nbsp; You continue to be on track to achieve your goals, <br/>
+                    2)&nbsp; Over a reasonable period of your investments produce acceptable return in relation to risk, <br/>
+                    3)&nbsp; Investment products contribute to the portfolio as anticipated, and <br/>
+                    4)&nbsp; The portfolio continues to feature an acceptable level of risk. 
+                </p>
+                
+                <p class="para">
+                    If there are concerns about the performance of your portfolio, contact your advisor to discuss these concerns and necessary changes.
+                </p>
+                
+                <p class="para">
+                    At times, outperformance of some products and underperformance of others may result in the need to 
+                    rebalance your portfolio and maintain a comfortable level of risk.
+                </p>
+                
+                <div class="signature"> 
+                    <p> Signature </p>
+                    <p> {!Investment_Policy_Statement_IPS__c.Client_Name__r.Name} </p>
+                </div>
+                
+                <div class="date"> Date: {! lastModifiedDate} </div>
+
+            </div>
+
+        </body>
+    
+    </html>
+
+</apex:page>

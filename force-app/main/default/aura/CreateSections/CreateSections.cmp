@@ -1,0 +1,50 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="isReadOnly" type="Boolean"/>
+    <aura:attribute name="fieldSetMap" type="Object" default="{}"/>
+    <aura:attribute name="record" type="Sobject"/>
+    <aura:attribute name="keyList" type="List"/>
+    <aura:attribute name="isSubsection" type="Boolean" default="false" />
+    <aura:attribute name="CompSource" type="String" />
+    <aura:attribute name="isObjUpdateable" type="Boolean" default="" />
+    <aura:attribute name="isSingleColumnSection" type="Boolean" default="false" />
+	<aura:attribute name="parentAccountId" type="String" default="" />
+    <aura:handler name="init" action="{!c.createSections}" value="{!this}"/>
+    <aura:attribute name="expand" type="string" default="false" />
+	<aura:attribute name="lookupFilter" type="String" default="NewFamily" />  
+    <aura:attribute name="FamilyType" type="Object" default="{}"/>
+    <aura:attribute name="isEnabledTradingFeilds" type="Boolean" default="false"/>
+    
+    <aura:iteration items="{!v.keyList}" var="fieldSetName" indexVar="index">
+        <aura:if isTrue="{!v.isSubsection}">
+        	<div class="slds-page-header" style="cursor: pointer; padding: 10px;" data-param="{!'toggel'+index}" onclick="{!c.toggleSection}">
+              <section class="slds-clearfix">
+                <div class="slds-float--left ">
+                    <aura:if isTrue="{!v.expand != 'false'  &amp;&amp; fieldSetName == v.expand}">                        
+                            <span id="{!'icon1'+index}" class="slds-hide expandIcon">+</span>
+                            <span id="{!'icon2'+index}" class="slds-show expandIcon">-</span>
+                        <aura:set attribute="else">
+                            <span id="{!'icon1'+index}" class="slds-show expandIcon">+</span>
+                            <span id="{!'icon2'+index}" class="slds-hide expandIcon">-</span>
+                        </aura:set>	
+                    </aura:if>
+                </div>
+                <div class="slds-m-left--large">{!fieldSetName}</div>
+              </section>
+            </div>
+        </aura:if>
+        <aura:if isTrue="{!v.expand != 'false'  &amp;&amp; fieldSetName == v.expand}">
+            <div class="slds-show slds-p-around--medium" id="{!'div'+index}" data-param="{!'div'+index}">
+                <c:CreateForm isObjUpdateable="{!v.isObjUpdateable}" CompSource="{!v.CompSource}" fieldSetMap="{!v.fieldSetMap}" fieldSetName="{!fieldSetName}" record="{!v.record}" isReadOnly="{!v.isReadOnly}" isSingleColumnSection="{!v.isSingleColumnSection}" parentAccountId="{!v.parentAccountId}" lookupFilter="{!v.lookupFilter}" FamilyType="{!v.FamilyType}" isEnabledTradingFeilds="{!v.isEnabledTradingFeilds}"/>
+            </div>
+            <aura:set attribute="else">
+                 <div class="slds-hide slds-p-around--medium" id="{!'div'+index}" data-param="{!'div'+index}">
+                    <c:CreateForm isObjUpdateable="{!v.isObjUpdateable}" CompSource="{!v.CompSource}" fieldSetMap="{!v.fieldSetMap}" fieldSetName="{!fieldSetName}" record="{!v.record}" isReadOnly="{!v.isReadOnly}" isSingleColumnSection="{!v.isSingleColumnSection}" parentAccountId="{!v.parentAccountId}" lookupFilter="{!v.lookupFilter}" FamilyType="{!v.FamilyType}" isEnabledTradingFeilds="{!v.isEnabledTradingFeilds}"/>
+                </div>
+            </aura:set>	
+        </aura:if>
+    </aura:iteration>
+
+ 
+	
+	
+</aura:component>

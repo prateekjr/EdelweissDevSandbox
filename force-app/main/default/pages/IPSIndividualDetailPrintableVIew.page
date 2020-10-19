@@ -1,0 +1,467 @@
+<apex:page standardController="Investment_Policy_Statement_IPS__c" extensions="IndividualIPSController" renderAs="pdf" showHeader="false" sidebar="false" standardStylesheets="true" applyBodyTag="false" >
+  <!-- Begin Default Content REMOVE THIS -->
+  
+  <head>
+  <style type = "text/css">
+  table {
+     padding:10px; 
+     spacing:10px;
+  }
+  table.main{
+      border-style:solid;
+      border-width:1px;
+      border-collapse:collapse;
+         //border-color: #ececec;
+            padding:10px;
+            
+  }
+  .main th{
+    background-color:#808080;
+    text-align:center;
+    width:100px;
+    border-style:solid;
+   border-width:1px;
+   border-collapse:collapse;
+   border-color:#333333;
+    }
+  .main td{
+   text-align:center; 
+   border-style:solid;
+   border-width:1px;
+   border-collapse:collapse;
+   border-color:#333333;
+   padding:10px;
+   width:100px;
+}
+@page { 
+        size:landscape;
+   }
+
+</style>
+</head>
+        <apex:pageBlock >
+        <apex:form >
+      
+
+
+         
+           <apex:pageBlockSection title="I. General Information (Auto Fill from CRM Entries)" columns="1">
+           <apex:outputText label="Name of Client(s):">{!Acc.Name}</apex:outputText>
+           <apex:outputText label="Date Of Birth / Incorporation:">{!Acc.Date_of_Birth__c}</apex:outputText>
+           <apex:outputText label="Residential Status:">{!Acc.Nationality__c}</apex:outputText>
+           <apex:outputText label="Tax Status for investments:">{!Acc.Type__c}</apex:outputText>
+           <apex:outputText label="Current Investable Assets:">{!Acc.Investible_Assets__c}</apex:outputText>
+           <apex:outputText label="Current Liabilities:">{!Acc.Name}</apex:outputText>
+           <apex:outputText label="Current Investment Advisor(s):">{!Acc.Primary_FA__r.Name}</apex:outputText>
+       </apex:pageBlockSection>
+       <apex:pageBlockSection title="Financial Requirements and Objectives" columns="1">
+       <apex:outputtext label="What are client’s requirements?" value="{!ObjIps.clients_requirements__c}"/>
+       <apex:outputtext label="What is client’s financial goal?" value="{!ObjIps.what_is_clients_financial_goal__c}">
+       <apex:actionSupport event="onchange" reRender="ajaxrequest" />
+        </apex:outputtext>
+        <apex:outputPanel id="ajaxrequest">   
+                  <apex:pageBlockSection rendered="{!ObjIps.what_is_clients_financial_goal__c=='Specific Goals'}" >
+                      
+                     <apex:outputtext label="Specific Goal :" value="{!ObjIps.Clients_Specific_Financial_Goals__c}"/>
+              
+                  </apex:pageBlockSection>
+              </apex:outputPanel> 
+              <apex:outputtext label="What is time horizon for client’s financial goal?" value="{!ObjIps.Time_horizon_for_clients_financial_goal__c}"/>
+              <apex:outputtext label="What is client’s present investment pattern?" value="{!ObjIps.client_s_present_investment_pattern__c}"/>
+              
+              <apex:pageBlockSectionItem helpText="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.current_sources_of_investment_ideas__c.InlineHelpText}">
+                  What are client’s current sources of investment ideas?
+                <apex:outputtext value="{!ObjIps.current_sources_of_investment_ideas__c}"/>
+                </apex:pageBlockSectionItem>
+
+              
+              
+              <!--<apex:pageBlockSectionItem HelpText="{!$ObjectType.Investment_Policy_Statement_IPS__c.fields.current_sources_of_investment_ideas__c.inline​HelpText}">
+              <apex:outputtext label="What are client’s current sources of investment ideas?" value="{!ObjIps.current_sources_of_investment_ideas__c}"/>
+              </apex:pageBlockSectionItem >-->
+              </apex:pageblocksection>
+              <apex:pageBlockSection title="Liquidity" columns="1">
+         <apex:outputtext label="How are client’s cash flows distributed?" value="{!ObjIps.client_s_cash_flows_distributed__c}"/>     
+        <apex:outputtext label="What are client’s foreseeable liquidity requirements?"> 
+        <table class='main'><tr><th>Event</th><th>Amount</th></tr><tr><td>
+        <apex:outputtext label="Event" value="{!ObjIps.Event_1__c}"/></td>
+        <td><apex:outputtext label="Amount" value="{!ObjIps.Amount_1__c}"/></td></tr>
+        <tr><td>
+        <apex:outputtext label="Event" value="{!ObjIps.Event_2__c}"/></td>
+        <td><apex:outputtext label="Amount" value="{!ObjIps.Amount_2__c}"/></td></tr>
+        <tr><td>
+        <apex:outputtext label="Event" value="{!ObjIps.Event_3__c}"/></td>
+        <td><apex:outputtext label="Amount" value="{!ObjIps.Amount_3__c}"/></td></tr>
+        </table>
+        </apex:outputtext>
+        <apex:outputtext label="What portion of client’s assets does client prefer to keep in liquid instruments (receive money in T+5 days)?" value="{!ObjIps.portion_of_client_s_assets_in_liquid__c}"/>  
+        </apex:pageblocksection>
+        
+        <apex:pageBlockSection title="Liabilities" columns="1">
+        
+        <apex:outputtext label="What are client’s current personal liabilities?" >
+        <table class='main'>
+        <tr><td> Housing Loan </td><td>
+        <apex:outputtext label="Housing Loan" value="{!ObjIps.Housing_Loan__c}"/></td>
+        <td> Maturity</td>
+        
+        <td><apex:outputtext label="Maturity" value="{!ObjIps.Housing_Loan_Maturity__c}"/></td></tr>
+        <tr><td> Auto Loan </td><td>
+        <apex:outputtext label="Auto Loan" value="{!ObjIps.Auto_loan__c}"/></td>
+        <td> Maturity</td>
+        
+        <td><apex:outputtext label="Maturity" value="{!ObjIps.Auto_loan_maturity__c}"/></td></tr>
+        <tr><td> Other Loan </td><td>
+        <apex:outputtext label="Other Loan" value="{!ObjIps.Other_loan__c}"/></td>
+        <td> Maturity</td>
+        
+        <td><apex:outputtext label="Maturity" value="{!ObjIps.Other_loan_maturity__c}"/></td></tr>
+                </table>
+        </apex:outputtext>
+        <apex:outputtext label="What are client’s loan / borrowings requirement?">
+
+        <table class='main'><tr><td>
+        <apex:outputtext label="What are client’s loan / borrowings requirement?" value="{!ObjIps.loan_borrowings_requirement__c}">
+                         </apex:outputtext>
+        </td></tr><tr><td>
+                                <apex:outputtext label="Options" value="{!ObjIps.Personal_debt_restructuring_options__c}"/>
+              </td></tr></table>
+                          </apex:outputtext>
+        <apex:outputtext label="How has client’s experience been with investments in various asset classes like stocks, bonds, gold, real estate et all? " value="{!ObjIps.client_s_experience__c}"/>
+        </apex:pageblocksection>
+
+        <apex:pageBlockSection title="Risk" columns="1">
+
+        <apex:outputtext label="How is client’s wealth concentrated?" >
+        <table class='main'>
+        <tr><td> Personal Assets</td><td>
+        <apex:outputtext label="Personal Assets" value="{!ObjIps.client_s_wealth_in_personal_asset__c}"/></td>
+        <td> % proportion</td>
+        </tr>
+        <tr><td> Business Assets</td><td>
+        <apex:outputtext label="Business Assets" value="{!ObjIps.client_s_wealth_in_business_asset__c}"/></td>
+        <td> % proportion</td>
+        
+        </tr>
+                        </table>
+        </apex:outputtext>
+        
+        <apex:outputtext label="How much is the client insured for?" >
+        <table class='main'>
+        <tr><td> Life</td><td>
+        <apex:outputtext label="Life" value="{!ObjIps.Insured_for_life__c}"/></td>
+                </tr>
+        <tr><td> Health</td><td>
+        <apex:outputtext label="Health" value="{!ObjIps.Insured_for_health__c}"/></td>
+                
+        </tr>
+                        </table>
+        </apex:outputtext>
+        
+        <apex:outputtext label="Are client’s family assets ring fenced from my business liabilities?" >
+
+        <table class='main'><tr><td>
+        <apex:outputtext label="What are client’s loan / borrowings requirement?" value="{!ObjIps.Are_client_s_family_assets_ring_fenced__c}">
+                         </apex:outputtext>
+        </td><td>  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;         Comments: </td><td>
+                                <apex:outputtext label="Comments" value="{!ObjIps.Comments__c}"/>
+              </td></tr></table>
+                          </apex:outputtext>
+        <apex:outputtext label="How does Client hold current investments?" value="{!ObjIps.How_Client_hold_current_investments__c}">
+       <apex:actionSupport event="onchange" reRender="showOther"/>
+        </apex:outputtext>
+        <apex:outputPanel id="showOther">
+                  <apex:pageBlockSection rendered="{!ObjIps.How_Client_hold_current_investments__c=='Other structure'}">
+                      
+                     <apex:outputtext label="Other structure:" value="{!ObjIps.Other_structure__c}"/>
+              
+                  </apex:pageBlockSection>
+              </apex:outputPanel> 
+
+       <apex:outputtext label="Is client prepared for uncertain life/ health circumstances?">
+
+        <table class='main'><tr><td>
+        <apex:outputtext label="Is client prepared for uncertain life/ health circumstances?" value="{!ObjIps.prepared_for_uncertain_life_circumstance__c}">
+                         </apex:outputtext>
+        </td><td>  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;         Comments: </td><td>
+                                <apex:outputtext label="Comments" value="{!ObjIps.comments_for_uncertain_life_circumstance__c}"/>
+              </td></tr></table>
+                          </apex:outputtext>
+        
+        <apex:outputtext label="Has the client planned his/her succession?">
+
+        <table class='main'><tr><td>
+        <apex:outputtext label="Has the client planned his/her succession?" value="{!ObjIps.Has_client_planned_his_succession__c}">
+                         </apex:outputtext>
+        </td><td>  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;         Requirements: </td><td>
+                                <apex:outputtext label="Requirements" value="{!ObjIps.Succession_Requirements__c}"/>
+              </td></tr></table>
+                          </apex:outputtext>
+        <apex:outputtext label="What are the risks attached to client’s wealth? Does client have a review process to asses these risks?" value="{!ObjIps.Risk_Attached_to_Client_s_wealth__c}"/>
+       </apex:pageblocksection>
+         <apex:pageBlockSection title="Risk Philosophy / Approach" columns="1">
+         <apex:pageBlockSection title="Risk Philosophy – Equities " columns="1">
+
+                  <apex:outputtext label="Preference of instrument">
+
+        <table class='main'><tr><td> Direct equities (% proportion)</td><td>
+        <apex:outputtext label="Direct equities (% proportion)" value="{!ObjIps.Direct_equities__c}"/>
+        </td></tr><tr><td> Futures and Options (% proportion)</td><td>
+         <apex:outputtext label="Futures and Options (% proportion)" value="{!ObjIps.Futures_and_options__c}"/></td></tr>
+        <tr><td> Mutual Funds (% proportion)</td><td>
+
+                                <apex:outputtext label="Mutual Funds (% proportion) " value="{!ObjIps.Mutual_Funds__c}"/>
+              </td></tr>
+              <tr><td> Structured Products (% proportion)</td><td> <apex:outputtext label="Structured Products (% proportion)" value="{!ObjIps.Structured_Products__c}"/></td></tr></table>
+                          </apex:outputtext>
+                <apex:outputtext label="Experience in equities" value="{!ObjIps.Experience_in_equities__c}"/>
+                <apex:outputtext label="Trading frequency" value="{!ObjIps.Trading_frequency__c}"/>
+                <apex:outputtext label="I made a loss on one of my investments. I would react to the situation as" value="{!ObjIps.React_to_situation_after_loss__c}"/>
+                <apex:outputtext label="What is the bearing capacity?" value="{!ObjIps.bearing_capacity__c}"/>
+                </apex:pageblocksection>
+                
+                
+                <apex:pageBlockSection title="Risk Philosophy – Fixed Income" columns="1">
+
+                  <apex:outputtext label="Preference of instrument">
+
+        <table class='main'><tr><td>Direct Fixed Income (Bonds)(% proportion)</td><td>
+        <apex:outputtext label="Direct Fixed Income (Bonds)(% proportion)" value="{!ObjIps.Direct_Fixed_Income_Bonds__c}"/>
+        </td></tr>
+         <tr><td> Mutual Funds (% proportion)</td><td>
+             <apex:outputtext label="Mutual Funds (% proportion) " value="{!ObjIps.Mutual_funds_in_Fixed_income__c}"/>
+              </td></tr>
+              <tr><td> Structured Products (% proportion)</td><td> <apex:outputtext label="Structured Products (% proportion)" value="{!ObjIps.Structured_Products_In_Fixed_Income__c}"/></td></tr></table>
+                          </apex:outputtext>
+                <apex:outputtext label="Average investment time horizon" value="{!ObjIps.Average_investment_time_horizon__c}"/>
+                <apex:outputtext label="Minimum Credit rating requirement " value="{!ObjIps.Minimum_Credit_rating_requirement__c}"/>
+                <apex:outputtext label="What is approach towards fixed income investments?" value="{!ObjIps.approach_towards_fixed_income_investment__c}"/>
+                <apex:outputtext label="Preference for liquidity " value="{!ObjIps.Preference_for_liquidity__c}"/>
+                </apex:pageblocksection>
+                
+                
+                <apex:pageBlockSection title="Risk Philosophy – Alternative Investments" columns="1">
+
+                  <apex:outputtext label="Preference of instrument">
+
+        <table class='main'><tr><td>Gold(% proportion)</td><td>
+        <apex:outputtext label="Gold(% proportion)" value="{!ObjIps.Gold_Investment__c}"/>
+        </td></tr>
+         <tr><td> Real Estate(% proportion)</td><td>
+             <apex:outputtext label="Real Estate (% proportion) " value="{!ObjIps.Real_estate_investment__c}"/>
+              </td></tr>
+              <tr><td> Commodities(% proportion)</td><td> <apex:outputtext label="Commodities (% proportion)" value="{!ObjIps.Commodities_Investment__c}"/></td></tr>
+              <tr><td> Alternate Investment Funds (% proportion)</td><td> <apex:outputtext label="Alternate Investment Funds(% proportion)" value="{!ObjIps.Alternate_Investment_Funds__c}"/></td></tr>
+              </table>
+                          </apex:outputtext>
+                </apex:pageblocksection>
+                <apex:pageBlockSection title="Risk Philosophy – Futures and Options" columns="1">
+                <apex:outputtext label="" value="{!ObjIps.Risk_Philosophy_Futures_and_Options__c}"/>
+                                  </apex:pageblocksection>
+
+
+                </apex:pageblocksection>
+                <apex:pageBlockSection title="Current Portfolio" columns="1">
+                                    <apex:outputtext label="Investments (details as on date ____________)" >
+
+                        <table class='main' rowspan='3' colspan='3'>
+                        <tr>
+                            <th>Asset Class</th><th>Invested Amount</th><th>Current %</th><th>Target %</th>
+                        </tr>
+                        <tr>
+                            <td>Permanent Holdings </td>
+                            <td>{!ObjIps.Permanent_Holdings_Invested_Amount__c}</td>
+                            <td>{!ObjIps.Permanent_Holiding_Current_Per__c}</td>
+                            <td>{!ObjIps.Permanent_Holdings_Target_Per__c}</td>
+                         </tr>
+                         <tr>
+                            <td>Promoter Holdings</td>
+                            <td><apex:outputtext label="Promoter Holdings" value="{!ObjIps.Promoter_Holdings_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Promoter Holdings" value="{!ObjIps.Promoter_Holdings_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Real Estate (Residence)</td>
+                            <td><apex:outputtext label="Real Estate (Residence)" value="{!ObjIps.Real_Estate_Residence_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Real Estate (Residence)" value="{!ObjIps.Real_Estate_Residence_Target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Illiquid/Locked in Holdings </td>
+                            <td>{!ObjIps.Illiquid_Locked_in_Holdings_Invested_Amt__c}</td>
+                            <td>{!ObjIps.Illiquid_Locked_in_Holdings_Current_Per__c}</td>
+                            <td>{!ObjIps.Illiquid_Locked_in_Holdings_Target_Per__c}</td>
+                         </tr>
+ 
+                         <tr>
+                            <td>Real Estate/Property Funds</td>
+                            <td><apex:outputtext label="Real Estate/Property Funds" value="{!ObjIps.Real_Estate_Property_Funds_Invested_Amt__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Real Estate/Property Funds" value="{!ObjIps.Real_Estate_Property_Funds_Target_Per__c}"/></td>
+                         </tr>  
+                         <tr>
+                            <td>Art Funds</td>
+                            <td><apex:outputtext label="Art Funds" value="{!ObjIps.Art_Funds_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Art Funds" value="{!ObjIps.Art_Funds_Target_Per__c}"/></td>
+                         </tr>  
+                         <tr>
+                            <td>Structured Products</td>
+                            <td><apex:outputtext label="Structured Products" value="{!ObjIps.Structured_Products_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Structured Products" value="{!ObjIps.Structured_Products_Target_Per__c}"/></td>
+                         </tr>  
+                         <tr>
+                            <td>PE Funds/Private Placement</td>
+                            <td><apex:outputtext label="PE Funds/Private Placement" value="{!ObjIps.PE_Funds_Private_Placement_Invested_Amt__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="PE Funds/Private Placement" value="{!ObjIps.PE_Funds_Private_Placement_Target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Provident Funds</td>
+                            <td><apex:outputtext label="Provident Funds" value="{!ObjIps.Provident_Funds_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Provident Funds" value="{!ObjIps.Provident_Funds_Target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Liquid Holdings - T+3/T+5 Basis*</td>
+                            <td>{!ObjIps.Liquid_Holdings_Invested_Amount__c}</td>
+                            <td>{!ObjIps.Liquid_Holdings_Current_Per__c}</td>
+                            <td>{!ObjIps.Liquid_Holdings_Target_Per__c}</td>
+                         </tr>
+                         <tr>
+                            <td>Equity</td>
+                            <td>{!ObjIps.Equity_Invested_Amount__c}</td>
+                            <td></td>
+                            <td>{!ObjIps.Equity_Target_per__c}</td>
+                         </tr>
+                         <tr>
+                            <td>Stocks (Cash)</td>
+                            <td><apex:outputtext label="Stocks (Cash)" value="{!ObjIps.Stocks_Cash_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Stocks (Cash)" value="{!ObjIps.Stocks_Cash_Target_Per__c}"/></td>
+                         </tr> 
+
+                          <tr>
+                            <td>Futures and Options</td>
+                            <td><apex:outputtext label="Futures and Options" value="{!ObjIps.Futures_and_Options_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Futures and Options" value="{!ObjIps.Futures_and_Options_target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Equity Mutual Funds</td>
+                            <td><apex:outputtext label="Equity Mutual Funds" value="{!ObjIps.Equity_Mutual_Funds_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Equity Mutual Funds" value="{!ObjIps.Equity_Mutual_Funds_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Other</td>
+                            <td><apex:outputtext label="Other" value="{!ObjIps.Other_Equity_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Other" value="{!ObjIps.Other_Equity_Target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Fixed Income</td>
+                            <td>{!ObjIps.Fixed_Income_Invested_Amount__c}</td>
+                            <td></td>
+                            <td>{!ObjIps.Fixed_Income_Target_Per__c}</td>
+                         </tr>
+                         <tr>
+                            <td>Fixed Deposits</td>
+                            <td><apex:outputtext label="Fixed Deposits" value="{!ObjIps.Fixed_Deposits_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Fixed Deposits" value="{!ObjIps.Fixed_Deposits_Target_Per__c}"/></td>
+                         </tr> 
+                         <tr>
+                            <td>Bonds</td>
+                            <td><apex:outputtext label="Bonds" value="{!ObjIps.Bonds_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Bonds" value="{!ObjIps.Bonds_target_Per__c}"/></td>
+                         </tr> 
+                          <tr>
+                            <td>Non Convertible Debentures</td>
+                            <td><apex:outputtext label="Non Convertible Debentures" value="{!ObjIps.Non_Convertible_Debentures_Invested_Amt__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Non Convertible Debentures" value="{!ObjIps.Non_Convertible_Debentures_Target_Per__c}"/></td>
+                         </tr> 
+                          <tr>
+                            <td>Fixed Maturity Plans</td>
+                            <td><apex:outputtext label="Fixed Maturity Plans" value="{!ObjIps.Fixed_Maturity_Plans_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Fixed Maturity Plans" value="{!ObjIps.Fixed_Maturity_Plans_Target_Per__c}"/></td>
+                         </tr> 
+                          <tr>
+                            <td>Other</td>
+                            <td><apex:outputtext label="Other" value="{!ObjIps.Other_Fixed_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Other" value="{!ObjIps.Other_Fixed_Income_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Bullion / Precious Metals</td>
+                            <td><apex:outputtext label="Bullion / Precious Metals" value="{!ObjIps.Bullion_Precious_Metals_Invested_Amt__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Bullion / Precious Metals" value="{!ObjIps.Bullion_Precious_Metals_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Commodities</td>
+                            <td><apex:outputtext label="Commodities" value="{!ObjIps.Commodities_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Commodities" value="{!ObjIps.Commodities_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Currency</td>
+                            <td><apex:outputtext label="Currency" value="{!ObjIps.Currency_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Currency" value="{!ObjIps.Currency_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Alternatives</td>
+                            <td><apex:outputtext label="Alternatives" value="{!ObjIps.Alternatives_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Alternatives" value="{!ObjIps.Alternatives_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Real Estate</td>
+                            <td><apex:outputtext label="Real Estate" value="{!ObjIps.Real_Estate_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Real Estate" value="{!ObjIps.Real_Estate_Target_Per__c}"/></td>
+                         </tr>
+                         <tr>
+                            <td>Philanthropy </td>
+                            <td><apex:outputtext label="Philanthropy " value="{!ObjIps.Philanthropy_Invested_Amount__c}"/></td>
+                            <td></td>
+                            <td><apex:outputtext label="Philanthropy " value="{!ObjIps.Philanthropy_Target_Per__c}"/></td>
+                         </tr> 
+
+      
+                         </table>
+                          </apex:outputtext>
+
+                    </apex:pageblocksection>
+
+                    
+                
+                
+                <apex:pageBlockSection title="Monitoring" columns="1">
+                <apex:outputtext label="How often does client wish to monitor portfolio?" value="{!ObjIps.How_often_does_client_monitor_po__c}"/>
+                <apex:outputtext label="Expectations from my Financial Advisor:" value="{!ObjIps.Expectations_from_my_Financial_Advisor__c}"/>
+                 </apex:pageblocksection>
+                 
+                 
+
+                <apex:pageBlockSection title="Business Requirements" columns="1">
+                <apex:outputtext label="What are treasury management needs? " value="{!ObjIps.treasury_management_needs__c}"/>
+                <apex:outputtext label="What are Investment Banking requirements?" value="{!ObjIps.Investment_Banking_requirements__c}"/>
+                <apex:outputtext label="What are real estate requirements? " value="{!ObjIps.What_are_real_estate_requirements__c}"/>
+                <apex:outputtext label="Am I protected against Business Risks?" value="{!ObjIps.Am_I_protected_against_Business_Risks__c}"/>
+                <apex:outputtext label="Any other business requirements" value="{!ObjIps.Any_other_business_requirements__c}"/>
+                 </apex:pageblocksection>
+
+       </apex:form>
+      </apex:pageBlock>
+                <apex:relatedList list="liabilities__r" title="Liabilities" />
+                <apex:relatedList list="Insurance__r" title="Insurance" />
+
+
+    <!-- End Default Content REMOVE THIS -->
+</apex:page>

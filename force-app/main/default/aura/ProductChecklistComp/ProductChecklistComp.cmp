@@ -1,0 +1,63 @@
+<aura:component controller="ProductChecklistController" implements="force:appHostable,force:hasRecordId,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes" >
+	<style>
+        .slds-checkbox [type="checkbox"]:checked + .slds-checkbox--faux:after,
+        .slds-checkbox [type="checkbox"]:checked ~ .slds-checkbox--faux:after {
+         
+          height: 0.30rem !important;
+          width: 0.6rem !important; }
+        
+    
+        .slds-checkbox [type="checkbox"][disabled] + .slds-checkbox--faux:after,
+        .slds-checkbox [type="checkbox"][disabled] ~ .slds-checkbox--faux:after {
+          border-color: #54698d !important; 
+        }
+    </style> 
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="fieldList" type="List"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+	<aura:attribute name="isNoData" type="Boolean" default="false"/>
+    
+    <aura:renderIf isTrue="{!v.isNoData}">
+     	
+    <aura:set attribute="else">
+    	<div id="ChecklistField">
+            <div role="banner">
+                <div class="slds-grid">
+                    <div class="slds-col slds-has-flexi-truncate" style="display: inline-block;">
+                        <p class="slds-page-header__title"><h1 class="checklistheader">Financial Transaction Stage Checklist</h1></p>                                   
+                    </div>
+                </div>
+            </div>        
+            <div class="slds-card" style="padding-bottom: 10px !important;">            
+                <div class="slds-card__body hide container">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                        <aura:iteration var="fieldName" items="{!v.fieldList}" indexVar="index">                     
+                            <label class="slds-checkbox" style="padding-bottom: 10px;">
+                                <div style="padding-right: 14px;color:red;display: inline-block;height: 18px;"> </div>
+                                                        
+                                <aura:if isTrue="{!!fieldName.value}">
+                                    <span>
+                                        <input id="{!v.compId+v.fieldsetName+ index}" type="checkbox" disabled="disabled" class="inputCheckBoxClass" value="{!fieldName.value}" />                        
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!fieldName.label}</span>
+                                    </span>                    
+                                </aura:if>
+                                <aura:if isTrue="{!fieldName.value}">
+                                     <span>                                	
+                                        <input id="{!v.compId+v.fieldsetName+ index}" type="checkbox" disabled="disabled" checked="checked" class="inputCheckBoxClass" name="{!fieldName.apiName}" value="{!fieldName.value}" />		
+                                        <span class="slds-checkbox--faux"></span>
+                                        <span class="slds-form-element__label">{!fieldName.label}</span>
+                                    </span>                                               
+                                </aura:if>						                       
+                            </label>
+                        </aura:iteration>                    
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </aura:set>
+  </aura:renderIf>  
+    
+</aura:component>

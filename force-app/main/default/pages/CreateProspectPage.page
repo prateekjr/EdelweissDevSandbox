@@ -1,0 +1,344 @@
+<apex:page standardController="Lead" extensions="CreateProspect" docType="html-5.0">
+    <apex:includeScript value="{!URLFOR($Resource.Edelweiss_Jquery, '/Jquery/1.11.3/js/jquery.min.js')}"/>
+    <style>
+            body .bPageBlock .pbBody .grey .pbSubheader{
+                background-color:#E6E6FA!important;
+                color:#000!important;
+            }
+            .mandatoryErrorMsg{
+                 color:red;
+                 font-weight:bold;
+                 font-size:1.2em;
+                 margin-left: 38%;
+            }
+            .requiredBlockCss {
+                background-color: #c00;
+                bottom: 1px;
+                left: -4px;
+                position: absolute;
+                top: 1px;
+                width: 3px;
+           } 
+           .requiredInputCss {
+                height: 100%;
+                position: relative;
+            }
+            .Hidden{
+                display:none;
+            }
+            .centerAlignBtn{
+            
+                margin-left: 18%!important;
+            }
+    </style>
+    <apex:outputPanel id="scriptPanel">
+        <script>
+           $(document).ready(function(){
+               $( "input[id$='organization']" ).prop('disabled', true);
+               $( "input[id$='listedAcc']" ).prop('disabled', true);
+               $( "select[id$='Category']" ).prop('disabled', true);               
+           } );
+           
+           
+        </script>
+    </apex:outputPanel>
+    <script>
+        function customSave(){
+            var noValue = false;
+            
+            $('input.mandatoryCheck').each(function(){
+                  var value=$(this).val();
+                  console.log('value=='+value);
+                  if(value == ''){
+                    noValue = true;                    
+                    if ($(this).parent().next(".validation").length == 0) // only add if not added
+                    {
+                        console.log('in if part==='+value);
+                        $(this).parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter value</div>");
+                    }
+                  }else {
+                     console.log('In else part==='+value);
+                     $(this).parent().next(".validation").remove(); // remove it
+                  }
+            });
+            $('select.mandatoryCheck').each(function(){
+                  var value=$(this).val();
+                  console.log('value=='+value);
+                  if(value == ''){
+                    noValue = true;                    
+                    if ($(this).parent().next(".validation").length == 0) // only add if not added
+                    {
+                        console.log('in if part==='+value);
+                        $(this).parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter value</div>");
+                    }
+                  }else {
+                     console.log('In else part==='+value);
+                     $(this).parent().next(".validation").remove(); // remove it
+                  }
+            });
+            $('.dependentReqField select').each(function(){
+                  var value=$(this).val();
+                  if(value == ''){
+                    noValue = true;                    
+                    if ($(this).parent().next(".validation").length == 0) // only add if not added
+                    {
+                        $(this).parent().after("<div class='validation' style='color:red;margin-bottom: 20px;'>Please enter value</div>");
+                    }
+                  }else {
+                     $(this).parent().next(".validation").remove(); // remove it
+                  }
+            });
+            if(noValue == true){
+            
+                $('[id$=theMandatoryFieldError]').css({ 'display': "block" });
+                return false;
+            }else{
+                $('[id$=theMandatoryFieldError]').css({ 'display': "none" });
+                saveProspects();
+            
+            }
+    
+        
+        }
+                
+    
+    </script>
+    <apex:form >
+        <apex:actionfunction name="toggleVisibility" action="{!toggleVisibility}"  id="toggleVisibility" reRender="listedAccountInnerPanel,organizationInnerPanel,scriptPanel"/>
+        <apex:pageMessages id="errorId"/>
+        <apex:outputText value="Please Enter Mandatory Fields" style="display:none;" id="theMandatoryFieldError" styleclass="mandatoryErrorMsg" />
+        <apex:pageBlock title="New Prospects & Leads">                              
+            <apex:pageBlockButtons >
+                <input type="button" class="btn centerAlignBtn" value="Save" onclick="customSave();" />
+                <apex:commandButton value="Cancel" action="{!cancel}"/>
+            </apex:pageBlockButtons>
+            <apex:actionfunction name="saveProspects" action="{!saveProspects}"  id="saveProspects" reRender="errorId,LeadDetailPagePanel">
+            </apex:actionfunction>
+            <apex:outputPanel id="LeadDetailPagePanel" styleClass="grey">
+            
+                <apex:pageBlockSection title="Prospect Details" >                  
+                    <apex:inputField value="{!newLeadObj.Category__c }" id="Category"/>
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Sub_Category__c.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss dependentReqField">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.Sub_Category__c}" styleClass="mandatoryCheck"/> 
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                    <apex:inputField value="{!newLeadObj.Others__c }" id="Others"/>
+                    
+                    <apex:pageBlockSectionItem rendered="{!IF(isCorporate|| isHybrid,true,false)}">
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Organization_Type__c.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.Organization_Type__c }" onchange="toggleVisibility();" 
+                                                                             styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>                   
+                    
+                    <apex:pageBlockSectionItem id="listedAccReqEnable" rendered="{!IF(isCorporate|| isHybrid,true,false)}" >
+                        <apex:outputlabel value="{!$ObjectType.Lead.Fields.ListedAccount__c.Label}"/>
+                        <apex:outputPanel id="listedAccountInnerPanel">                          
+                            <apex:inputText value="{!newLeadObj.ListedAccount__c }" id="listedAcc" rendered="{!!islistedAccount}"/>  
+                            <apex:outputPanel rendered="{!islistedAccount}">
+                                <div class="requiredInputCss">
+                                    <div class="requiredBlockCss"></div>
+                                    <apex:inputField value="{!newLeadObj.ListedAccount__c }" id="listedAccReq"  styleClass="mandatoryCheck" />
+                                </div>  
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:inputField value="{!newLeadObj.Salutation }" rendered="{!IF(isIndividual || isHybrid,true,false)}"/>
+                    
+                    <apex:pageBlockSectionItem id="organizationReqEnable"  >
+                        <apex:outputlabel value="{!$ObjectType.Lead.Fields.Organizations__c.Label}"/>
+                        <apex:outputPanel id="organizationInnerPanel" >                          
+                            <apex:inputField value="{!newLeadObj.Organizations__c}" id="organization" rendered="{!!isOrganization}" />
+                            <apex:outputPanel rendered="{!isOrganization}">
+                                <div class="requiredInputCss">
+                                    <div class="requiredBlockCss"></div>
+                                    <apex:inputField value="{!newLeadObj.Organizations__c}" id="organizationReq"  styleClass="mandatoryCheck" />
+                                </div>  
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlockSectionItem>
+                                             
+                    <apex:pageBlockSectionItem rendered="{!IF(isIndividual || isHybrid,true,false)}" >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.FirstName.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.FirstName }" id="firstNameReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem> 
+                    
+                    <!--<apex:inputField required="true" value="{!newLeadObj.FirstName }" rendered="{!IF(isIndividual || isHybrid,true,false)}"/>
+                    -->
+                    <apex:pageBlockSectionItem rendered="{!IF(isIndividual || isHybrid,true,false)}" >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.LastName.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:input value="{!lastName}" styleClass="mandatoryCheck" />
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem> 
+                    
+                    <apex:inputField value="{!newLeadObj.MiddleName }" rendered="{!IF(isIndividual || isHybrid,true,false)}"/>
+                    
+                    <apex:inputField value="{!newLeadObj.Suffix }" rendered="{!IF(isIndividual || isHybrid,true,false)}"/>                
+                </apex:pageBlockSection>  
+                
+                <apex:pageBlockSection id="tBlock" title="Prospect Source Information">
+                     <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.LeadSource.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.LeadSource }" styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem> 
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Sub_Source_Level_1__c.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss dependentReqField">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputfield value="{!newLeadObj.Sub_Source_Level_1__c}" styleClass="mandatoryCheck"/>
+                                <apex:actionSupport event="onchange" rerender="tBlock"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                    
+                    
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Sub_Source_Level_2__c.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss dependentReqField">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputfield value="{!newLeadObj.Sub_Source_Level_2__c}" styleClass="mandatoryCheck" />
+                                <apex:actionSupport event="onchange" rerender="tBlock"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_2__c== 'Other Edelweiss Employee'}" value="{!newLeadObj.SBU_Name__c}" />
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_2__c== 'FA Referral' || newLeadObj.Sub_Source_Level_2__c== 'Other Edelweiss Employee'}" value="{!newLeadObj.Employee_Name__c}" />                    
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_2__c== 'Sub-Broker'}" value="{!newLeadObj.Sub_Broker_Name__c}" />
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_1__c== 'Database'}" value="{!newLeadObj.Database_Name__c}" />
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_1__c== 'Third Party Intelligence'}" value="{!newLeadObj.Name_of_Third_Party__c}" />
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_2__c== 'Stake Sale'}" value="{!newLeadObj.Date_of_News__c}" />
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_1__c== 'Third Party Intelligence'}" value="{!newLeadObj.Relationship_with_Third_Party__c}" />   
+                    <apex:inputfield rendered="{!newLeadObj.Sub_Source_Level_2__c== 'Stake Sale'}" value="{!newLeadObj.Source_of_News__c}" />
+                                                  
+                </apex:pageBlockSection>  
+                   
+                
+                <apex:pageBlockSection title="Prospect Contact Information" rendered="{!isCorporate}">
+                    <apex:inputField value="{!newLeadObj.Salutation }" />
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.FirstName.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.FirstName }" id="firstNameReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem> 
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.LastName.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:input value="{!lastName }" styleClass="mandatoryCheck" />
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:inputField value="{!newLeadObj.MiddleName }" />
+                    <apex:inputField value="{!newLeadObj.Suffix }" />
+                    <!--<apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.phone.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.phone}" id="phoneReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem> -->       
+                    <apex:inputfield value="{!newLeadObj.Phone}" />
+                    <!--<apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Email.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.Email}" id="EmailReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>  -->
+                    <apex:inputfield value="{!newLeadObj.Email}" />
+                    <apex:inputfield value="{!newLeadObj.Secondary_Email__c}" />
+                    <apex:inputfield value="{!newLeadObj.Connect_Information__c}" />
+                    <apex:inputfield value="{!newLeadObj.Connect_Within_Edelweiss__c}" />
+                </apex:pageBlockSection>  
+                
+                <apex:pageBlockSection title="Prospect Contact Information" rendered="{!IF(isIndividual || isHybrid,true,false)}">
+                    <!--<apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.phone.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.phone}" id="phoneReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>   -->     
+                    <apex:inputfield value="{!newLeadObj.Phone}" />
+                    <!--<apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Email.Label}" />  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputField value="{!newLeadObj.Email}" id="EmailReq"  styleClass="mandatoryCheck"/>
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>--> 
+                    <apex:inputfield value="{!newLeadObj.Email}" /> 
+                    <apex:inputfield value="{!newLeadObj.Secondary_Email__c}" />
+                    <apex:inputfield value="{!newLeadObj.Connect_Information__c}" />
+                    <apex:inputfield value="{!newLeadObj.Connect_Within_Edelweiss__c}" />
+                </apex:pageBlockSection> 
+                
+                <apex:pageBlockSection title="Additional Information" >
+                     
+                    <apex:inputfield value="{!newLeadObj.Family_Branch__c}" /> 
+                    <apex:inputField value="{!newLeadObj.Sub_LOB__c}"/>   
+                    <apex:inputField value="{!newLeadObj.Date_of_Birth__c}" rendered="{!(!isCorporate)}"/>
+                    <apex:inputField value="{!newLeadObj.Date_of_Inception__c}" rendered="{!isCorporate}"/>
+                </apex:pageBlockSection> 
+                
+                <apex:pageBlockSection title="Investment Information">
+                    <apex:pageBlockSectionItem >
+                        <apex:outputLabel value="{!$ObjectType.Lead.Fields.Size_of_Deal__c.Label}"/>  
+                        <apex:outputPanel >
+                            <div class="requiredInputCss">
+                                <div class="requiredBlockCss"></div>
+                                <apex:inputfield value="{!newLeadObj.Size_of_Deal__c}" styleClass="mandatoryCheck"/> 
+                            </div>  
+                        </apex:outputPanel>    
+                    </apex:pageBlockSectionItem>
+                    
+                    <apex:inputfield value="{!newLeadObj.Date_of_Deal__c}" />
+                    
+                </apex:pageBlockSection>  
+            
+            </apex:outputPanel>
+            
+              
+        </apex:pageBlock> 
+    </apex:form>
+</apex:page>

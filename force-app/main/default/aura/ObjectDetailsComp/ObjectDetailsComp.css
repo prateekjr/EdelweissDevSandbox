@@ -1,0 +1,45 @@
+.THIS .box-shadow{    
+    box-shadow: 0 0 10px rgba(0,0,0,.4);
+	border-radius : 5px; 
+}
+
+.THIS .slds-icon{
+    width:20px !important;
+    height:20px !important;
+}
+
+.THIS .slds-notify-container, .THIS .slds-notify_container{
+	position:relative !important;
+}
+.THIS .HeaderSectionCls{
+    height:25px;
+    padding:0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.THIS .DetailLabelClass{
+	vertical-align: middle;
+    margin-left:5px;
+}
+.THIS .checkboxgroup input{
+    display: inline-grid !important;
+    margin: 7px !important;
+    border: 1px solid rgb(109, 96, 82) !important;
+}
+.THIS .checkboxgroup {    
+    padding-left: 20px;
+    border: 1px solid #796f6f;
+    border-radius: 9px;
+    background-color: #e4f5f5;
+}
+.THIS .cObjectDetailsComp .slds-icon {
+    width: 15px!important;
+    height: 15px!important;
+}
+.THIS .selectwidth {
+    width: 80px !important;
+}
+
+.THIS.cCreateField.slds-input {
+    width: 95%!important;
+    margin: 10px;
+}

@@ -1,0 +1,10 @@
+.THIS .tableHeaderClass{
+    border-collapse: separate;
+    border-spacing: 25px 5px;
+}
+.THIS .tableTbClass{
+    vertical-align: top;
+    border-bottom: 1px solid rgb(216, 221, 230);
+    border-top-style: none;
+	word-break: break-all;
+}

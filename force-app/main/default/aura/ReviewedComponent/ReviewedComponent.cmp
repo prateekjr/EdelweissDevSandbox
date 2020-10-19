@@ -1,0 +1,22 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" controller="ReviewedController">  
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="profileFlag" type="Integer"/>
+    <aura:attribute name="successFlag" type="Integer"/>
+    
+     <aura:attribute name="spinner" type="Boolean" default="false"/>
+    <aura:attribute name="orderEntry" type="Order_Entry__c" 
+                    default="{ 'sobjectType': 'Order_Entry__c' }"/>	
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    
+        <aura:if isTrue="{!v.spinner}"> 
+    <center>
+        <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+               <img id="awesomeAdmin" src="/resource/Spinner"  />
+            </div>
+        </div>
+    </center>
+    </aura:if>
+</aura:component>

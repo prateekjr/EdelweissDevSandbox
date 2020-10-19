@@ -1,0 +1,193 @@
+<aura:component controller="AccountOpenCaseCreation" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global" >
+	<style>
+    	@-webkit-keyframes NAME-YOUR-ANIMATION {
+          0%, 49% {
+            background-color: rgb(255, 255, 255);
+          }
+          50%, 100% {
+            background-color: #e50000;
+          }
+        }
+    </style>    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />    
+    <aura:attribute name="RecordType" type="object" />
+    <aura:attribute name="recordTypeId" type="string" />
+    <aura:attribute name="RecordTypeMap" type="object" />
+    <aura:attribute name="CaseList" type="List" />
+    <aura:attribute name="Index" type="Integer" />
+    <aura:attribute name="isAccountOpening" type="boolean" default="false"/>
+    <aura:attribute name="isAccountOpeningDetail" type="boolean" default="false"/>
+    <aura:attribute name="isAccountOpeningDetailSub" type="boolean" default="false"/>
+    <aura:attribute name="isEdit" type="boolean" default="false"/>    
+  	<aura:attribute name="Cases" type="List" default="[]"/>
+    <aura:attribute name="caseObj" type="SObject" default="{ 'sobjectType': 'Case' }"/>
+    <aura:handler name="cmpEvent" event="c:ceEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="FamilyType" type="object" default="{}"/>
+    <aura:attribute name="isServiceRequestDetail" type="boolean" default="false"/>
+    <aura:attribute name="lookupFilter" type="String" default="NewFamily" />
+    <aura:attribute name="isProcessing" type="boolean" default="false"/>
+    <aura:attribute name="Confirmation" type="boolean" default="false"/>
+    <aura:attribute name="isDelete" type="boolean" default="false"/>
+    <aura:attribute name="indexDelete" type="Integer"/>
+
+    <aura:if isTrue="{!v.isProcessing}"> 
+    <center>
+        <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+             <div class="slds-modal__container">
+               <img id="Spin" src="/resource/Spinner"  />
+            </div>
+        </div>
+    </center>
+    </aura:if>
+    <aura:if isTrue="{!v.Confirmation}"> 
+      <center>
+        <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+          	<header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                   <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Delete Confirmation</h2>
+             </header>
+             <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                   This action will delete the record , Are you Sure ?
+             </div>
+             <footer class="slds-modal__footer">
+                <button class="slds-button slds-button_neutral" onclick="{!c.DeleteCancel}" >No</button>
+                <button class="slds-button slds-button_brand" onclick="{!c.DeleteConfirm}" >Yes</button>
+             </footer>
+            </div>
+        </div>
+    </center>
+    </aura:if>   
+    <aura:if isTrue="{!v.isServiceRequestDetail}"> 
+        <div class="normal">
+          <button class="slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small slds-button--brand " onclick="{!c.closeModel}">Redirect To Case Home</button>
+        </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isAccountOpeningDetail}">        
+        <div role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+            <div class="slds-modal__container">
+              <div class="slds-modal__header">
+                <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                X
+                <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 id="header99" class="slds-text-heading--medium">New Case: Account opening</h2>
+              </div>
+              <div class="slds-modal__content slds-p-around--medium">
+                <fieldset class="slds-form-element">            
+                    <aura:if isTrue="{!v.isAccountOpeningDetailSub}">
+                        <div class="slds-form-element__control">
+                            <span class="slds-radio">
+                                <input type="radio" id="NewClient" name="client" checked="checked"/>
+                                <label class="slds-radio__label" for="NewClient">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">New Client</span>
+                                </label>
+                            </span>
+                            <span class="slds-radio">
+                                <input type="radio" id="ExistingClient" name="client"/>
+                                <label class="slds-radio__label" for="ExistingClient">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Existing Client</span>
+                                </label>
+                            </span>
+                        </div>
+                        <aura:set attribute="else">
+                            <div class="slds-form-element__control">
+                                <span class="slds-radio">
+                                    <input type="radio" id="NewFamily" name="family" checked="checked"/>
+                                    <label class="slds-radio__label" for="NewFamily">
+                                    <span class="slds-radio_faux"></span>
+                                    <span class="slds-form-element__label">New Family</span>
+                                    </label>
+                                </span>
+                                <span class="slds-radio">
+                                    <input type="radio" id="ExistingFamily" name="family"/>
+                                    <label class="slds-radio__label" for="ExistingFamily">
+                                    <span class="slds-radio_faux"></span>
+                                    <span class="slds-form-element__label">Existing Family</span>
+                                    </label>
+                                </span>
+                            </div>
+                        </aura:set>
+                    </aura:if>
+                </fieldset>
+              </div>
+              <div class="slds-modal__footer">
+                <button class="slds-button slds-button--neutral" onclick="{!c.closeModel}" >Cancel</button>
+                <button class="slds-button slds-button--brand" onclick="{!c.nextModel}">Next</button>
+              </div>
+            </div>
+          </div>
+    </aura:if>
+    <aura:if isTrue="{!v.isAccountOpening}"> 
+        <div style="background-color: white !important; min">                  
+        	<div aura:id="detailDiv"/>            
+        	<aura:if isTrue="{!!v.FamilyType.ExistingClient}">
+                <div style="overflow: auto!important;">
+                <table class="slds-table slds-table--bordered" >                
+                    
+                    <thead>
+                        <tr class="slds-text-title_caps">
+                            <th scope="col" >
+                               <div class="slds-truncate">Client Name</div>
+                            </th>			
+                            <th scope="col">
+                               <div class="slds-truncate">Product Type</div>
+                            </th>
+                            <th scope="col" >
+                               <div class="slds-truncate">Entity Type</div>
+                            </th>
+                            <th scope="col" >
+                               <div class="slds-truncate">Is Family Head?</div>
+                            </th>
+                            <th scope="col" >
+                               <div class="slds-truncate">Actions</div>
+                            </th>
+                        </tr>
+                </thead>
+                <tbody>       
+                <aura:iteration items="{!v.Cases}" var="item" indexVar="index">
+                     <tr id="{!'tr'+index}">
+                        <td scope="col">
+                            <aura:if isTrue="{!item.Case.Client_Name__c != null &amp;&amp; item.Case.Client_Name__c != ''}">
+                            <div class="slds-truncate">{!item.Case.Client_Name__c}</div>
+                                <aura:set attribute="else">
+                                  <div class="slds-truncate">{!item.Account.Account.Name}</div>
+                                </aura:set>
+                            </aura:if>
+                        </td>
+                        <td scope="col">
+                            <div class="slds-truncate">{!item.Case.Product_Type__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div class="slds-truncate">{!item.Case.Entity_Type__c}</div>
+                        </td>
+                        <td scope="col">
+                            <div class="slds-truncate"><ui:outputCheckbox value="{!item.Case.Is_Family_Head__c}"/></div>
+                        </td>
+                        <td scope="col">
+                            <div class="slds-truncate"><a href="javascript:void(0)" class="slds-text-link" data-Index="{!index}" onclick="{!c.editRecord}">Edit</a> | <a href="javascript:void(0)" data-Index="{!index}" onclick="{!c.DeleteNav}" class="slds-text-link">Delete</a></div>
+                        </td>
+                    </tr>
+                </aura:iteration>
+                </tbody>
+                    
+            </table>    
+                        </div>
+            <div class="slds-p-around--medium" aura:id="articleOne">
+                <div aura:id="DetailBtnDiv" >   
+                    <div aura:id="formDiv"/>
+                    <div aura:id="DetailEditBtnSection" style="text-align: center;">
+                        <button onclick="{!c.cancelAll}" class=" slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small ">Cancel All</button>
+                        <button onclick="{!c.saveAllCases}" class=" slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small slds-button--brand">Save All</button>
+                    </div>
+                </div>	
+            </div>
+     	</aura:if>
+        </div>
+    </aura:if>    
+
+</aura:component>

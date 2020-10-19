@@ -1,0 +1,61 @@
+<apex:page showHeader="false"
+	sidebar="false"
+	docType="html-5.0"
+	applyHtmlTag="false"
+	applyBodyTag="false"
+	controller="AjaxProxyController"
+>
+<html>
+<head>
+	<script>
+function promisify(fn, scope) {
+	return function() {
+		var args = Array.prototype.slice.apply(arguments);
+		return new Promise(function (resolve, reject) {
+			fn.apply(scope, args.concat([function(result, event) {
+				if (event.status) {
+					resolve(result);
+				} else {
+					reject(new Error(event.message));
+				}
+			}, { escape: false }]));
+		});
+	}
+}
+
+var AjaxProxy = {
+	request: promisify(AjaxProxyController.request, AjaxProxyController)
+};
+
+function request(params) {
+	return AjaxProxy.request(params).then(function(res) {
+		var headers = Object.keys(res.headers || {}).reduce(function(hds, key) {
+			hds[key.toLowerCase()] = res.headers[key];
+			return hds;
+		}, {});
+		if (/^application\/json($|;)/.test(headers['content-type'])) {
+			res.body = JSON.parse(res.body);
+		}
+		return res;
+	});
+}
+
+// It is required to define GoogleApi named credential
+// to connect google api (https://www.googleapis.com/)
+request({
+	method: 'GET',
+	url: 'http://182.73.52.130:5045/api/Client/GetSalesForceClients'
+}).then(function(res) {
+	console.log(res.statusCode, res.body);
+	document.getElementById('email').innerHTML = res.body.email;
+}).catch(function(err) {
+	console.error(err);
+});
+
+	</script>
+</head>
+<body>
+	<span>Google Account Email: <b id="email"></b></span>
+</body>
+</html>
+</apex:page>

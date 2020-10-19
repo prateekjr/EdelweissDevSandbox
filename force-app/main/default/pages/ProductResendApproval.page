@@ -1,0 +1,20 @@
+<apex:page standardController="Product2"  >
+
+    <apex:includeLightning />
+
+    <div id="lightning" />
+
+    <script>
+     var id = '{!Product2.id}';
+      
+        
+      $Lightning.use("c:ResendApprovalApp", function () {
+          $Lightning.createComponent("c:ResendApproval", {
+            recordId: "{!Product2.id}"
+          },
+          "lightning",
+           function(cmp) { });
+     });
+    </script>
+
+</apex:page>

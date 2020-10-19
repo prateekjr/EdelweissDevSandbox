@@ -1,0 +1,51 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" controller="RecordTypeSelectorController" access="global">
+    
+    <ltng:require styles="/resource/SLDS103/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" access="public"/>
+    <aura:attribute name="recordTypes" type="String[]" access="public"/>
+    <aura:attribute name="myrRecordTypes" type="String[]" access="public"/>
+    <aura:attribute name="selectedrecordType" type="String[]" access="public"/>
+    <aura:attribute name="serviceRequestId" type="String" default=""/>
+    <aura:attribute name="accountOpeningId" type="String" default=""/>
+     <aura:attribute name="FundTransferId" type="String" default=""/>
+    <aura:attribute name="FinancialTransactionId" type="String" default=""/>
+    <aura:attribute name="WealthInWardingId" type="String" default=""/>
+    
+    <div class="demo-only" style="height: 640px;">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                        X
+                        <span class="slds-assistive-text">Close</span></button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Case</h2>
+                </header>
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    Select a record type : 
+                    <div style="display: inline-grid;padding-left:250px">
+                        <aura:iteration items="{!v.myrRecordTypes}" var="rt">
+                            <span class="slds-radio slds-list--vertical slds-list--vertical-space">
+                                <ol class="slds-list--vertical slds-list--vertical-space" style="padding-bottom:20px;" >
+                                    <input type="radio" value="{!rt.rt.Name}" disabled = "false" name="recordTypeRadio" checked="{!rt.isChecked}" id="{!rt.rt.Id}" style="margin-right: 15px;" class="slds-list--vertical slds-list--vertical-space"/>
+                                    <label class="slds-radio__label" for="{!rt.rt.Id}">
+                                        <span class="slds-radio_faux"></span>
+                                        <span class="slds-form-element__label">{!rt.rt.Name}</span>
+                                        <br/>
+                                        <div style="margin-left: 25px;">{!rt.rt.Description}</div>
+                                    </label>
+                                </ol> 
+                            </span>
+                        </aura:iteration>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick="{!c.createRecord}">Next</button>
+                </footer>
+                
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </div>
+</aura:component>

@@ -1,0 +1,44 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<ltng:require styles="/resource/LDS/assets/styles/salesforce-lightning-design-system-vf.css" />
+    <aura:attribute name="fieldSetList" type="FieldSetMember[]"/>
+    <aura:attribute name="fieldSetName" type="String" default=""/>
+    <aura:attribute name="leftPanelLst" type="FieldSetMember[]"/>
+    <aura:attribute name="rightPanelLst" type="FieldSetMember[]"/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="true"/>
+    <aura:attribute name="isEnabledTradingFeilds" type="Boolean" default="false"/>
+    <aura:attribute name="fieldSetMap" type="Object" default="{}"/>
+    <aura:attribute name="CompSource" type="String" />
+    <aura:attribute name="isObjUpdateable" type="Boolean" default="" />
+    <aura:attribute name="iterateLst" type="FieldSetMember[]" />
+    <aura:attribute name="isSingleColumnSection" type="Boolean" default="false" />
+	<aura:attribute name="parentAccountId" type="String" default="" />
+    <aura:attribute name="lookupFilter" type="String" default="NewFamily" />
+    <aura:attribute name="FamilyType" type="Object" default="{}"/>
+    
+    <aura:attribute name="record" type="Sobject"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	
+	<div class="slds" style="padding-left: 3% !important;">
+         <div class="slds-p-around--medium">
+            <div class="slds-grid slds-wrap">
+                <aura:iteration items="{!v.iterateLst}" var="filedSetList" indexVar="indx">
+                   
+                        <aura:iteration items="{!filedSetList}" var="fldSet" indexVar="indx">
+							<aura:if isTrue="{!fldSet.isAccessible}">
+                                <aura:if isTrue="{!fldSet.fieldPath == 'Joint_Holder_Client2_Name__c' || fldSet.fieldPath == 'Joint_Holder_Client1_Name__c'}">
+                                    <div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2"></div>
+                                </aura:if>
+								<div class="slds-col slds-size--1-of-1 slds-medium-size--1-of-2">                               
+									<aura:if isTrue="{!fldSet != undefined}">                                        
+                                         <c:CreateField parentAccountId="{!v.parentAccountId}" isObjUpdateable="{!v.isObjUpdateable}" CompSource="{!v.CompSource}" record="{!v.record}" isReadOnly="{!v.isReadOnly}" label="{!fldSet.label}" inputType="{!fldSet.type}" fieldName="{!fldSet.fieldPath}" referenceObjName="{!fldSet.referenceObjName}" isRequired="{!fldSet.required}"  dbRequired="{!fldSet.DBRequired}" pickListValues="{!fldSet.pickListValues}" value="{!fldSet.value}" isRTF="{!fldSet.isHTMLFormatted}" maxLength="{!fldSet.maxLength}" isFormula="{!fldSet.isFormula}" isEditable="{!fldSet.isEditable}" DecimalDigits="{!fldSet.decimalDigits}" helpText="{!fldSet.helpText}" lookupFilter="{!v.lookupFilter}" FamilyType="{!v.FamilyType}" isEnabledTradingFeilds="{!v.isEnabledTradingFeilds}" />
+                                    </aura:if>
+								</div>
+							</aura:if>
+                        </aura:iteration> 
+                  
+                </aura:iteration>            
+             </div>
+
+        </div>
+    </div>
+</aura:component>

@@ -1,0 +1,43 @@
+<aura:component implements="force:appHostable" access="global" controller="CSVImportController">
+<aura:attribute name="parentId" type="String"/>
+<aura:attribute name="reportURL" type="String"/>
+<aura:handler event="aura:waiting" action="{!c.waiting}"/>
+<aura:handler event="aura:doneWaiting" action="{!c.doneWaiting}"/>
+
+<div class="slds-form--horizontal">
+  <div class="slds-form-element">
+	<label class="slds-form-element__label" for="inputSample2">Select Object Name :</label>
+	<div class="slds-form-element__control">
+	   <ui:inputSelect aura:id="SelectObject" label="Selected Values: ">
+		<ui:inputSelectOption label="Monthly Target AuA" text="MonthlyTargetAuA"/>
+		<ui:inputSelectOption label="NPS" text="NPS"/>
+        <ui:inputSelectOption label="R5 Target Count" text="R5TargetCount"/>
+		<ui:inputSelectOption label="FA Revenue" text="FARevenue"/>
+        <ui:inputSelectOption label="Client Revenue" text="ClientRevenue"/>
+	   </ui:inputSelect>
+	</div>
+  </div>
+  
+  <div class="slds-form-element">
+	  <span class="slds-form-element__label" id="file-selector-id">Attach CSV File</span>
+	  <div class="slds-form-element__control">
+		<div class="slds-file-selector slds-file-selector--files">
+		  <div class="slds-file-selector__dropzone">
+			<input type="file" aura:id="file" class="slds-file-selector__input slds-assistive-text" accept=".csv" id="file-upload-input-01" aria-describedby="file-selector-id" />
+			<label class="slds-file-selector__body" for="file-upload-input-01">
+			  <span class="slds-file-selector__button slds-button slds-button--neutral">		   
+				Upload Files</span>
+			  <span class="slds-file-selector__text slds-medium-show">or Drop Files</span>
+			</label>
+		  </div>
+		</div>
+	  </div>
+   </div>
+    <div class="slds-form-element">
+		<div class="slds-form-element__control">
+			<ui:button label="Save" press="{!c.save}"/>
+		</div>
+	</div>     
+	
+</div>   
+</aura:component>

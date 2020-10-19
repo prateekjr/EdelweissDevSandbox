@@ -1,0 +1,7 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    <aura:attribute name="EventRec" type="Task" 
+      default="{ 'sobjectType': 'Task' }"/>
+    test
+                      <force:inputField required="true"  value="{!v.EventRec.Subject}"/>
+	 <force:inputField value="{!v.EventRec.Description}"/>
+</aura:component>

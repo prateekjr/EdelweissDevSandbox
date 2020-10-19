@@ -1,0 +1,82 @@
+.THIS .customIcon div{
+    vertical-align: top !important;
+}
+ 
+.THIS.customIcon div{
+    vertical-align: top !important;
+}
+.THIS .uiInput--select .select	{
+    height:35px !important;
+}
+.THIS.select{
+    height:35px !important;
+}
+.THIS .uiInput--select{
+    height:35px !important;
+}
+.THIS.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.THIS.tooltip:hover{
+  visibility: visible;
+}
+
+
+.THIS .verticalAlign {
+	cursor: pointer;
+	margin: 6px 0px 0px 6px!important;
+}
+.THIS .fullWidth {
+	width: 100% !important;
+}
+.THIS .recordListBox {
+	margin-top:0px !important;
+	overflow-y: scroll;
+}
+.THIS .inputBox input {
+	padding-left: 30px;
+}
+.THIS .eachItem:hover {
+    background-color: #EEE;
+    cursor: pointer;
+}
+.THIS .inputIcon {
+	z-index: 99;
+    padding: 2px 0;
+}
+ 
+/* For Scrolling */
+.THIS ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+.THIS ::-webkit-scrollbar-track {
+   display: none !important;
+}
+.THIS ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0,0,0,0.4);
+}
+
+.THIS .inputLookup{
+    height: 35px !important;
+}
+.THIS .slds-pill-container {
+     height:36px;
+}
+
+.THIS .slds-modal__container{
+	width: 80% !important;
+	max-width: 80% !important;
+}

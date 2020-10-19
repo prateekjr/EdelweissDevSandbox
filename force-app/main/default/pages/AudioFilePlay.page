@@ -1,0 +1,17 @@
+<apex:page controller="AudioFilePlayController" docType="html-5.0"  sidebar="false" standardStylesheets="false" showHeader="false" >
+<head>
+  <apex:slds /> 
+</head> 
+<body>
+    <div class="slds">  
+        <apex:dataTable value="{!ContentVersionClsList}" var="record" styleClass="slds-table slds-table--bordered slds-table--striped">
+            <apex:column >
+                <div>
+                    {!record.Title}.{!record.FileExtension}
+                </div>
+                <audio controls="controls" src="data:audio/mpeg;base64,{!record.VersionData}" />
+            </apex:column>
+        </apex:dataTable>
+    </div>
+</body>
+</apex:page>

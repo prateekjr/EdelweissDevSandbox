@@ -1,0 +1,53 @@
+<aura:component controller="MOUIIntegration" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" >
+	<aura:attribute name="recordId" type="String" />
+    <aura:attribute name="message" type="string" default="Processing..."/>
+    <aura:attribute name="isSuccess" type="string" default="false"/>
+    <aura:attribute name="errorMessage" type="string"/>
+    <aura:attribute name="returnBody" type="string"/>
+    <aura:attribute name="Confirmation" type="boolean" default="true"/>
+    <aura:attribute name="isMailSent" type="boolean" default="false"/>
+    <aura:attribute name="mailPopup" type="boolean" default="false"/>
+    <aura:attribute name="MOUIPopup" type="boolean" default="true"/>
+    <aura:attribute name="isProcessing" type="boolean" default="false"/>
+    <aura:attribute name="isError" type="boolean" default="false"/>
+    <aura:attribute name="salutations" type="string"/>
+    <aura:attribute name="clientName" type="string"/>
+    <aura:attribute name="emailAddress" type="string"/>
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <aura:if isTrue="{!v.isProcessing}"> 
+        <center>
+                <div role="status" class="slds-spinner slds-spinner_medium">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+        </center>
+    </aura:if>
+    <aura:if isTrue="{!v.MOUIPopup}">  
+    <center>
+        Are you sure to send MOUI request ?
+    </center>
+    <center>
+        <div style='height:5px;'></div>
+    </center>
+    <br></br>
+    <center>
+        <button class="slds-button slds-button_brand" onclick="{!c.sendOneReq}" >Yes</button>
+        <button class="slds-button slds-button_neutral" onclick="{!c.cancelRequest}" >No</button>
+    </center>
+    </aura:if>
+    <aura:if isTrue="{!v.mailPopup}">  
+        <center>
+            Are you sure to send Client Introduction Mail to {!v.salutations}&nbsp;{!v.clientName} with {!v.emailAddress} email Id?
+        </center>
+        <center>
+            <div style='height:5px;'></div>
+        </center>
+        <br></br>
+        <center>
+            <button class="slds-button slds-button_brand" onclick="{!c.sendMailAndMOUI}" >Yes</button>
+            <button class="slds-button slds-button_neutral" onclick="{!c.sendMOUIOnly}" >No</button>
+        </center>              
+    </aura:if>
+</aura:component>

@@ -1,0 +1,19 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" controller="MarkUnqualifiedController" access="global">
+    
+    <ltng:require styles="/resource/SLDS103/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" access="public"/>
+    <aura:attribute name="AccountRec" type="Account" 
+                    default="{ 'sobjectType': 'Account' }"/>
+     <aura:attribute name="showError" type="boolean" default="false"/>
+    <div>
+       Select Reason : 
+        <br/>
+	<force:inputField value="{!v.AccountRec.Reason_For_Disqualification__c}"/>
+    </div>
+    <br/>
+    <aura:renderIf isTrue="{!v.showError}">
+    <label style="color:RED">Please Select Any Reason
+        </label>
+    </aura:renderIf>
+     <button class="slds-button slds-button_brand"  onclick="{!c.saveRecordDetails}" style="float:right">Save</button>
+</aura:component>

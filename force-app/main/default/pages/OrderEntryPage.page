@@ -1,0 +1,100 @@
+<apex:page standardController="Order_Entry__c">
+  <html>
+      <article class="slds-card">
+  <div class="slds-card__body slds-card__body_inner">
+    <div class="slds-path">
+      <div class="slds-grid slds-path__track">
+        <div class="slds-grid slds-path__scroller-container">
+          <div class="slds-path__scroller" role="application">
+            <div class="slds-path__scroller_inner">
+              <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                <li class="slds-path__item" role="presentation">
+                  <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1">
+                    
+                    <span class="slds-path__title">Amir Khan</span>
+                  </a>
+                </li>
+                <li class="slds-path__item slds-is-incomplete" role="presentation">
+                  <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1">
+                    <span class="slds-path__stage">
+                       
+                    </span>
+                    <span class="slds-path__title">Bond</span>
+                  </a>
+                </li>
+                <li class="slds-path__item slds-is-active slds-is-current" role="presentation">
+                  <a aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-13" role="option" tabindex="0">
+                    <span class="slds-path__stage">
+                       
+                      <span class="slds-assistive-text">Current Stage:</span>
+                    </span>
+                    <span class="slds-path__title">Dummy Product</span>
+                  </a>
+                </li>
+                <li class="slds-path__item slds-is-incomplete" role="presentation">
+                  <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-14" role="option" tabindex="-1">
+                    <span class="slds-path__stage">
+                       
+                    </span>
+                    <span class="slds-path__title">Txn Details</span>
+                  </a>
+                </li>                
+              </ul>
+            </div>
+          </div>
+        </div>       
+      </div>
+    </div>
+  </div>
+</article>
+      <article class="slds-card">
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-path">
+                <div class="slds-grid slds-path__track">
+                    <div class="slds-grid slds-path__scroller-container">
+                        <div class="slds-path__scroller" role="application">
+                            <div class="slds-path__scroller_inner">
+                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                    <li class="slds-path__item slds-is-complete" role="presentation">
+                                        <a aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-1" role="option" tabindex="0">
+                                            <span class="slds-path__stage">                                              
+                                                
+                                            </span>
+                                            <span class="slds-path__title">Amir Khan</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item slds-is-complete" role="presentation">
+                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-2" role="option" tabindex="1">
+                                            <span class="slds-path__stage">
+                                                
+                                            </span>
+                                            <span class="slds-path__title">Bond</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item slds-is-current slds-is-active" role="presentation">
+                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-3" role="option" tabindex="2">
+                                            <span class="slds-path__stage">
+                                                 <span class="slds-assistive-text">Current Stage:</span>
+                                            </span>
+                                            <span class="slds-path__title">Dummy Product</span>
+                                        </a>
+                                    </li>
+                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-4" role="option" tabindex="3">
+                                            <span class="slds-path__stage">
+                                               
+                                            </span>
+                                            <span class="slds-path__title">Txn Details</span>
+                                        </a>
+                                    </li>                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </article>
+
+  </html>
+</apex:page>

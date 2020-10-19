@@ -1,0 +1,80 @@
+<aura:component access="global" implements="flexipage:availableForRecordHome,force:hasRecordId" controller="ChecklistCompController">
+	
+    <aura:attribute name="compId" type="String" />
+    <aura:attribute name="fieldSetNameList" type="List" />
+    <aura:attribute name="fieldsetName" type="String" />
+    <aura:attribute name="accountId" type="String" />
+    <aura:attribute name="fieldList" type="List"/>    
+    <aura:attribute name="accountRecord" type="Account" default="{ 'sobjectType': 'Account' }"/>
+    <aura:attribute name="completeChecklist" type="Boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:registerEvent name="CheckBoxSelect" type="c:CheckBoxSelect"/>
+    
+    
+    <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 10px !important;">
+        <div class="slds-card__header slds-grid" style="margin-bottom:0;">
+          <div class="slds-media slds-media--center slds-has-flexi-truncate">       
+            	<div style="display: inline-block; width: 10%;" class="iconCompleteDiv">                	
+                    <aura:renderIf isTrue="{!v.completeChecklist}">
+                    	<c:svgIcon Id="{!v.compId+'completeIcon'+v.fieldsetName}" class="slds-m-bottom--x-small slds-icon slds-icon--x-small slds-icon-text-default completeIcon" svgPath='/resource/EdelWiessSLDS/assets/icons/action-sprite/svg/symbols.svg#approval'></c:svgIcon>                
+                    </aura:renderIf>
+                    <aura:renderIf isTrue="{!!v.completeChecklist}">
+                        <c:svgIcon Id="{!v.compId+'incompleteIcon'+v.fieldsetName}" class="slds-m-bottom--x-small slds-icon slds-icon--x-small slds-icon-text-error incompleteIcon" svgPath='/resource/EdelWiessSLDS/assets/icons/action-sprite/svg/symbols.svg#new_task'></c:svgIcon>               
+                    </aura:renderIf>
+				</div>
+              <div class="slds-media__body">              	
+                <div style="display: inline-block; width: 90%;">
+                	<h2 class="slds-text-heading--small slds-truncate fieldSetName"> {!v.fieldsetName} Stage</h2>
+                </div>                
+            </div>
+          </div>
+          <div class="slds-no-flex ToggleCollapseDiv" style="cursor: pointer;" id="{!v.compId+v.fieldsetName+'_ButtonDiv'}" onclick="{!c.ToggleCollapse}">
+            <div class="show"> 
+                <img src="/resource/EdelWeissResource/extraIcon/chevron-down.png" alt="Down" />
+            </div> 
+            <div class="hide"> 
+                <img src="/resource/EdelWeissResource/extraIcon/chevron-up.png" alt="Up" />
+            </div> 
+          </div>
+        </div>
+        <div class="slds-card__body hide container">
+          	<div class="slds-form-element">
+                <div class="slds-form-element__control">
+                <aura:iteration var="fieldName" items="{!v.fieldList}" indexVar="index">                     
+                    <label class="slds-checkbox">
+                        <aura:if isTrue="{!fieldName.isrequire}">
+                            <div style="padding-right: 5px;color:red; font-weight: bold;font-size: 20px;vertical-align: middle;display: inline-block;">*</div>
+                        </aura:if>
+                        <aura:if isTrue="{!!fieldName.isrequire}">
+                            <div style="padding-right: 14px;color:red;display: inline-block;height: 18px;"> </div>
+                        </aura:if>                        
+                        <aura:if isTrue="{!!fieldName.value}">
+                            <aura:if isTrue="{!!fieldName.isReadOnly}">
+                                <span>
+                                    <input id="{!v.compId+v.fieldsetName+ index}" type="checkbox"  class="inputCheckBoxClass" name="{!fieldName.apiName}" value="{!fieldName.value}" onchange="{!c.Savechanges}" />
+                                	<span class="slds-checkbox--faux"></span>
+                        			<span class="slds-form-element__label">{!fieldName.label}</span>
+                                </span>                        
+                            </aura:if>
+                            <aura:if isTrue="{!fieldName.isReadOnly}">
+                                 <span>
+                                	<input id="{!v.compId+v.fieldsetName+ index}" type="checkbox" disabled="disabled"  class="inputCheckBoxClass" name="{!fieldName.apiName}" value="{!fieldName.value}" />                        
+                            		<span class="slds-checkbox--faux"></span>
+                        			<span class="slds-form-element__label">{!fieldName.label}</span>
+                                </span>  
+                            </aura:if>                     
+                        </aura:if>
+                        <aura:if isTrue="{!fieldName.value}">
+							 <span>                                	
+								<input id="{!v.compId+v.fieldsetName+ index}" type="checkbox" disabled="disabled" checked="checked" class="inputCheckBoxClass" name="{!fieldName.apiName}" value="{!fieldName.value}" onchange="{!c.Savechanges}" />		
+								<span class="slds-checkbox--faux"></span>
+								<span class="slds-form-element__label">{!fieldName.label}</span>
+							</span>                                               
+                        </aura:if>						                       
+                    </label>
+                </aura:iteration>                    
+                </div>
+            </div>
+        </div> 
+  	</div> 
+</aura:component>

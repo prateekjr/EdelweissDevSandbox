@@ -1,0 +1,7 @@
+<aura:component controller="gotoGWMPortal" implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" >
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="message" type="string" default="Processing..."/>
+    <aura:attribute name="objcallBack" type="gotoGWMPortal.lightingCallBack" default="{'sobjectType':'gotoGWMPortal.lightingCallBack'}" />
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    {!v.message}
+</aura:component>

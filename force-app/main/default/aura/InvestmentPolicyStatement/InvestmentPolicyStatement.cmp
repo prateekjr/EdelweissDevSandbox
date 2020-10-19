@@ -1,0 +1,8 @@
+<aura:component implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" >
+    
+    <aura:attribute name="recordId" type="Id" />
+    
+    <iframe height="500px" width="100%" src="{! '/apex/InvestmentPolicyStatement?id=' + v.recordId}">
+    </iframe>
+	
+</aura:component>

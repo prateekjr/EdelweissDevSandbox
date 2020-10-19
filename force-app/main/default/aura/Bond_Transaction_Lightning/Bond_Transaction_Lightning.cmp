@@ -1,0 +1,1180 @@
+<aura:component Controller="TransactionController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+    
+    <aura:attribute name="cutoffCounter" type="integer" default="0" />
+    <!-- For Client Consonent File Attachment Start -->
+    <!-- 'parentId' Aura Attribute for store the Id for Parent Record where we are attach our file -->  
+    <aura:attribute name="parentId" type="Id"/>
+    <!-- 'showLoadingSpinner' attribute for show/hide the uploading image and msg in aura:if-->
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <!-- 'fileName' attribute for display the selected file name -->  
+    <aura:attribute name="fileName" type="String" default="No File Selected.." />
+    <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->
+    <aura:attribute name="attachmentName" type="String" default=""/>
+    
+    <!-- disable preview screen fields -->
+    <aura:attribute name="isDisabled" type="Boolean" default="true" />
+    
+    
+    <aura:attribute name="orderEntry" type="Order_Entry__c" 
+                    default="{ 'sobjectType': 'Order_Entry__c' }"/>	
+    
+    <aura:attribute name="filteredFamilyList" type="String[]" />
+    <aura:attribute name="filteredClientList" type="String[]" />
+    <aura:attribute name="filteredClientAccountList" type="String[]" />
+    <aura:attribute name="filteredClientAssetList" type="String[]" />
+    <aura:attribute name="filteredClientAssetListRedemption" type="String[]" />
+    <aura:attribute name="filteredInstruments" type="String[]" />
+    <aura:attribute name="folioList" type="String[]" />
+    <aura:attribute name="uccList" type="String[]" />
+    <aura:attribute name="folioListPurchase" type="String[]" />
+    <aura:attribute name="amcList" type="String[]" />
+    <aura:attribute name="schemeList" type="String[]" />
+    <aura:attribute name="selectedFamilyRecord" type="sObject" default="{}"/>
+    <aura:attribute name="selectedClientRecord" type="sObject" default="{}"/>
+    <aura:attribute name="selectedClientAccountRecord" type="sObject" default="{}"/>
+    <aura:attribute name="selectedFolio" type="sObject" default="{}"/>
+    <aura:attribute name="selectedInstrument" type="sObject" default="{}"/>
+    
+    
+    
+    <aura:attribute name="primaryFA" type="String" />
+    
+    <aura:attribute name="productList" type="String[]" />
+    <aura:attribute name="objDetail" type="contact" default="{'sobjectType' : 'Order_Entry__c'}"/>
+    <aura:attribute name="controllingFieldAPI" type="string" default="Product_Type_Order_Entry__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="Transaction_Type__c" description="store field API name of dependent field"/>
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listMarketTypeValues" type="list" default="IPO,Market purchase" description="to store Market Type field values"/>
+    <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    <aura:attribute name="isFirstScreen" type="Boolean" Default ="true" />
+    <aura:attribute name="isProuctTypeMF" type="Boolean" Default ="false" />
+    <aura:attribute name="isPreviewScreen" type="Boolean" Default ="false" />
+    <aura:attribute name="isBond" type="Boolean" Default ="false" />
+    <aura:attribute name="showInstrument" type="Boolean" Default ="false" />
+    <aura:attribute name="isBondBuy" type="Boolean" Default ="false" />
+    <aura:attribute name="isBondSell" type="Boolean" Default ="false" />
+    <aura:attribute name="isBondPreviewScreen" type="Boolean" Default ="false" />
+    <aura:attribute name="orderDateStr" type="String"/>
+    <aura:attribute name="valueDateStr" type="String"/>
+    <aura:attribute name="accountNameDisplay" type="String"/>
+    <aura:attribute name="currentTime" type="DateTime" />
+
+    <aura:attribute name="isSP" type="Boolean" Default ="false" />
+    <aura:attribute name="isPriceDisable" type="Boolean" default="false" />
+	<aura:attribute name="isPaymentModeDisable" type="Boolean" Default ="false" />
+    <aura:attribute name="isPOADisplay" type="Boolean" Default ="false" />
+    <aura:attribute name="isExternalDisplay" type="Boolean" Default ="false" />
+    <aura:attribute name="isPOA" type="Boolean" Default ="false" />
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+   <!-- <aura:handler name="change" value="{!v.orderEntry.Family_Name__c}" action="{!c.familySelection}"/> -->
+    <aura:handler name="change" value="{!v.selectedClientRecord}" action="{!c.clientAccountSelection}"/>
+    <aura:handler name="change" value="{!v.selectedClientAccountRecord}" action="{!c.getProducts}"/>
+    <aura:handler name="change" value="{!v.selectedInstrument}" action="{!c.setValueToInstrument}"/>
+    <aura:handler name="change" value="{!v.selectedFamilyRecord}" action="{!c.setValueToFamily}"/>
+    
+    <!-- De-merger comment Ends -->
+    <!-- Check for Profile Access -->
+    <aura:attribute name="isProfileAccess" type="Boolean" Default ="false" />        
+    <aura:attribute name="tooltip" type="boolean" default="false" />
+    <aura:attribute name="tooltip1" type="boolean" default="false" />        
+
+    <aura:renderIf isTrue="{!v.isProfileAccess}">
+    <!-- Screen 1 for Both MF and Bond and PMS-->
+    <aura:renderIf isTrue="{!v.isFirstScreen}">
+        <div class="demo-only" style="height: 640px;width:100%">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open slds-scrollable">
+                <div class="slds-modal__container" style="max-width: 70% !important;width:70% !important;">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Initiate Transaction</h2>
+                    </header>
+                    <article class="slds-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-path">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container">
+                                        <div class="slds-path__scroller" role="application">
+                                            <div class="slds-path__scroller_inner">
+                                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                                    <li class="slds-path__item slds-is-current" role="presentation">
+                                                        <a  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1">
+                                                            <span class="slds-path__title "> Initiate Transaction</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                                        <a onclick="{!c.loadMainScreen}" aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                            </span>
+                                                            <span class="slds-path__title" >Transaction Details</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                                        <a onclick="{!c.setValuesToField}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-13" role="option" tabindex="0">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                                <span class="slds-assistive-text">Current Stage:</span>
+                                                            </span>
+                                                            <span class="slds-path__title">Compliance</span>
+                                                        </a>
+                                                    </li>                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    
+                    <div class="slds-grid slds-wrap slds-size_2-of-2 slds-modal__content">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                <!--lightning help text for input field-->                                                                
+                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Family Name</label>
+                                <!-- <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />  -->
+                               <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedFamilyRecord}" listOfFilteredRecords ="{!v.filteredFamilyList}" placeholder="Search Family"  /> 
+
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-2">
+                            
+                            <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Name</label>
+                                <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedClientRecord}" listOfFilteredRecords ="{!v.filteredClientList}" placeholder="Search Client"  />
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Account Name</label>
+                                <c:customLookup objectAPIName="Client_Account__c" IconName="standard:product" selectedRecord="{!v.selectedClientAccountRecord}" listOfFilteredRecords ="{!v.filteredClientAccountList}" placeholder="Search Client Account"  />
+                            </div>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 ">
+                            <div class=" slds-p-around_medium" id="modal-content-id-1" >
+                                <!--Controller Field-->
+                                <lightning:select name="controllerFld"
+                                                  value="{!v.orderEntry.Product_Type_Order_Entry__c}"
+                                                  label="Product Type"
+                                                  onchange="{!c.onControllerFieldChange}" required="true" >
+                                    <aura:iteration items="{!v.listControllingValues}" var="val">                                       
+                                        <aura:if isTrue ="{!or(val == '--- None ---',val =='Bond')}" >
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:if>
+                                        <aura:if isTrue ="{!or(val == 'SP',val =='CP')}" >
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:if>
+                                        <aura:if isTrue ="{!or(val =='CD',val =='FD')}" >
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:if>
+                                        <aura:if isTrue ="{!val =='ICD'}" >
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:if>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <!--Dependent Field-->
+                            <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                <lightning:select name="dependentFld"
+                                                  value="{!v.orderEntry.Transaction_Type__c}"
+                                                  label="Transaction Type"
+                                                  onchange="{!c.transactionSelection}" 
+                                                  disabled="{!v.bDisabledDependentFld}" required="true">
+                                    <aura:iteration items="{!v.listDependingValues}" var="val">
+                                        <option value="{!val}">{!val}</option>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </div> 
+                            
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <!-- De-merger comment Starts -->
+                            <!--<aura:renderIf isTrue="{!v.showAmc}">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >AMC Name</label>
+                                    <c:CustomListSearch  selectedRecord="{!v.selectedAMCName1}"  objectName="Schema_Master__c" fieldName="AMC_Code__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                </div>
+                            </aura:renderIf>-->
+                            <!-- De-merger comment Starts -->
+                            
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <aura:renderIf isTrue="{!v.showInstrument}">                                                                                           
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Insrument </label>
+                                    <c:CustomListSearch  selectedRecord="{!v.selectedInstrument}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productISIN__c" label="" iconName="standard:account" placeholder="Enter Instruments" />
+                                </div>
+                            </aura:renderIf>
+                            <!-- De-merger comment Starts -->
+                            <!-- PMS Start -->
+                            <!--<aura:renderIf isTrue="{!v.showProductName}">                                                                                           
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Product Name </label>
+                                    <c:CustomListSearch  selectedRecord="{!v.selectedProductName}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productCodeName__c" label="" iconName="standard:account" placeholder="Enter Product Name" />
+                                </div>
+                            </aura:renderIf> -->
+                            <!-- PMS Ends -->
+                            <!-- De-merger comment Ends -->
+                            
+                        </div>
+                        <!-- De-merger comment Starts -->
+                        <!--<aura:renderIf isTrue="{!!v.showAllScheme}">
+                        <aura:if isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Purchase',v.orderEntry.Transaction_Type__c == 'Redemption') }">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Scheme</label>                                   
+                                    <c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                </div>
+                            </div>
+                        </aura:if> 
+                        </aura:renderIf>
+                        
+                      <aura:if isTrue="{!v.showAllScheme}" > 
+                        <aura:if isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Purchase',v.orderEntry.Transaction_Type__c == 'Redemption') }">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Scheme</label>                                  
+									<c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" SchemeSelect="All" iconName="standard:account" placeholder="Enter Value" />
+                                </div>
+                            </div>
+                        </aura:if> 
+                        </aura:if>
+                        
+                        <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Redemption'}">
+                       <div class="slds-col slds-size_1-of-2" style="margin: 16px 0px 0px 0px;">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                     		<button class="slds-button slds-button_brand" onclick="{!c.getAllScheme}">All</button>
+                           </div>
+                        </div>
+                        </aura:if>                      
+                        
+                        <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
+                             <aura:renderIf isTrue="{!!v.showAllScheme}">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >From Scheme</label>                                    
+                                    <c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                </div>
+                            </div>
+                            </aura:renderIf>
+               
+                            
+ 							<aura:renderIf isTrue="{!v.showAllScheme}">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >From Scheme</label>                                  
+									<c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" SchemeSelect="All" label="" iconName="standard:account" placeholder="Enter Value" />
+                                </div>
+                            </div>
+                            </aura:renderIf>      
+                                           <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
+                       <div class="slds-col slds-size_1-of-2" style="margin: 16px 0px 0px 0px;">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                     		<button class="slds-button slds-button_brand" onclick="{!c.getAllScheme}">All</button>
+                           </div>
+                        </div>
+                        </aura:if>
+                            
+                        </aura:if> 
+                        
+                        <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
+                            <div class="slds-col slds-size_1-of-2">
+                                <div class="slds-p-around_medium" id="modal-content-id-1" >
+                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >To Scheme</label>                                  
+                                    <c:CustomListSearch  selectedFromSchemeObj ="{!v.selectedFromSchemeObj}" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedToSchemeObj}" orderEntry="{!v.orderEntry}"   objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" criteriaField="ToScheme" label="" iconName="standard:account" placeholder="Enter Value" /> 
+                                </div>
+                            </div>
+                        </aura:if> -->
+                        
+                        <!-- De-merger comment Starts -->
+                        
+                    </div> 
+                    <footer class="slds-modal__footer">	
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.loadMainScreen}">Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    </aura:renderIf>
+    
+    <!-- De-merger comment Starts -->
+    <!-- Screen 2 MF Transaction-->
+    <!-- <aura:renderIf  isTrue="{! v.isProuctTypeMF}">
+        <div class="demo-only" style="height: 740px;width:100%">
+            <section tabindex="-1" class="slds-modal slds-fade-in-open" role="dialog" aria-describedby="modal-content-id-1" aria-labelledby="modal-heading-01" aria-modal="true">
+                <div class="slds-modal__container lightningtoast" style="max-width: 70% !important;width: 70% !important;">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-buttonicon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Transaction Details</h2>
+                    </header>
+                    <article class="slds-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-path">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container">
+                                        <div class="slds-path__scroller" role="application">
+                                            <div class="slds-path__scroller_inner">
+                                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                                    <li class="slds-path__item slds-is-active slds-is-complete" role="presentation">
+                                                        <aura:if isTrue="{! or(v.isPurchase,v.isRedemption)}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Scheme__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.isSwitch}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.From_Scheme__c}~{!v.orderEntry.To_Scheme__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>
+                                                    </li>
+                                                    <aura:if isTrue="{!v.tooltip}" >
+                                                        <aura:if isTrue="{! or(v.isPurchase,v.isRedemption)}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Scheme__c}</span></div>
+                                                            </div>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.isSwitch}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-40px;left:350px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.From_Scheme__c}~{!v.orderEntry.To_Scheme__c}</span></div>
+                                                            </div>
+                                                        </aura:if>
+                                                    </aura:if>
+                                                    
+                                                    <li class="slds-path__item slds-is-current" role="presentation">
+                                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                            </span>
+                                                            <span class="slds-path__title">Transaction Details</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                                        <a  onclick="{!c.setValuesToField}"  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-13" role="option" tabindex="0">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                                <span class="slds-assistive-text">Current Stage:</span>
+                                                            </span>
+                                                            <span class="slds-path__title">Compliance</span>
+                                                        </a>
+                                                    </li>                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div style="width: 100%;">
+                            <div class="slds-form slds-form_compound" style="text-align: left;">
+                                <div class="slds-form-element__group">
+                                    
+                                    <div class="slds-form-element__row" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >UCC</label>                                        
+                                            <ui:inputSelect aura:id="folio" label="" value="{!v.selectedUcc}" change="{!c.fetchClientHolding}" >
+                                                <aura:iteration items="{!v.uccList}" var="ucc">
+                                                    <ui:inputSelectOption text="{!ucc}" label="{!ucc}"/>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </div>
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Holding and Type</label>
+                                            <div style="margin-top: -17px;">
+                                                <force:inputField  required="true"  value="{!v.orderEntry.Client_Holding_and_Type__c}" change="{!c.getFolioOnHolding}" />
+                                            </div>     
+                                        </div>                      
+                                    </div>
+                                    
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Order Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"   value="{!v.orderDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Value Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"  value="{!v.valueDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div> 
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_3-of-8" style="padding-top: 13px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="15" width="15" />
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Folio</label>
+                                            <ui:inputSelect aura:id="folio" label="" value="{!v.selectedFolioPurchase}" change="{!c.setFolioPurchase}" >
+                                                <aura:iteration items="{!v.folioListPurchase}" var="folio">
+                                                    <ui:inputSelectOption text="{!folio}" label="{!folio}"/>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </div>    
+                                          <div class="slds-form-element slds-wrap slds-col slds-size_1-of-8" style="padding-top: 32px;padding-left: 35px">
+                                            <button class="slds-button slds-button_brand" onclick="{!c.callApi}" >Refresh</button>
+                                        </div> 
+                                        <aura:renderIf isTrue="{!v.orderEntry.Transaction_Type__c == 'Purchase'}">
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 10px" >
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transaction Amount </label>
+                                                <div style="margin-top: 7px;">
+                                                    <force:inputField required="true"  value="{!v.orderEntry.Transaction_Amount_Financial_Transaction__c}" />
+                                                </div>
+                                            </div> 
+                                        </aura:renderIf>
+                                        
+                                        <aura:renderIf  isTrue="{!or (v.orderEntry.Transaction_Type__c == 'Redemption',v.orderEntry.Transaction_Type__c == 'Switch')}">
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 7px;">
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Type</label>
+                                                <div style="margin-top:-7px;">                                            
+                                                       	<force:inputField required="true"  value="{!v.orderEntry.Redemption_Type__c}" change='{!c.handleRedemptionChange}'/>                                                                                                                                                                   
+                                                </div>
+                                            </div>
+                                        </aura:renderIf>                                        
+                                    </div>
+                                    <div class="slds-form-element__row" >
+                                        <aura:renderIf isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Redemption',v.orderEntry.Transaction_Type__c == 'Switch')}">
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 24px;" >
+                                             
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transaction Amount</label>
+                                                <div style="margin-top:7px;">
+                                                    <lightning:input required="true"  value="{!v.orderEntry.Transaction_Amount_Financial_Transaction__c}" disabled="{!v.isDisableTxnAmount}"/>
+                                                </div>
+                                            </div>
+                                        </aura:renderIf>                                    
+                                        <aura:renderIf  isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Redemption',v.orderEntry.Transaction_Type__c == 'Switch')}">
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 23px;">                                            
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Units</label>
+                                                <div style="margin-top:7px;">
+                                                    <lightning:input required="true"  value="{!v.orderEntry.Redemption_Units__c}" disabled="{!v.isDisableRedemptionUnit}"/>
+                                                </div>
+                                            </div>
+                                        </aura:renderIf>                                        
+                                    </div>
+                                    
+                                    <div class="slds-form-element__row">
+                                          <aura:renderIf isTrue="{!v.isPOA}" >
+                                          <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style ="padding: 10px 0px 0px 0px;">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Execution Channel</label>
+                                            <div Style=" margin: -11px 0px 0px 0px;">
+                                              <force:inputField value="{!v.orderEntry.POA_Non_POA__c}"/>
+                                            </div>
+                                        </div>
+                                        </aura:renderIf>
+                                          <aura:renderIf isTrue="{!v.isNonPOA}" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style ="padding: 10px 0px 0px 0px;">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Execution Channel</label>
+                                            <div Style=" margin: -11px 0px 0px 0px;">
+                                              <lightning:input value="{!v.orderEntry.POA_Non_POA__c}" disabled="true"/>
+                                            </div>
+                                        </div>
+                                        </aura:renderIf>
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 8px 0px 0px 9px">                                              
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Remarks</label>
+                                            <div style="margin-top: 7px;">
+                                                <force:inputField required="true"  value="{!v.orderEntry.Remarks__c}" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="slds-form-element__row">
+                                                                          
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px;">                                                                                        
+                                        </div>                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.loadFirstScreen}" >Back</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.setValuesToField}" >Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+        
+    </aura:renderIf> -->
+    <!-- De-merger comment Ends -->
+    <!-- Screen 3 FOR Both MF and BOND ans PMS-->
+    <aura:renderIf  isTrue="{!v.isPreviewScreen}">
+        <div class="demo-only" style="height: 740px;width:100%">
+            <section tabindex="-1" class="slds-modal slds-fade-in-open" role="dialog" aria-describedby="modal-content-id-1" aria-labelledby="modal-heading-01" aria-modal="true">
+                <div class="slds-modal__container lightningtoast" style="max-width: 70% !important;width: 70% !important;">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Compliance</h2>
+                    </header>
+                    <article class="slds-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-path">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container">
+                                        <div class="slds-path__scroller" role="application">
+                                            <div class="slds-path__scroller_inner">
+                                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                                    <li class="slds-path__item slds-is-active slds-is-complete" role="presentation">
+                                                        <!-- De-merger comment Starts -->
+                                                        <!--<aura:if isTrue="{! or(v.isPurchase,v.isRedemption)}" >
+                                                            <a onclick="{!c.loadFirstScreen}"  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Scheme__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.isSwitch}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.From_Scheme__c}~{!v.orderEntry.To_Scheme__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if> -->
+                                                        <!-- De-merger comment Ends -->
+                                                        <aura:if isTrue="{! v.isBondBuy}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if> 
+                                                         <aura:if isTrue="{! v.isBondSell}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>
+                                                        <!-- De-merger comment Starts -->
+                                                        <!--<aura:if isTrue="{! v.isPMSCompliance}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Product_Name_Display__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if> -->
+                                                        <!-- De-merger comment Starts -->
+                                                    </li>
+                                                    <aura:if isTrue="{!v.tooltip}" >
+                                                        <!-- De-merger comment Starts -->
+                                                        <!--<aura:if isTrue="{! or(v.isPurchase,v.isRedemption)}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Scheme__c}</span></div>
+                                                            </div>
+                                                        </aura:if>
+                                                        <aura:if isTrue="{!v.isSwitch}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-40px;left:350px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.From_Scheme__c}~{!v.orderEntry.To_Scheme__c}</span></div>
+                                                            </div>
+                                                        </aura:if>-->
+                                                        <!-- De-merger comment Ends -->
+                                                        <aura:if isTrue="{! v.isBondBuy}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}</span></div>
+                                                            </div>                                                           
+                                                        </aura:if> 
+                                                        <aura:if isTrue="{! v.isBondSell}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}</span></div>
+                                                            </div>
+                                                        </aura:if>
+                                                        <!-- De-merger comment Starts -->
+                                                        <!--<aura:if isTrue="{! v.isPMSCompliance}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Product_Name_Display__c}</span></div>
+                                                            </div>                                                           
+                                                        </aura:if>--> 
+                                                        <!-- De-merger comment Ends -->
+                                                    </aura:if>
+                                                    <li class="slds-path__item slds-is-active slds-is-complete" role="presentation" >
+                                                        <a onclick="{!c.getToMain}"  aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1" >
+                                                            <span class="slds-path__stage">                                                                
+                                                            </span>
+                                                            <!-- De-merger comment Starts -->
+                                                            <!--<aura:if isTrue="{!v.isPurchaseAmount}" >
+                                                                <span class="slds-path__title">INR {!v.orderEntry.Transaction_Amount_Financial_Transaction__c} On  {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.isPartialAmount}" >
+                                                                <span class="slds-path__title">INR {!v.orderEntry.Transaction_Amount_Financial_Transaction__c} On  {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.isRedemAllUnit}" >
+                                                                <span class="slds-path__title">All Unit On  {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{!v.isPartialUnit}" >
+                                                                <span class="slds-path__title">{!v.orderEntry.Redemption_Units__c} Unit On {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>-->
+                                                            <!-- De-merger comment Ends -->
+                                                            <aura:if isTrue="{! v.isBondBuy}" >                                                               
+                                                                <span class="slds-path__title">INR {!v.orderEntry.Face_Value__c} On {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>
+                                                            <aura:if isTrue="{! v.isBondSell}" >
+                                                                <span class="slds-path__title">INR {!v.orderEntry.Face_Value__c} On {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>
+                                                            <!-- De-merger comment Starts -->
+                                                            <!--
+                                                            <aura:if isTrue="{!v.isPMSCompliance}" >
+                                                                <span class="slds-path__title">INR {!v.orderEntry.Transaction_Amount_Financial_Transaction__c} On  {!v.orderDateStr}
+                                                                </span>
+                                                            </aura:if>-->
+                                                            <!-- De-merger comment Starts -->
+                                                        </a>
+                                                    </li>
+                                                    
+                                                    <li class="slds-path__item slds-is-current" role="presentation">                                                        
+                                                        <a onclick="{!c.loadFirstScreen}"  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip1}" onmouseout="{!c.HideToolTip1}">
+                                                            <span class="slds-path__title">Client Risk Profile :{!v.orderEntry.Client_Risk_Profile__c } ~ Product Risk Profile:{!v.orderEntry.Product_Risk_Profile_FinancialT__c }
+                                                            </span> 
+                                                        </a>                                                       
+                                                    </li>																										
+                                                    <aura:if isTrue="{!v.tooltip1}" >                                                        
+                                                        <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;right:10px">
+                                                            <div class="slds-popover__body"> <span >Client Risk Profile :{!v.orderEntry.Client_Risk_Profile__c } ~ Product Risk Profile:{!v.orderEntry.Product_Risk_Profile_FinancialT__c }
+                                                                </span></div>
+                                                        </div>                                                                                                                                                                           
+                                                    </aura:if>	
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div style="width: 100%;">
+                            <div class="slds-form slds-form_compound" style="text-align: left;">
+                                <div class="slds-form-element__group">
+                                    
+                                    
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px;">                                            
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Risk Profile</label>
+                                            <lightning:input value="{!v.orderEntry.Client_Risk_Profile__c}" disabled="{!v.isDisabled}"/>
+                                        </div>
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 10px;">
+                                          <!--  <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Product Risk Profile </label>
+                                            <lightning:input value="{!v.orderEntry.Product_Risk_Profile_FinancialT__c}" disabled="{!v.isDisabled}"/>
+                                        </div>
+                                    </div>    
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"   style ="padding: 10px 0px 0px 0px;">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Primary FA</label>
+                                            <lightning:input value="{!v.orderEntry.Primary_FA__c}" disabled="{!v.isDisabled}"/>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 10px 0px 0px 10px;">
+                                            <!-- De-merger comment Starts -->
+                                            <!--<aura:if isTrue="{! or(v.isPurchase,v.isRedemption,v.isSwitch)}" >
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >EUIN</label>
+                                                <lightning:input value="{!v.orderEntry.EUIN__c}" disabled="{!v.isDisabled}"/>
+                                            </aura:if>
+                                            <aura:if isTrue="{! v.isSwitch}" >
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >EUIN</label>
+                                                <lightning:input value="{!v.orderEntry.EUIN__c}" disabled="{!v.isDisabled}"/>
+                                            </aura:if>-->
+                                            <!-- De-merger comment Starts -->
+                                        </div>
+                                    </div>
+                                    <div class="slds-form-element__row">                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 10px 0px 0px 0px;">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Communication Mode</label>
+                                            <div Style=" margin: -11px 0px 0px 0px;">
+                                                <force:inputField required="true"  value="{!v.orderEntry.Origin__c}" />
+                                            </div>
+                                        </div>
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 10px 0px 0px 10px;" >
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Consent</label>
+                                            <div Style=" margin: -11px 0px 0px 0px;">
+                                                <lightning:input value="{!v.orderEntry.Client_Concent__c}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="slds-form-element__row">  
+                                        <!-- De-merger comment Starts -->
+                                        <!--<aura:if isTrue="{! or(v.isPurchase,v.isRedemption)}" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px; padding-top: 25px;">                                           
+                                            <lightning:input aura:id="fileMF" onchange="{!c.handleFilesChange}" label="Client Consent  Attachment" type="file" name="file" multiple="false"/>
+                                            <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>                                           
+                                            <aura:if isTrue="{!v.showLoadingSpinner}">
+                                                <div class="slds-text-body_small slds-text-color_error">Uploading... 
+                                                    <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+                                                </div>
+                                            </aura:if>
+                                            <br/>                                            
+                                        </div>
+                                        </aura:if>
+                                        <aura:if isTrue="{! v.isSwitch}" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px; padding-top: 25px;">                                           
+                                            <lightning:input required="true" aura:id="fileMF" onchange="{!c.handleFilesChange}" label="Client Consent  Attachment" type="file" name="file" multiple="false"/>
+                                            <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>                                           
+                                            <aura:if isTrue="{!v.showLoadingSpinner}">
+                                                <div class="slds-text-body_small slds-text-color_error">Uploading... 
+                                                    <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+                                                </div>
+                                            </aura:if>
+                                            <br/>                                            
+                                        </div>
+                                        </aura:if>-->
+                                        <!-- De-merger comment Ends -->
+                                        <aura:if isTrue="{! or(v.isBondBuy, v.isBondSell)}" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px; padding-top: 25px;">                                           
+                                            <lightning:input required="true" aura:id="fileBond" onchange="{!c.handleFilesChange}" label="Client Consent  Attachment" type="file" name="file" multiple="false"/>
+                                            <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>
+                                            
+                                            <!--use aura:if for show-hide the loading spinner image--> 
+                                            <aura:if isTrue="{!v.showLoadingSpinner}">
+                                                <div class="slds-text-body_small slds-text-color_error">Uploading... 
+                                                    <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+                                                </div>
+                                            </aura:if>
+                                            <br/>                                            
+                                        </div>
+                                        </aura:if>
+                                        <!-- De-merger comment Starts -->
+                                        <!--<aura:if isTrue="{! v.isPMSCompliance}" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px; padding-top: 25px;">                                           
+                                            <lightning:input required="true" aura:id="filePMS" onchange="{!c.handleFilesChange}" label="Client Consent  Attachment" type="file" name="file" multiple="false"/>
+                                            <div class="slds-text-body_small slds-text-color_error">{!v.fileName} </div>                                            
+                                            <aura:if isTrue="{!v.showLoadingSpinner}">
+                                                <div class="slds-text-body_small slds-text-color_error">Uploading... 
+                                                    <img src="/auraFW/resources/aura/images/spinner.gif" class="spinner-img" alt="Loading"/>'
+                                                </div>
+                                            </aura:if>
+                                            <br/>                                            
+                                        </div>
+                                        </aura:if>-->
+                                        <!-- De-merger comment Starts -->
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style ="padding: 10px 0px 0px 0px;">
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.getToMain}" >Back</button>                        
+                        <button class="slds-button slds-button_brand" onclick="{!c.SaveRecord}" >Save for Preview</button>                       
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:renderIf>
+    
+    <!-- Bond Transaction Screen-->
+    <aura:renderIf  isTrue="{!v.isBond}">
+        <div class="demo-only" style="height: 740px;width:100%">
+            <section tabindex="-1" class="slds-modal slds-fade-in-open" role="dialog" aria-describedby="modal-content-id-1" aria-labelledby="modal-heading-01" aria-modal="true">
+                <div class="slds-modal__container lightningtoast" style="max-width: 70% !important;width: 70% !important;">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Transaction Details</h2>
+                    </header>
+                    <article class="slds-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-path">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container">
+                                        <div class="slds-path__scroller" role="application">
+                                            <div class="slds-path__scroller_inner">
+                                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                                    <li class="slds-path__item slds-is-active slds-is-complete" role="presentation">
+                                                        <aura:if isTrue="{! v.isBond}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>                                                        
+                                                    </li>
+                                                    <aura:if isTrue="{!v.tooltip}" >
+                                                        <aura:if isTrue="{!v.isBond}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Instrument_Name_Display__c}</span></div>
+                                                            </div>
+                                                        </aura:if>                                                       
+                                                    </aura:if>
+                                                    
+                                                    <li class="slds-path__item slds-is-current" role="presentation">
+                                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                            </span>
+                                                            <span class="slds-path__title">Transaction Details</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                                        <a  onclick="{!c.setValuesToBondField}"  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-13" role="option" tabindex="0">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                                <span class="slds-assistive-text">Current Stage:</span>
+                                                            </span>
+                                                            <span class="slds-path__title">Compliance</span>
+                                                        </a>
+                                                    </li>                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div style="width: 100%;">
+                            <div class="slds-form slds-form_compound" style="text-align: left;">
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Order Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"   value="{!v.orderDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Value Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"  value="{!v.valueDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div> 
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Face Value</label>
+                                            <div style="margin-top: 7px;"> 
+                                                <force:inputField  required="true"  value="{!v.orderEntry.Face_Value__c}" />
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-p-left_x-small slds-size_1-of-2" style="padding-top: 10px">
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Price</label>
+                                            <div style="margin-top: -10px;"> 
+                                                <lightning:input  value="{!v.orderEntry.Price_new__c}" disabled="{!v.isPriceDisable}"/>
+                                            </div>  
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">                                            
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Total Consideration</label>    
+                                            <div style="margin-top: 7px;">
+                                                <ui:inputNumber  value="{!v.orderEntry.Total_Consideration__c}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <aura:if isTrue="{!v.isBondSell}" >
+                                        <div class="slds-form-element__row" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                                <!--<img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Current Investment Amount</label>   
+                                                <div style="margin-top: 7px;"> 
+                                                    <ui:inputNumber value="{!v.orderEntry.Current_Investment_Amount__c}" />
+                                                </div>
+                                                <!-- <ui:inputNumber  required="true"  value="{!v.orderEntry.Current_Investment_Amount__c}" />-->
+                                            </div>
+                                            
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                                <!-- <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Available Quantity</label>                                          
+                                                <!--<ui:inputNumber  required="true" value="{!v.orderEntry.Available_Quantity__c}" /> -->
+                                                <div style="margin-top: 7px;"> 
+                                                    <ui:inputNumber value="{!v.orderEntry.Available_Quantity__c}" /> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aura:if> 
+                                  
+                                    <aura:if isTrue="{!v.isSP}" >
+                                        <div  class="slds-form-element__row">
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >CounterParty Investment Id(If Available)</label>
+                                                <div style="margin-top: -7px;">
+                                                    <lightning:input value="{!v.orderEntry.Counterparty_investment_id_if_avl__c}" />   
+                                                </div>
+                                            </div>
+                                            
+                                               <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px;margin-top: 8px;">
+                                                                                                        
+                                                       <lightning:select name="dependentFld"
+                                                                         value="{!v.orderEntry.Market_Type__c}"
+                                                                         required="true"
+                                                                         label="Market Type"> 
+                                                           <aura:iteration items="{!v.listMarketTypeValues}" var="val">
+                                                               <option value="{!val}">{!val}</option>
+                                                           </aura:iteration>
+                                                       </lightning:select>
+                                                   
+                                               </div> 
+                                           
+                                        </div>
+                                    </aura:if>
+                                    <div class="slds-form-element__row">     
+                                     <aura:renderIf isTrue="{!v.isExternalDisplay}" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">                                            
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
+                                                <div style="margin-top: -10px;">
+                                                    <lightning:input  value="{!v.orderEntry.Payment_Mode__c}" disabled="{!v.isPaymentModeDisable}"/>
+                                                </div>
+                                            </div>
+                                        </aura:renderIf>                                            
+                                        <aura:renderIf isTrue="{!v.isPOADisplay}" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
+                                                <div style="margin-top: -10px;">
+                                                    <force:inputField  required="true"  value="{!v.orderEntry.Payment_Mode__c}" />
+                                                </div>
+                                            </div> 
+                                        </aura:renderIf>      
+                                    </div>
+                                    
+                                    
+                                    <div class="slds-form-element__row">                                                                          
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px;">                                                                                        
+                                        </div>                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.loadFirstScreen}" >Back</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.setValuesToBondField}" >Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>                
+    </aura:renderIf>
+    
+    <!-- De-merger comment Starts -->
+    <!-- PMS Transaction Screen-->
+    <!--
+    <aura:renderIf  isTrue="{!v.isPMS}">
+        <div class="demo-only" style="height: 740px;width:100%">
+            <section tabindex="-1" class="slds-modal slds-fade-in-open" role="dialog" aria-describedby="modal-content-id-1" aria-labelledby="modal-heading-01" aria-modal="true">
+                <div class="slds-modal__container lightningtoast" style="max-width: 70% !important;width: 70% !important;">
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-buttonicon-inverse" title="Close" onclick="{!c.closeModel}">
+                            X
+                            <span class="slds-assistive-text">Close</span></button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Transaction Details</h2>
+                    </header>
+                    <article class="slds-card">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-path">
+                                <div class="slds-grid slds-path__track">
+                                    <div class="slds-grid slds-path__scroller-container">
+                                        <div class="slds-path__scroller" role="application">
+                                            <div class="slds-path__scroller_inner">
+                                                <ul class="slds-path__nav" role="listbox" aria-orientation="horizontal">
+                                                    <li class="slds-path__item slds-is-active slds-is-complete" role="presentation">
+                                                        <aura:if isTrue="{! v.isPMS}" >
+                                                            <a onclick="{!c.loadFirstScreen}" aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-11" role="option" tabindex="-1" onmouseover="{!c.showToolTip}" onmouseout="{!c.HideToolTip}">
+                                                                <span class="slds-path__title " > 
+                                                                    {!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Product_Name_Display__c}
+                                                                </span> 
+                                                            </a>
+                                                        </aura:if>                                                        
+                                                    </li>
+                                                    <aura:if isTrue="{!v.tooltip}" >
+                                                        <aura:if isTrue="{!v.isPMS}" >
+                                                            <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="help" style="position:absolute;top:-50px;left:100px">
+                                                                <div class="slds-popover__body"><span>{!v.accountNameDisplay}~{!v.orderEntry.Transaction_Type__c}~{!v.orderEntry.Product_Name_Display__c}</span></div>
+                                                            </div>
+                                                        </aura:if>                                                       
+                                                    </aura:if>
+                                                    
+                                                    <li class="slds-path__item slds-is-current" role="presentation">
+                                                        <a aria-selected="false" class="slds-path__link" href="javascript:void(0);" id="path-12" role="option" tabindex="-1">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                            </span>
+                                                            <span class="slds-path__title">Transaction Details</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="slds-path__item slds-is-incomplete" role="presentation">
+                                                        <a  onclick="{!c.setValuesToPMSField}"  aria-selected="true" class="slds-path__link" href="javascript:void(0);" id="path-13" role="option" tabindex="0">
+                                                            <span class="slds-path__stage">
+                                                                
+                                                                <span class="slds-assistive-text">Current Stage:</span>
+                                                            </span>
+                                                            <span class="slds-path__title">Compliance</span>
+                                                        </a>
+                                                    </li>                
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div style="width: 100%;">
+                            <div class="slds-form slds-form_compound" style="text-align: left;">
+                                <div class="slds-form-element__group">
+                                    <div class="slds-form-element__row">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Order Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"   value="{!v.orderDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 10px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Value Date</label>
+                                            <div style="margin-top: -10px;">
+                                                <lightning:input aura:id="orderDate"  value="{!v.valueDateStr}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div> 
+                                    <div class="slds-form-element__row" >
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Folio Number</label>
+                                            <ui:inputSelect aura:id="folio" label="" value="{!v.selectedFolioPMS}" change="{!c.setFolioPMS}"  disabled="{!v.disablePMSFolio}">
+                                                <aura:iteration items="{!v.folioListPMS}" var="folio">
+                                                    <ui:inputSelectOption text="{!folio}" label="{!folio}"/>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 10px" >
+                                            <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transaction Amount </label>
+                                            <div style="margin-top: 7px;">
+                                                <ui:inputNumber required="true"  value="{!v.orderEntry.Transaction_Amount_Financial_Transaction__c}" />
+                                            </div>
+                                        </div>                                         
+                                    </div>
+                                    
+                                        <div class="slds-form-element__row" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Portfolio Fee Type</label>                                            
+                                                <lightning:input value="{!v.orderEntry.Portfolio_Fee_Type__c}" disabled="{!v.isDisabled}"/>
+                                            </div>
+                                            
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
+                                                                                         
+                                            </div>
+                                        </div>
+                                    
+                                    <div class="slds-form-element__row">
+                                        
+                                        <aura:renderIf isTrue="{!v.isExternalDisplay}" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">                                            
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
+                                                <lightning:input  value="{!v.orderEntry.Payment_Mode__c}" disabled="{!v.isPaymentModeDisable}"/>
+                                            </div>
+                                        </aura:renderIf>                                             
+                                        <aura:renderIf isTrue="{!v.isPOADisplay}" >
+                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
+                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
+                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
+                                                <force:inputField  required="true"  value="{!v.orderEntry.Payment_Mode__c}" />
+                                            </div> 
+                                        </aura:renderIf>                                     
+                                        
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 7px;">                                            
+                                        </div>                                        
+                                    </div>
+                                    
+                                    
+                                    <div class="slds-form-element__row">                                                                          
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 0px;">                                                                                        
+                                        </div>                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.loadFirstScreen}" >Back</button>                                            
+                        <button class="slds-button slds-button_brand" onclick="{!c.setValuesToPMSField}" >Next</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>                
+    </aura:renderIf>-->
+    <!-- De-merger comment Ends -->
+</aura:component>

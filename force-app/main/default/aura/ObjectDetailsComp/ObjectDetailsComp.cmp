@@ -1,0 +1,124 @@
+<aura:component controller="ObjectDetailsController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" > 
+    <aura:attribute name="filedSetList" type="FieldSetMember[]"/>
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="fieldsetName" type="String[]" default="" required="true"/>
+    <aura:attribute name="fieldsetLabel" type="String" default="" />
+    <aura:attribute name="account" type="SObject" default="{ 'sobjectType': 'Lead' }"/>
+    <aura:attribute name="accountRef" type="SObject" default="{ 'sobjectType': 'Lead' }"/>
+    <aura:attribute name="oldAccount" type="SObject" default="{ 'sobjectType': 'Lead' }"/>
+    <aura:attribute name="oldAccountRef" type="SObject" default="{ 'sobjectType': 'Lead' }"/>
+    <aura:attribute name="caseRecord" type="SObject" default="{ 'sobjectType': 'case' }"/>
+    <aura:attribute name="mainLeadCaseRecord" type="SObject" default="{ 'sobjectType': 'case' }"/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="true"/>
+    <aura:attribute name="iscalledFromCancel" type="Boolean" default="false"/>
+    <aura:attribute name="pageMessage" type="String" default=""/>
+    <aura:attribute name="fieldSetMap" type="Object" default="{}"/>
+    <aura:attribute name="selectedFieldSetMap" type="Object" default="{}"/>
+    <aura:attribute name="isSubsection" type="Boolean" default="false" />
+    <aura:attribute name="isObjUpdateable" type="Boolean" default="" />
+    <aura:attribute name="profileName" type="String" default="" />
+    <aura:attribute name="CompSource" type="String" default="AccountDetails" />
+    <aura:attribute name="isIE" type="Boolean"/>
+	<aura:attribute name="objectType" type="String" default="Lead" />
+    <aura:attribute name="relatedObjData" type="String" default=""/>
+    <aura:attribute name="isDefaultExpand" type="Boolean" default="false" />
+    <aura:attribute name="isSingleColumnSection" type="Boolean" default="false" />
+	<aura:attribute name="lkpFieldID" type="String" default="" />
+    <aura:attribute name="parentAccountId" type="String" default="" />
+	<aura:attribute name="lkpFieldName" type="String" default="" />
+	<aura:attribute name="showHeader" type="Boolean" default="true" />
+    <aura:attribute name="RecordTypeId" type="String" default="01228000000m0gg" />  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler event="force:refreshView" action="{!c.doInit}" />
+	<aura:handler event="c:changeInputValEvent" action="{!c.handleChangeInputValue}"/>
+    <aura:attribute name="ProductType" type="String"  />
+    <aura:registerEvent name="cmpEvent" type="c:ceEvent"/>
+    <aura:attribute name="isValid" type="Boolean" default="false" />
+    <aura:attribute name="isDemat" type="Boolean" default="false" />
+    <aura:attribute name="expand" type="string" default="false" />
+    <aura:attribute name="selectedAccount" type="Object" default="{}" />
+    <aura:attribute name="isFamilyHead" type="Boolean" default="false" />
+    <aura:attribute name="isRecordAdded" type="Boolean" default="false" />
+    <aura:attribute name="lookupFilter" type="String" default="NewFamily" />
+	<aura:attribute name="FamilyType" type="Object" default="{}" />
+    <aura:attribute name="isLeadSelect" type="Boolean" default="false" />
+    <aura:attribute name="isCaseCreated" type="Boolean" default="false" />
+    <aura:attribute name="isCorporate" type="Boolean" default="false" />
+    <aura:attribute name="riskProfileEditable" type="Boolean" default="true" />
+    <aura:attribute name="riskProfileforMainLead" type="Boolean" default="false" />
+	<aura:attribute name="isEnabledTradingFeilds" type="Boolean" default="false"/>
+    <aura:attribute name="isMainLead" type="Boolean" default="false"/>
+    <aura:attribute name="isAdditionalLead" type="Boolean" default="false"/>
+    <aura:attribute name="status" type="string" default="Open"/>
+    <aura:handler name="inlineEditEvent" event="c:InlineEditingEvent" action="{!c.editAccount}"/> 
+    
+    <div class="modal-header slds-modal__header">
+    	<h2 class="title slds-text-heading--medium">{!v.fieldsetLabel}</h2>
+    </div>
+    <div class="modal-body scrollable slds-modal__content slds-p-around--medium" >
+        <div aura:id="DetailBtnDiv" >  
+             <div class="slds-grid checkboxgroup slds-grid slds-wrap">
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8"><ui:inputCheckbox aura:id="Trading" click="{!c.updateProduct}"/>Trading</div>
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8">
+                   <span>
+                       <div style="display: inline-block !important;">
+                           <ui:inputCheckbox aura:id="Demat" click="{!c.updateProduct}"/>
+                       </div>Demat
+                       <aura:if isTrue="{!v.isDemat}">  
+                           <ui:inputSelect aura:id="SingleJoint" multiple="false" class="selectwidth" change="{!c.onSelectDemat}">
+                               <ui:inputSelectOption text="Single" label="Single" value="true"/>
+                               <ui:inputSelectOption text="Joint" label="Joint"/>
+                           </ui:inputSelect>
+                       </aura:if>
+                   </span>                   
+               </div>
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8 "><ui:inputCheckbox aura:id="POA" click="{!c.updateProduct}"/>POA</div>
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8">
+                   <aura:if isTrue="{!v.FamilyType.ExistingClient}">
+                       <input class="uiInput--checkbox input" type="checkbox" name="Miles" disabled="disabled"/>Miles
+                       <aura:set attribute="else">
+                           <input class="uiInput--checkbox input" type="checkbox" checked="checked" name="Miles" disabled="disabled" style="background-color: rgb(21, 137, 238);"/>Miles
+                       </aura:set>
+                   </aura:if>
+               </div>              
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8"><ui:inputCheckbox aura:id="Advisory"  click="{!c.updateProduct}"/>Advisory</div>
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8"><ui:inputCheckbox aura:id="Funding" click="{!c.updateProduct}"/>Funding </div>
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8"><ui:inputCheckbox aura:id="ComodityTrad"  click="{!c.updateProduct}"/>Comodity Trading</div>               
+               <div class="slds-col slds-col slds-size--1-of-2 slds-small-size--1-of-2 slds-medium-size--1-of-8"><ui:inputCheckbox aura:id="ComodityTrack"  click="{!c.updateProduct}"/>Comodity Tracking</div>
+            </div>     
+            
+            <div aura:id="formDiv"/>
+            <div aura:id="DetailEditBtnSection" style="text-align: center;">
+                <button onclick="{!c.cancelfn}" class=" slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small ">Cancel</button>
+                <aura:if isTrue="{!v.FamilyType.ExistingClient}">
+                    <button onclick="{!c.saveAccount}" class=" slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small slds-button--brand">Save</button>
+                    <aura:set attribute="else">
+                        <button onclick="{!c.saveAccount}" class=" slds-m-bottom--small slds-m-left--small slds-button slds-button--neutral slds-button--small slds-button--brand">Add</button>
+                    </aura:set>
+                </aura:if>
+                
+            </div>
+        </div>
+    </div>   
+    <aura:if isTrue="{!v.FamilyType.NewFamily}">
+        <aura:if isTrue="{!!v.isRecordAdded &amp;&amp; !v.isLeadSelect}">
+            <div style="background-color: white !important; min ">                  
+                <center>
+            <div style="background-color: rgba(128, 128, 128, 0.4);" role="dialog" tabindex="-1" aria-labelledby="header99" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                       <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Lead</h2>
+                 </header>
+                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style="height: 100px;overflow: unset;">
+                     <c:LookupSObject label="Select Lead" pluralLabel="Select Lead" fieldAPIName="AccountId" sObjectAPIName="Account" instanceId="AccountId" listIconSVGPath="/assets/icons/utility-sprite/svg/symbols.svg#account" listIconClass="slds-icon-standard-account" selSearchString="" ChildObject="Case" parentAccountId="" filter="NewFamily"/>
+                 </div>
+                </div>
+            </div>
+            </center>
+         </div>
+        </aura:if>
+    </aura:if>
+</aura:component>

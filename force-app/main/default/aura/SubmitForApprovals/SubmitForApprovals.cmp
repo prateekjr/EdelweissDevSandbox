@@ -1,0 +1,46 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" controller="SubmitForApprovalsController" access="global" >
+    <aura:attribute name="recordId" type="String" default=""/>
+    <aura:attribute name="messageBody" type="String"/>
+    <aura:attribute name="today" type="Date" default=""/>
+    <aura:attribute name="account" type="Account" default="{ 'sobjectType': 'Account' }"/>
+    
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <div class="slds-card" id="{!'card'+v.fieldsetName}" style="padding-bottom: 3px !important;">
+        <div class="slds-card__header slds-grid" style="margin-bottom:0;text-align: left;">
+        </div>
+        
+        
+        <div class="slds-form-element__row" >
+            <h2 class="slds-text-heading--xsmall slds-truncate fieldSetName">Please select any one approval type</h2>
+        </div>
+        
+        <div class="slds-form-element__row row-bottom-margin" >
+            <div class="slds-form-element slds-wrap slds-size_1-of-1">
+                <label class="slds-form-element__label" for="input-id-01" style="display: inline;">R5/R4+ Approval</label>
+                <force:inputField value="{!v.account.Request_Approval_for_R5__c}"/>
+            </div>
+        </div>
+        <div class="slds-form-element__row row-bottom-margin">
+            <div class="slds-form-element slds-size_1-of-1">
+                <label class="slds-form-element__label" for="input-id-02" style="display: inline;">Acquisition Approval</label>
+                <force:inputField value="{!v.account.Acquisiton_Approval_For_FY__c}"/>
+            </div>
+        </div>   
+        <div class="slds-form-element__row">
+            <div class="slds-form-element slds-size_1-of-1">
+                <label class="slds-form-element__label" for="input-id-03" style="display: inline;">Comments</label>
+                <force:inputField value="{!v.account.Requestor_Comments_For_Approval__c}"/>
+            </div>
+        </div>   
+        <div class="errorDiv">
+					<div>{!v.messageBody}</div>
+        </div>
+        
+        <div style="text-align: center; padding-top: 10px;">
+            <ui:button label="Submit" press="{!c.save}" />
+            <ui:button label="Cancel" press="{!c.cancel}" />
+        </div>
+    </div>
+</aura:component>
