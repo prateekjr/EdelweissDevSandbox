@@ -107,25 +107,40 @@
         var selectedClientRecord = component.get("v.selectedClientRecord");
         var selectedClientId = selectedClientRecord.Id;
         
+
         orderEntry.Client_Name__c =selectedClientId;
         component.set("v.orderEntry", orderEntry);
-
-        var action = component.get("c.getClientAccountInformation");
-        action.setParams({
-            "clientId" : selectedClientId
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listOfAllClientAccounts = response.getReturnValue();
-                if(listOfAllClientAccounts == null){
-                    helper.showToast("Client Account not found for family","Error");
-                }else{                   
-                    component.set("v.filteredClientAccountList",listOfAllClientAccounts);
+        //Check for related client and Display Error only if Family is selected
+        if(orderEntry.Family_Name__c != undefined && orderEntry.Client_Name__c != undefined)
+        {
+            var action = component.get("c.getClientAccountInformation");
+            action.setParams({
+                "clientId" : selectedClientId
+            });                  
+            action.setCallback(this, function(response) {    
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var listOfAllClientAccounts = response.getReturnValue();
+                    //Checking returned list is not null and length should be geater than 0
+                    if(listOfAllClientAccounts == null || listOfAllClientAccounts.length == 0){ 
+                        helper.showToast("Client Account not found for family","Error");
+                        component.set("v.filteredClientAccountList",listOfAllClientAccounts);
+                    }else{                   
+                        component.set("v.filteredClientAccountList",listOfAllClientAccounts);
+                    }
                 }
-            }
-            
-        });$A.enqueueAction(action);
+                
+            });$A.enqueueAction(action);
+        }
+
+        //Clear Selected Client Account only when Client is cleared
+        if(orderEntry.Client_Name__c == undefined)
+        {
+            var clientAccountLookup =component.find("clientAccountLookup");
+            clientAccountLookup.clearMethod();
+            component.set("v.filteredClientAccountList",[]);
+        }
+  
         
     },
     
@@ -490,37 +505,56 @@
     
         setValueToFamily : function(component, event, helper) {
         
-        var orderEntry = component.get("v.orderEntry");  
-        if(orderEntry.Family_Name__c != ''){
-            component.set("v.familySelected",true);
-        }else if(orderEntry.Family_Name__c == '') {
-            component.set("v.familySelected",false);
-        }
-        var selectedFamilyRecord = component.get("v.selectedFamilyRecord");
-        console.log('selectedFamilyRecord :'+JSON.stringify(component.get("v.filteredFamilyList")));
-        var selectedFamilyId = selectedFamilyRecord.Id;
-        
-        orderEntry.Family_Name__c =selectedFamilyId;
-        component.set("v.orderEntry", orderEntry);
-
-        var orderEntry = component.get("v.orderEntry");  
-        var action = component.get("c.getClientInformation");
-        action.setParams({
-            "familyId" : orderEntry.Family_Name__c
-        });                  
-        
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listOfAllClients = response.getReturnValue();
-                if(listOfAllClients == null){
-                    helper.showToast("Client not found for family","Error");
-                }else{                    
-                    component.set("v.filteredClientList",listOfAllClients);
-                    helper.setValueToProductType(component, event, helper);
-                }
+            var orderEntry = component.get("v.orderEntry");  
+            if(orderEntry.Family_Name__c != ''){
+                component.set("v.familySelected",true);
+            }else if(orderEntry.Family_Name__c == '') {
+                component.set("v.familySelected",false);
             }
+            var selectedFamilyRecord = component.get("v.selectedFamilyRecord");
+            console.log('selectedFamilyRecord :'+JSON.stringify(component.get("v.filteredFamilyList")));
+            var selectedFamilyId = selectedFamilyRecord.Id;
             
-        });$A.enqueueAction(action);
+            orderEntry.Family_Name__c =selectedFamilyId;
+            component.set("v.orderEntry", orderEntry);
+
+            //Check for related client and Display Error only if Family is selected
+            if(orderEntry.Family_Name__c != undefined)
+            {
+                var orderEntry = component.get("v.orderEntry");  
+                var orderEntry = component.get("v.orderEntry");  
+                var action = component.get("c.getClientInformation");
+                action.setParams({
+                    "familyId" : orderEntry.Family_Name__c
+                });                  
+                
+                action.setCallback(this, function(response) {    
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        var listOfAllClients = response.getReturnValue();
+                        console.log('listOfAllClients:'+listOfAllClients);
+                        //Checking returned list is not null and length should be geater than 0
+                        if(listOfAllClients == null || listOfAllClients.length == 0){
+                            helper.showToast("Client not found for family","Error");
+                            component.set("v.filteredClientList",listOfAllClients);
+                        }else{                    
+                            component.set("v.filteredClientList",listOfAllClients);
+                            helper.setValueToProductType(component, event, helper);
+                        }
+                    }
+                    
+                });$A.enqueueAction(action);
+            }    
+
+        //Clear Selected Client and Client Account only when family is cleared
+        if(orderEntry.Family_Name__c == undefined)
+        {
+            var clientNameLookup = component.find("clientNameLookup");
+            clientNameLookup.clearMethod();
+            component.set("v.filteredClientList",[]);
+            var clientAccountLookup =component.find("clientAccountLookup");
+            clientAccountLookup.clearMethod();
+            component.set("v.filteredClientAccountList",[]);
+        }
     },
 })

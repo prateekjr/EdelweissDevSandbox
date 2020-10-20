@@ -172,23 +172,22 @@
                             <div class="slds-p-around_medium" id="modal-content-id-1" >
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Name</label>
-                                <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedClientRecord}" listOfFilteredRecords ="{!v.filteredClientList}" placeholder="Search Client"  />
+                                <c:customLookup objectAPIName="Account" aura:id="clientNameLookup" IconName="standard:account" selectedRecord="{!v.selectedClientRecord}" listOfFilteredRecords ="{!v.filteredClientList}" placeholder="Search Client"  />
                             </div>
                         </div>
                         <div class="slds-col slds-size_1-of-2">
                             <div class="slds-p-around_medium" id="modal-content-id-1" >
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Account Name</label>
-                                <c:customLookup objectAPIName="Client_Account__c" IconName="standard:product" selectedRecord="{!v.selectedClientAccountRecord}" listOfFilteredRecords ="{!v.filteredClientAccountList}" placeholder="Search Client Account"  />
+                                <c:customLookup objectAPIName="Client_Account__c" aura:id="clientAccountLookup" IconName="standard:product" selectedRecord="{!v.selectedClientAccountRecord}" listOfFilteredRecords ="{!v.filteredClientAccountList}" placeholder="Search Client Account"  />
                             </div>
                         </div>
                         <div class="slds-col slds-size_1-of-2 ">
                             <div class=" slds-p-around_medium" id="modal-content-id-1" >
-                                <!--Controller Field-->
                                 <lightning:select name="controllerFld"
                                                   value="{!v.orderEntry.Product_Type_Order_Entry__c}"
                                                   label="Product Type"
-                                                  onchange="{!c.onControllerFieldChange}" required="true" >
+                                                  required="true" >
                                     <aura:iteration items="{!v.listControllingValues}" var="val">                                        
                                         <aura:if isTrue ="{!val =='PMS'}" >
                                             <option value="{!val}">{!val}</option>
