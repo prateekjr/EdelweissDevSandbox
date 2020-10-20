@@ -11,139 +11,6 @@
     validateFirstScreen : function(component, event, helper) {
         var isvalid = 1;
         var orderEntry = component.get("v.orderEntry");  
-         /* De-merger comment Starts */
-		/*
-        if(orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Purchase'){
-            if (orderEntry.Family_Name__c == '' || typeof orderEntry.Family_Name__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Family Name","Error");
-            } else if (orderEntry.Client_Name__c == '' || typeof  orderEntry.Client_Name__c === 'undefined') {                
-                isvalid = 0;
-                helper.showToast("Please Select Client Name","Error");
-            } else if (typeof orderEntry.Client_Account__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Account Name","Error");
-            }
-                else if(orderEntry.Product_Type_Order_Entry__c == '' || orderEntry.Product_Type_Order_Entry__c == '--- None ---'){
-                    isvalid = 0;
-                    helper.showToast("Please Select Product Type","Error");
-                }
-                    else if(orderEntry.Transaction_Type__c == '' || orderEntry.Transaction_Type__c == '--- None ---'){
-                        isvalid = 0;
-                        helper.showToast("Please Select Transaction Type","Error");
-                    }
-                        else if (typeof orderEntry.AMC_Name__c === 'undefined') {
-                            isvalid = 0;
-                            helper.showToast("Please Select AMC Name","Error");
-                        }
-                            else if (typeof orderEntry.Scheme__c === 'undefined') {
-                                isvalid = 0;
-                                helper.showToast("Please Select Scheme","Error");
-                            }
-            return isvalid;
-        }if(orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Redemption'){
-            if (orderEntry.Family_Name__c == '' || typeof orderEntry.Family_Name__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Family Name","Error");
-            } else if (orderEntry.Client_Name__c == '' || typeof  orderEntry.Client_Name__c === 'undefined') {                
-                isvalid = 0;
-                helper.showToast("Please Select Client Name","Error");
-            } else if (typeof orderEntry.Client_Account__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Account Name","Error");
-            }
-                else if(orderEntry.Product_Type_Order_Entry__c == '' || orderEntry.Product_Type_Order_Entry__c == '--- None ---'){
-                    isvalid = 0;
-                    helper.showToast("Please Select Product Type","Error");
-                }
-                    else if(orderEntry.Transaction_Type__c == '' || orderEntry.Transaction_Type__c == '--- None ---'){
-                        isvalid = 0;
-                        helper.showToast("Please Select Transaction Type","Error");
-                    }
-                        else if (typeof orderEntry.AMC_Name__c === 'undefined') {
-                            isvalid = 0;
-                            helper.showToast("Please Select AMC Name","Error");
-                        }
-                            else if (typeof orderEntry.Scheme__c === 'undefined') {
-                                isvalid = 0;
-                                helper.showToast("Please Select Scheme","Error");
-                            } 
-           
-            return isvalid;
-            
-        } if(orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Switch'){
-            if (orderEntry.Family_Name__c == '' || typeof orderEntry.Family_Name__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Family Name","Error");
-            } else if (orderEntry.Client_Name__c == '' || typeof  orderEntry.Client_Name__c === 'undefined') {                
-                isvalid = 0;
-                helper.showToast("Please Select Client Name","Error");
-            } else if (typeof orderEntry.Client_Account__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Account Name","Error");
-            }
-                else if(orderEntry.Product_Type_Order_Entry__c == '' || orderEntry.Product_Type_Order_Entry__c == '--- None ---'){
-                    isvalid = 0;
-                    helper.showToast("Please Select Product Type","Error");
-                }
-                    else if(orderEntry.Transaction_Type__c == '' || orderEntry.Transaction_Type__c == '--- None ---'){
-                        isvalid = 0;
-                        helper.showToast("Please Select Transaction Type","Error");
-                    }
-                        else if (typeof orderEntry.AMC_Name__c === 'undefined') {
-                            isvalid = 0;
-                            helper.showToast("Please Select AMC Name","Error");
-                        }
-                            else if (typeof orderEntry.From_Scheme__c === 'undefined') {
-                                isvalid = 0;
-                                helper.showToast("Please Select From Scheme","Error");
-                            }
-                                else if (typeof orderEntry.To_Scheme__c === 'undefined') {
-                                    isvalid = 0;
-                                    helper.showToast("Please Select To Scheme","Error");
-                                }
-            return isvalid;
-        }if(orderEntry.Product_Type_Order_Entry__c == 'Bond' || orderEntry.Product_Type_Order_Entry__c == 'CP' || orderEntry.Product_Type_Order_Entry__c == 'FD' || 
-           orderEntry.Product_Type_Order_Entry__c == 'SP' || orderEntry.Product_Type_Order_Entry__c == 'CD' || orderEntry.Product_Type_Order_Entry__c == 'ICD' && (orderEntry.Transaction_Type__c == 'Buy' || orderEntry.Transaction_Type__c == 'Sell')){
-            
-            if (typeof orderEntry.Client_Account__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Account Name","Error");
-            }
-            else if(orderEntry.Product_Type_Order_Entry__c == '' || orderEntry.Product_Type_Order_Entry__c == '--- None ---'){
-                isvalid = 0;
-                
-                helper.showToast("Please Select Product Type","Error");
-            }else if(orderEntry.Transaction_Type__c == '' || orderEntry.Transaction_Type__c == '--- None ---'){            
-                isvalid = 0;
-                helper.showToast("Please Select Transaction Type","Error");
-            }else if(orderEntry.Instrument_Name_Display__c == '' || typeof orderEntry.Instrument_Name_Display__c === 'undefined' || orderEntry.Instrument_Name_Display__c == '--- None ---'){              
-                isvalid = 0;
-                helper.showToast("Please Select Instrument Name","Error");
-            }
-            return isvalid;
-        } */
-        /* De-merger comment Starts */
-
-        /*if(orderEntry.Product_Type_Order_Entry__c == 'PMS'){
-           
-            if (typeof orderEntry.Client_Account__c === 'undefined') {
-                isvalid = 0;
-                helper.showToast("Please Select Account Name","Error");
-            }
-            else if(orderEntry.Product_Type_Order_Entry__c == '' || orderEntry.Product_Type_Order_Entry__c == '--- None ---'){
-                isvalid = 0;
-                
-                helper.showToast("Please Select Product Type","Error");
-            }else if(orderEntry.Transaction_Type__c == '' || orderEntry.Transaction_Type__c == '--- None ---'){            
-                isvalid = 0;
-                helper.showToast("Please Select Transaction Type","Error");
-            }else if(orderEntry.Product_Name_Display__c == '' || typeof orderEntry.Product_Name_Display__c === 'undefined' || orderEntry.Product_Name_Display__c == '--- None ---'){              
-                isvalid = 0;
-                helper.showToast("Please Select Product Name","Error");
-            }
-            return isvalid;
-        }*/
         
             if (orderEntry.Family_Name__c == '' || typeof orderEntry.Family_Name__c === 'undefined') {
                 isvalid = 0;
@@ -167,14 +34,6 @@
                             isvalid = 0;
                             helper.showToast("Please Select IPO Name","Error");
                         }
-            /* else if (typeof orderEntry.AMC_Name__c === 'undefined') {
-                        isvalid = 0;
-                        helper.showToast("Please Select AMC Name","Error");
-                    }
-                        else if (typeof orderEntry.Scheme__c === 'undefined') {
-                            isvalid = 0;
-                            helper.showToast("Please Select Scheme","Error");
-                        }*/
             return isvalid;
         
         
@@ -184,88 +43,6 @@
         var isvalid = 1;
         var orderEntry = component.get("v.orderEntry");      
         
-        
-       /* De-merger comment Starts */
-		/*
-        if(orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Purchase'){
-            isvalid = helper.validateSecondScreenCommon(component, event, helper);
-            if (typeof orderEntry.Transaction_Amount_Financial_Transaction__c  === 'undefined' || typeof orderEntry.Transaction_Amount_Financial_Transaction__c == '') {
-                isvalid = 0;
-                helper.showToast("Please Select Transaction Amount","Error");
-            }
-            return isvalid;
-        }else if (orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Redemption'){
-            isvalid = helper.validateSecondScreenCommon(component, event, helper);
-            if(isvalid == 1){
-                if (typeof orderEntry.Product_lookup__c  === 'undefined' || typeof orderEntry.Product_lookup__c == '') {
-                    isvalid = 0;
-                    helper.showToast("Please Select Scheme Name","Error");
-                }else if(orderEntry.Redemption_Type__c == 'None' || typeof orderEntry.Redemption_Type__c === 'undefined'){
-                    isvalid = 0;
-                    helper.showToast("Please Select Redemption Type ","Error");
-                }else if ((orderEntry.Redemption_Type__c == 'Partial Amount') && (typeof orderEntry.Transaction_Amount_Financial_Transaction__c  === 'undefined' || typeof orderEntry.Transaction_Amount_Financial_Transaction__c == '')) {
-                    isvalid = 0;
-                    helper.showToast("Please Select Transaction Amount for Partial Amount Redemption","Error");
-                }else if ((orderEntry.Redemption_Type__c == 'Partial Unit') && (typeof orderEntry.Redemption_Units__c  === 'undefined' || typeof orderEntry.Redemption_Units__c == '')) {
-                    isvalid = 0;
-                    helper.showToast("Please Select Redemption Units for Partial Unit Redemption","Error");
-                } 
-                
-            }
-            return isvalid;
-        }else if (orderEntry.Product_Type_Order_Entry__c == 'MF' && orderEntry.Transaction_Type__c == 'Switch'){
-            isvalid = helper.validateSecondScreenCommon(component, event, helper);
-            if(isvalid == 1){
-                if (typeof orderEntry.Product_lookup__c  === 'undefined' || typeof orderEntry.Product_lookup__c == '') {
-                    isvalid = 0;
-                    helper.showToast("Please Select Scheme Name","Error");
-                }else if(orderEntry.Redemption_Type__c == 'None' || typeof orderEntry.Redemption_Type__c === 'undefined'){
-                    isvalid = 0;
-                    helper.showToast("Please Select Redemption Type ","Error");
-                }else if ((orderEntry.Redemption_Type__c == 'Partial Unit') && (typeof orderEntry.Redemption_Units__c  === 'undefined' || typeof orderEntry.Redemption_Units__c == '')) {
-                    isvalid = 0;
-                    helper.showToast("Please Select Redemption Units for Partial Unit Redemption","Error");
-                }else if ((orderEntry.Redemption_Type__c == 'Partial Amount') && (typeof orderEntry.Transaction_Amount_Financial_Transaction__c  === 'undefined' || typeof orderEntry.Transaction_Amount_Financial_Transaction__c == '')) {
-                        isvalid = 0;
-                        helper.showToast("Please Select Transaction Amount for Partial Amount Redemption","Error");
-                    }else if ((orderEntry.Redemption_Type__c == 'Partial Unit') && (typeof orderEntry.Redemption_Units__c  === 'undefined' || typeof orderEntry.Redemption_Units__c == '')) {
-                        isvalid = 0;
-                        helper.showToast("Please Select Redemption Units for Partial Unit Redemption","Error");
-                    }
-            }
-        } else if(orderEntry.Product_Type_Order_Entry__c == 'Bond' || orderEntry.Product_Type_Order_Entry__c == 'CP' || orderEntry.Product_Type_Order_Entry__c == 'FD' || 
-           orderEntry.Product_Type_Order_Entry__c == 'SP' || orderEntry.Product_Type_Order_Entry__c == 'CD' || orderEntry.Product_Type_Order_Entry__c == 'ICD'){
-       
-            if (typeof orderEntry.Face_Value__c  === 'undefined' || typeof orderEntry.Face_Value__c == '' ||  orderEntry.Face_Value__c == null) {
-                isvalid = 0;
-                helper.showToast("Please enter Face Value ","Error");
-            }            
-            if(orderEntry.Transaction_Type__c == 'Sell'){ 
-                
-                if (typeof orderEntry.Face_Value__c  === 'undefined' || typeof orderEntry.Face_Value__c == '' ||  orderEntry.Face_Value__c == null) {
-                    isvalid = 0;
-                    helper.showToast("Please enter Face Value ","Error");
-                }          
-            }
-        }else */
-        /* De-merger comment Ends */
-
-     /*   else if (orderEntry.Product_Type_Order_Entry__c == 'PMS'){
-            isvalid = helper.validateSecondScreenCommon(component, event, helper);            
-            if(isvalid == 1){               
-                if (typeof orderEntry.Portfolio_Fee_Type__c  === 'undefined' || typeof orderEntry.Portfolio_Fee_Type__c == '') {
-                    isvalid = 0;
-                    helper.showToast("Please Select Portfolio Fee Type ","Error");
-                }else if ((typeof orderEntry.Folio__c  === 'undefined' ||   orderEntry.Folio__c == '' ||  orderEntry.Folio__c == '--None--') && (orderEntry.Transaction_Type__c != 'Subscription (New)')) {
-                    isvalid = 0;
-                    helper.showToast("Please Select Folio","Error");
-                } else if (typeof orderEntry.Transaction_Amount_Financial_Transaction__c  === 'undefined' || typeof orderEntry.Transaction_Amount_Financial_Transaction__c == '' || orderEntry.Transaction_Amount_Financial_Transaction__c == null ) {
-                    isvalid = 0;
-                    helper.showToast("Please Select Transaction Amount","Error");
-                } 
-            }
-            return isvalid;
-        } */
             if (orderEntry.Product_Type_Order_Entry__c == 'IPO'){
                     
                     if (typeof orderEntry.IPO_Application_Number__c  === 'undefined' ||   orderEntry.IPO_Application_Number__c == '') {
@@ -320,13 +97,7 @@
         if (typeof orderEntry.AttachmentId__c  === 'undefined' || typeof orderEntry.AttachmentId__c == '') {
             isvalid = 0;
             helper.showToast("Please Select Attachement","Error");
-        }/* else if (typeof orderEntry.Client_Risk_Profile__c  === 'undefined' || typeof orderEntry.Client_Risk_Profile__c == '') {
-            isvalid = 0;
-            helper.showToast("Please Select Client Risk Profile","Error");
-        }else if (typeof orderEntry.Product_Risk_Profile_FinancialT__c  === 'undefined' || typeof orderEntry.Product_Risk_Profile_FinancialT__c == '') {
-            isvalid = 0;
-            helper.showToast("Please Select Product Risk Profile","Error");
-        }*/
+        }
         else if (typeof orderEntry.Primary_FA__c  === 'undefined' || typeof orderEntry.Primary_FA__c == '') {
             isvalid = 0;
             helper.showToast("Please Select Primary FA","Error");
@@ -362,20 +133,7 @@
             }else if (typeof orderEntry.Origin__c  === 'undefined' || typeof orderEntry.Origin__c == '') {
                 isvalid = 0;
                 helper.showToast("Please Select Communication Mode","Error");
-            }/*else if (typeof orderEntry.Transaction_Mode__c  === 'undefined' || typeof orderEntry.Transaction_Mode__c == '') {
-                isvalid = 0;
-                helper.showToast("Please Select Transaction Mode","Error");
-            }else if (typeof orderEntry.Payment_Mode__c  === 'undefined' || typeof orderEntry.Payment_Mode__c == '') {
-                isvalid = 0;
-                helper.showToast("Please Select Payment Mode","Error");
-            }*/
-              /*else if (typeof orderEntry.Client_Concent__c  === 'undefined' || typeof orderEntry.Client_Concent__c == '') {
-                isvalid = 0;
-                helper.showToast("Please Select Client Concent","Error");
-            }*//*else if (typeof orderEntry.AttachmentId__c  === 'undefined' || typeof orderEntry.AttachmentId__c == '') {
-                isvalid = 0;
-                helper.showToast("Please Select Attachement","Error");
-            }  */  
+            }  
         	 return isvalid;
         }                  
         return isvalid;
@@ -410,17 +168,10 @@
                     listOfkeys.push(singlekey);
                 }
                 
-                //set the controller field value for lightning:select
-                if (listOfkeys != undefined && listOfkeys.length > 0) {
-                    ControllerField.push('--- None ---');
-                }
-                
                 for (var i = 0; i < listOfkeys.length; i++) {
                     ControllerField.push(listOfkeys[i]);
                 }  
                 // set the ControllerField variable values to country(controller picklist field)
-                
-                 
                 component.set("v.listControllingValues", ControllerField);
                   
             }else{
@@ -521,7 +272,6 @@
                 if(orderEntryObj != null){
                     orderEntry.Scheme_Name__c = orderEntryObj;
                     component.set("v.orderEntry",orderEntry); 
-                    
                 }
             }
             
@@ -531,32 +281,6 @@
     
     doSave: function(component, event, helper) {
         var orderEntry = component.get("v.orderEntry");
-        
-      /*  if(orderEntry.Product_Type_Order_Entry__c == 'MF'){
-            
-            var fileInput = component.find("fileMF").get("v.files");
-            if (fileInput.length > 0) {
-                helper.uploadHelper(component, event,fileInput);
-            } else {
-                alert('Please Select a Valid File');
-            }
-        }  else if(orderEntry.Product_Type_Order_Entry__c == 'Bond' || orderEntry.Product_Type_Order_Entry__c == 'CP' || orderEntry.Product_Type_Order_Entry__c == 'FD' || 
-                   orderEntry.Product_Type_Order_Entry__c == 'SP' || orderEntry.Product_Type_Order_Entry__c == 'CD' || orderEntry.Product_Type_Order_Entry__c == 'ICD'){            
-            var fileInput = component.find("fileBond").get("v.files");
-            if (fileInput.length > 0) {
-                helper.uploadHelper(component, event,fileInput);
-            } else {
-                alert('Please Select a Valid File');
-            }
-        }
-            else if (orderEntry.Product_Type_Order_Entry__c == 'PMS'){            
-                var fileInput = component.find("filePMS").get("v.files");
-                if (fileInput.length > 0) {
-                    helper.uploadHelper(component, event,fileInput);
-                } else {
-                    alert('Please Select a Valid File');
-                }
-            }*/
                  if (orderEntry.Product_Type_Order_Entry__c == 'IPO'){            
                     var fileInput = component.find("fileIPO").get("v.files");
                     if (fileInput.length > 0) {
@@ -720,62 +444,45 @@
             }
         });$A.enqueueAction(action);
     },
-    
-    
-    /*demarge start*/
-    /*
-    callAPiHelper: function(component, event, helper){              
-        var orderEntry = component.get("v.orderEntry" );
-        var foList = new Array();
-        var folioByAPIList = new Array();
-        if(orderEntry.Transaction_Type__c == 'Purchase'){
-            var action = component.get("c.getFolioFromAPI");  
-        }else if(orderEntry.Transaction_Type__c == 'Redemption' || orderEntry.Transaction_Type__c == 'Switch'){
-            var action = component.get("c.getHoldingFromAPI");
-        }
-        action.setParams({
-            "clientAccountId" : orderEntry.Client_Account__c,
-            "bseStarAmcCode" : orderEntry.AMC_Name__c,
-            "holdingType" : orderEntry.Client_Holding_and_Type__c,
-            "transactionType" : orderEntry.Transaction_Type__c,
-            "schemeName" : orderEntry.Scheme__c,
-            "fromSchemeName" : orderEntry.From_Scheme__c
-        });   
+	getFilteredFamilyRecords: function(component, event, helper){      
+        var action = component.get("c.getFilteredFamilyRecords");
         action.setCallback(this, function(response){
             var state = response.getState();
             if(state === "SUCCESS"){
-                var folioListReceived = new Array();
-                folioListReceived = response.getReturnValue();
-                if(orderEntry.Transaction_Type__c == 'Purchase'){
-                    foList.push('New');  
-                    if(folioListReceived != null){
-                        for(var m=0 ; m < folioListReceived.length; m++){
-                            foList.push(folioListReceived[m]); 
-                        }
-                        component.set("v.folioListPurchase",foList); 
-                        helper.showToast("Folio List Fetched","Success");
-                    }else{
-                        helper.showToast("No Data Found !!! !!!","Error");
-                    }
-                    
-                }else if(orderEntry.Transaction_Type__c == 'Redemption' || orderEntry.Transaction_Type__c == 'Switch'){
-                    component.set("v.HoldingInformationAPI",folioListReceived); 
-                    folioByAPIList.push('-- None --');
-                    if(folioListReceived != null){
-                        for(var m=0 ; m < folioListReceived.length; m++){
-                            folioByAPIList.push(folioListReceived[m].folio);
-                        }
-                        component.set("v.folioListPurchase",folioByAPIList); 
-                        component.set("v.folioByAPI",true); 
-                        helper.showToast("Holding Information Fetched","Success");
-                    }else{
-                        helper.showToast("No Data Found !!!","Error");
-                    }
+                var listOfAllFamilies = response.getReturnValue();
+                if(listOfAllFamilies == null){
+                    helper.showToast("Family not Found","Error");
+                }else{                    
+                    component.set("v.filteredFamilyList",listOfAllFamilies);
+                    console.log('filteredFamilyList :'+JSON.stringify(component.get("v.filteredFamilyList")));
                 }
             }
         });$A.enqueueAction(action);
+    },
+    setValueToProductType: function(component, event, helper){     
+        var orderEntry = component.get("v.orderEntry");
+        orderEntry.Product_Type_Order_Entry__c = 'IPO';
+        component.set("v.orderEntry",orderEntry);
+        var controllerValueKey = 'IPO';
+        var depnedentFieldMap = component.get("v.depnedentFieldMap");
+        component.set("v.selectedAMCName1",'');
+        if (controllerValueKey != '--- None ---') {
+            var ListOfDependentFields = depnedentFieldMap[controllerValueKey];
+            component.set("v.showProductName",true);       
+
+            if(ListOfDependentFields.length > 0){
+                component.set("v.bDisabledDependentFld" , false);  
+                helper.fetchDepValues(component, ListOfDependentFields);
+                
+            }else{
+                component.set("v.bDisabledDependentFld" , true); 
+                component.set("v.listDependingValues", ['--- None ---']);
+            }  
+        }
+        else {
+            component.set("v.listDependingValues", ['--- None ---']);
+            component.set("v.bDisabledDependentFld" , true);
+        }
         
-    }*/
-    
-    /*demagre end */
+    }, 
 })
