@@ -1,4 +1,4 @@
-public class TransactionController {
+public with sharing class TransactionController {
     public static Id attachId;
     public static  Integer popUpCounter= 0;
     public static String attachmentName;
@@ -41,6 +41,13 @@ public class TransactionController {
             }                                                                                                   
         return null;
     }   
+
+    @AuraEnabled
+    public static List<Account> getFilteredFamilyRecordsMF(){
+            Id devRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Family').getRecordTypeId();
+            List<Account> clientObj = [SELECT id ,owner.id,owner.name, Parent.id,GWM_Online_Id__c, Parent.Name , name , Risk_Profile_Based_on_IPS__c ,Primary_FA__c , Demat_Account_Number__c , Pan_Number__c FROM Account where recordTypeId=:devRecordTypeId];            
+            return clientObj;                                                                                              
+    }
     
     
     

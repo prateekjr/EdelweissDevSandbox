@@ -197,7 +197,6 @@
                                                       label="{!v.islabel}"
                                                       onchange="{!c.transactionSelection}" 
                                                       disabled="{!v.bDisabledDependentFld}" required="true">
-                                        
                                         <aura:iteration items="{!v.listDependingValues}" var="val">
                                             <option value="{!val}">{!val}</option>
                                         </aura:iteration>
@@ -211,7 +210,7 @@
                                     <div class="slds-p-around_medium" id="modal-content-id-1" >
                                         <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                         <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >IPO Name</label>
-                                        <c:CustomListSearch  selectedRecord="{!v.selectedIPOName}"  objectName="IPO_Master__c" selectedIPOType="{!v.orderEntry.Transaction_Type__c}" fieldName="Name__c" label="" iconName="standard:account" placeholder="Enter IPO Name" />
+                                        <c:CustomListSearch  selectedRecord="{!v.selectedIPOName}" aura:id="ipoNameLookup" objectName="IPO_Master__c" selectedIPOType="{!v.orderEntry.Transaction_Type__c}" fieldName="Name__c" label="" iconName="standard:account" placeholder="Enter IPO Name" widthFlag="50"/>
                                     </div>
                                 </div>
                             </aura:renderIf>

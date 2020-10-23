@@ -57,6 +57,7 @@
 
         var isvalid = 1;
         var orderEntry = component.get("v.orderEntry"); 
+
         if(orderEntry.Product_Type_Order_Entry__c == 'Bond' || orderEntry.Product_Type_Order_Entry__c == 'CP' || orderEntry.Product_Type_Order_Entry__c == 'FD' || 
            orderEntry.Product_Type_Order_Entry__c == 'SP' || orderEntry.Product_Type_Order_Entry__c == 'CD' || orderEntry.Product_Type_Order_Entry__c == 'ICD'){
        
@@ -238,7 +239,6 @@
         });$A.enqueueAction(action);
         
     },
-    /* De-merger comment Ends */
     doSave: function(component, event, helper) {
         var orderEntry = component.get("v.orderEntry");
         if(orderEntry.Product_Type_Order_Entry__c == 'Bond' || orderEntry.Product_Type_Order_Entry__c == 'CP' || orderEntry.Product_Type_Order_Entry__c == 'FD' || 

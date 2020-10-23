@@ -11,6 +11,8 @@
 }
 .THIS .inputBox input {
 	padding-left: 30px;
+    height:38px;
+    width : 442px;
 }
 .THIS .eachItem:hover {
     background-color: #EEE;
@@ -42,8 +44,9 @@
 }
 
 .THIS .slds-pill{
-    padding-top : 4px;
+    padding-top: 5px;
     width: 100%;
+    display: inline-block !important;
 }
 
 .THIS .slds-pill__label{

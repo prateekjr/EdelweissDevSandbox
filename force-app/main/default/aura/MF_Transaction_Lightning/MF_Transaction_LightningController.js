@@ -60,6 +60,7 @@
                     // call the helper function
                     helper.fetchPicklistValues(component,objDetails,controllingFieldAPI, dependingFieldAPI);      
                     helper.currentTime(component, event, helper);
+		    helper.getFilteredFamilyRecords(component, event, helper);
                     console.log("transaction mode :"+orderEntry.Transaction_Mode_new__c);
                 }
                 
@@ -67,31 +68,18 @@
             } else{
                 
             }
-        });$A.enqueueAction(action1);
-        
-     //  helper.callAPiDrawdownData(component, event, helper);
-        
-     /*   component.set('v.columns', [
-            {label: 'Drawdown Form Date', fieldName: 'drawdownFormDate', type: 'text'},
-            {label: 'Drawdown Till Date', fieldName: 'drawdownTillDate', type: 'text'},
-            {label: 'Adjusted Drawdown Due Date', fieldName: 'adjustedDrawdownDueDate', type: 'text'},
-            {label: 'CCY', fieldName: 'CCY', type: 'text'},
-            {label: 'Drawdown Amount', fieldName: 'drawdownAmount', type: 'text'}]); */
-        
+        });$A.enqueueAction(action1);        
     },
-    familySelection : function(component, event, helper) {
+    /*familySelection : function(component, event, helper) {
         var orderEntry = component.get("v.orderEntry");  
         if(orderEntry.Family_Name__c != ''){
             component.set("v.familySelected",true);
         }else if(orderEntry.Family_Name__c == '') {
             component.set("v.familySelected",false);
         }
-        
-        //var myText = component.find('familyName').get('v.value');
+
         var myText = component.find('familyName').get('v.value');
-        
-        
-        
+
         var orderEntry = component.get("v.orderEntry");  
         var action = component.get("c.getClientInformation");
         action.setParams({
@@ -113,13 +101,14 @@
             
         });$A.enqueueAction(action);
         
-    },
+    }, */
     transactionSelection : function(component, event, helper) {
         component.set("v.showAllScheme",false);
         var orderEntry = component.get("v.orderEntry");  
         console.log("orderEntry.Transaction_Type__c :"+orderEntry.Transaction_Type__c);
         console.log("isoderentryMF :"+component.get("v.isoderentryMF"));
-        
+        var isoderentryMF=component.get("v.isoderentryMF");
+
         if(orderEntry.Transaction_Type__c == 'Redemption'){
             orderEntry.Folio__c = '-- None --'; 
             orderEntry.To_Folio__c = '-- None --';
@@ -156,40 +145,6 @@
             component.set("v.isSTP",false);
             
         }
-            /*demarging start*/
-            
-            /*else if(orderEntry.Transaction_Type__c == 'Buy'){           
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",true);
-            component.set("v.isBondSell",false);*/
-            /*var selectedClientAccountRecord = component.get("v.selectedClientAccountRecord");
-            var selectedClientAccountId =   selectedClientAccountRecord.Id;
-            var txnType = orderEntry.Transaction_Type__c
-            var clientName = orderEntry.Client_Account_Display__c;
-            
-            var action = component.get("c.getInstrumentName");
-            action.setParams({
-                "typeOfTxn": txnType,
-                "clienAccountId": selectedClientAccountId
-            });   
-            action.setCallback(this, function(response){
-                var state = response.getState();
-                if(state === "SUCCESS"){
-                    var instrumentNameList = response.getReturnValue();                        
-                    component.set("v.filteredInstruments", instrumentNameList);
-                }
-            });$A.enqueueAction(action);
-            
-        } else if(orderEntry.Transaction_Type__c == 'Sell'){
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",false);
-            component.set("v.isBondSell",true);
-        }*/
-        /*demarging end*/
             else if(orderEntry.Transaction_Type__c == 'SIP'){
                 orderEntry.Folio__c = 'New';
                 orderEntry.To_Folio__c ='New';
@@ -226,7 +181,61 @@
                         component.set("v.isSWP",false);
                         component.set("v.isSTP",true);
                     }
-        component.set("v.orderEntry",orderEntry);  
+        component.set("v.orderEntry",orderEntry); 
+        
+        if(isoderentryMF)
+        {
+            var amcLookupOrderEntry =component.find("amcLookupOrderEntry");
+            amcLookupOrderEntry.clearMethod();
+            if(orderEntry.Transaction_Type__c == 'Purchase' || orderEntry.Transaction_Type__c == 'SIP')
+            {
+                var schemeLookupOrderEntryPS =component.find("schemeLookupOrderEntryPS");
+                schemeLookupOrderEntryPS.clearMethod();
+            }
+            else if(orderEntry.Transaction_Type__c == 'Redemption' || orderEntry.Transaction_Type__c == 'SWP')
+            {
+                var schemeLookupOrderEntryRS =component.find("schemeLookupOrderEntryRS");
+                schemeLookupOrderEntryRS.clearMethod();
+            }
+            else if(orderEntry.Transaction_Type__c == 'Switch' || orderEntry.Transaction_Type__c == 'STP')
+            {
+                var fromschemeLookupOrderEntrySS =component.find("fromschemeLookupOrderEntrySS");
+                fromschemeLookupOrderEntrySS.clearMethod();
+                var toschemeLookupOrderEntrySS =component.find("toschemeLookupOrderEntrySS");
+                toschemeLookupOrderEntrySS.clearMethod();
+            }
+            
+        }
+        else{
+            var amcLookupBSEStar =component.find("amcLookupBSEStar");
+            amcLookupBSEStar.clearMethod();
+            if(orderEntry.Transaction_Type__c == 'Purchase' || orderEntry.Transaction_Type__c == 'Redemption')
+            {
+                var schemeLookupBSEStarPR =component.find("schemeLookupBSEStarPR");
+                schemeLookupBSEStarPR.clearMethod();
+            }
+            else if(orderEntry.Transaction_Type__c == 'Purchase' || orderEntry.Transaction_Type__c == 'Redemption')
+            {
+                var schemeLookupBSEStarPRe =component.find("schemeLookupBSEStarPRe");
+                schemeLookupBSEStarPRe.clearMethod();
+            }
+            else if(orderEntry.Transaction_Type__c == 'Switch')
+            {
+                var fromschemeLookupSS =component.find("fromschemeLookupSS");
+                fromschemeLookupSS.clearMethod();
+                var toschemeLookupBSEStar =component.find("toschemeLookupBSEStar");
+                toschemeLookupBSEStar.clearMethod(); 
+                var fromschemeLookupBSEStarSS =component.find("fromschemeLookupBSEStarSS");
+                fromschemeLookupBSEStarSS.clearMethod();
+                
+            }
+        
+        }
+   
+        component.set("v.selectedToSchemeObj",'');
+        component.set("v.selectedFromSchemeObj",'');
+        component.set("v.selectedSchemeObj",'');
+        //component.set("v.selectedAMCName1",'');
     },
     
     clientAccountSelection : function(component, event, helper) {
@@ -237,29 +246,38 @@
         
         orderEntry.Client_Name__c =selectedClientId;
         component.set("v.orderEntry", orderEntry);
-        /*
-            for(var m=0 ; m < listOfAllClients.length; m++){
-                if(selectedClientId == listOfAllClients[m].Id){
-                    orderEntry.Client_Risk_Profile__c  =  listOfAllClients[m].Risk_Profile_Based_on_IPS__c;
+        //component.set("v.selectedAMCName1",'');
+        //Check for related client and Display Error only if Family is selected
+        if(orderEntry.Family_Name__c != undefined && orderEntry.Client_Name__c != undefined)
+        {
+            var action = component.get("c.getClientAccountInformation");
+            action.setParams({
+                "clientId" : selectedClientId
+            });                  
+            action.setCallback(this, function(response) {    
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var listOfAllClientAccounts = response.getReturnValue();
+                    //Checking returned list is not null and length should be geater than 0
+                    if(listOfAllClientAccounts == null || listOfAllClientAccounts.length == 0){ 
+                        helper.showToast("Client Account not found for family","Error");
+                        component.set("v.filteredClientAccountList",listOfAllClientAccounts);
+                    }else{                   
+                        component.set("v.filteredClientAccountList",listOfAllClientAccounts);
+                    }
                 }
-            }
-        	component.set("v.orderEntry", orderEntry); */
-        var action = component.get("c.getClientAccountInformation");
-        action.setParams({
-            "clientId" : selectedClientId
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listOfAllClientAccounts = response.getReturnValue();
-                if(listOfAllClientAccounts == null){
-                    helper.showToast("Client Account not found for family","Error");
-                }else{                   
-                    component.set("v.filteredClientAccountList",listOfAllClientAccounts);
-                }
-            }
-            
-        });$A.enqueueAction(action);
+                
+            });$A.enqueueAction(action);
+        }
+
+        //Clear Selected Client Account only when Client is cleared
+        if(orderEntry.Client_Name__c == undefined)
+        {
+            var clientAccountLookup =component.find("clientAccountLookup");
+            clientAccountLookup.clearMethod();
+            component.set("v.filteredClientAccountList",[]);
+        }
+  
         
     },
     
@@ -270,51 +288,7 @@
         var orderEntry = component.get("v.orderEntry");  
         orderEntry.Client_Account__c = selectedClientAccountId;
         component.set("v.orderEntry", orderEntry); 
-        //Change End
-        /*var action = component.get("c.getClientProducts");
-        action.setParams({
-            "clienAccountId": selectedClientAccountId
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var listOfProducts = response.getReturnValue();
-                if(listOfProducts == null){
-                    helper.showToast("Client Asset Details Not Found","Error");
-                }else{
-                    component.set("v.productList",listOfProducts);  
-                }
-            }
-            
-        });$A.enqueueAction(action);
-        
-        
-        var folioList = new Array();
-        
-        var action = component.get("c.getFolioNumbersPurchase");
-        action.setParams({
-            "clientAccountId" : selectedClientAccountId,
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var clientAssetList = response.getReturnValue();
-                if(clientAssetList == null){
-                    helper.showToast("Client Asset not available","Error");
-                }else{
-                    folioList.push('New');                    
-                    for(var m=0 ; m < clientAssetList.length; m++){
-                        folioList.push(clientAssetList[m].Folio_Number__c);
-                    }
-                    component.set("v.clientAssetListPurchase",clientAssetList); 
-                    component.set("v.folioListPurchase",folioList); 
-                }
-            }
-        });$A.enqueueAction(action);
-        
-        */
-        //Change End
-        
+       
     },
     
     onControllerFieldChange: function(component, event, helper) {
@@ -322,33 +296,13 @@
         var controllerValueKey = event.getSource().get("v.value"); // get selected controller field value
         var depnedentFieldMap = component.get("v.depnedentFieldMap");
         var  isoderentryMF = component.get("v.isoderentryMF"); 
-        
-        /*var CaseRec = component.get("v.CaseRec");
-    
-        //Initialize
-        component.set('v.CaseRec.Transaction_Type__c', ['--- None ---']);
-        component.set("v.listDependingValues", ['--- None ---']);
-        component.set('v.filteredProductList',['--- None ---']);
-        component.set('v.filteredAllProductList',['--- None ---']);
-        component.set("v.folioNumber",'');
-        
-      
-	
-        component.set("v.selectedLookUpRecord",{});
-        component.set("v.selectedLookUpRecord1",{});*/
         component.set("v.selectedAMCName1",'');
         
         if (controllerValueKey != '--- None ---') {
             var ListOfDependentFields = depnedentFieldMap[controllerValueKey];
             var orderEntry = component.get("v.orderEntry"); 
             if(controllerValueKey === 'MF'){
-                component.set("v.showAmc" , true); 
-                component.set("v.showInstrument",false);
-                /* PMS Start */
-                component.set("v.showProductName",false);
-                /* PMS Ends */
-                //changes by aashay
-                
+                component.set("v.showAmc" , true);                
                 console.log('orderEntry.Family_Name__'+orderEntry.Family_Name__c);
                 
                 var actionmf = component.get("c.getClientInformationorderentery");
@@ -365,9 +319,6 @@
                         
                         if(isfound){
                             component.set("v.isoderentryMF",true);
-                            /*  component.set("v.isSIP",true);
-                              component.set("v.isSTP",true);
-                              component.set("v.isSWP",true); */
                      
                             console.log("isoderentryMF onchange :"+component.get("v.isoderentryMF"));
                             var listDependingValuesTemp = new Array();
@@ -382,7 +333,7 @@
                                 listDependingValuesTemp.push('STP');
                                 component.set("v.listDependingValues",listDependingValuesTemp);  
                             } 
-                           // helper.showToast("Enter MF Order Entry","success");
+               
                         } 
                         
                     }
@@ -390,33 +341,6 @@
                 });$A.enqueueAction(actionmf);
                 
             }
-            /*demarging start*/
-           /* else if(controllerValueKey === 'Bond'){
-                component.set("v.showInstrument",true);
-                component.set("v.showAmc" , false); */
-                /* PMS Start */
-               // component.set("v.showProductName",false);
-                /* PMS Ends */
-                
-                /*var txnType = component.get('orderEntry.Transaction_Type__c');
-                
-                var action = component.get("c.getInstrumentName");
-                action.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var instrumentNameList = response.getReturnValue();                        
-                        component.set("v.filteredInstruments", instrumentNameList);
-                    }
-                });$A.enqueueAction(action);}*/
-            
-               /*demarging start*/
-            /*
-             else if(controllerValueKey === 'PMS'){
-                component.set("v.showProductName",true);
-                component.set("v.showInstrument",false);
-                component.set("v.showAmc" , false);                 
-            }*/
-               /*demarging end*/
             
             if(ListOfDependentFields.length > 0){
                 component.set("v.bDisabledDependentFld" , false);  
@@ -450,22 +374,7 @@
                 
             });$A.enqueueAction(action);
             
-        }
-        /*   var listDependingValuesTemp = new Array();
-        var isorderentry = component.get("v.isoderentryMF");
-        listDependingValuesTemp = component.get("v.listDependingValues");  
-        console.log('listDependingValuesTemp :'+listDependingValuesTemp);
-        console.log('isoderentryMF :'+isorderentry);
-           if(isorderentry){
-            
-            listDependingValuesTemp.push("SIP");  
-            listDependingValuesTemp.push('SWP'); 
-            listDependingValuesTemp.push('STP');
-               component.set("v.listDependingValues",listDependingValuesTemp);  
-          //  listDependingValuesTemp.remove('Purchase');
-        }
-        */
-        
+        }        
     },
     
     getFolioOnHolding : function(component, event, helper){
@@ -674,20 +583,6 @@
                     console.log('from scheme value' + orderEntry.From_Scheme__c);
                     console.log('TO scheme value' + orderEntry.To_Scheme__c);
                 }
-                /*var action = component.get("c.getStringsDate");         
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();            
-                    if (state === "SUCCESS") {              
-                        var todaysDate = response.getReturnValue();                 
-                        if(todaysDate == null){
-                            helper.showToast("Client not found for family","Error");
-                        }else{                       
-                            component.set("v.orderDateStr",todaysDate);
-                            component.set("v.valueDateStr",todaysDate);                                        
-                        }
-                    } 
-                    
-                });$A.enqueueAction(action); */
                 var selectedClientRecord = component.get("v.selectedClientRecord");
                 var listOfAllClients = component.get("v.filteredClientList");
                 for(var m=0 ; m < listOfAllClients.length; m++){
@@ -1033,10 +928,7 @@
                                                  console.log("folioListOtherToFolio :"+JSON.stringify(folioListOtherToFolio)); 
                                              }
                                          });$A.enqueueAction(actionToFolio); 
-                                     }
-                
-                                        
-                                     
+                                     }  
                                     
                                 }
                 //Change start
@@ -1178,9 +1070,6 @@
                                             for(var m=0 ; m < clientAssetList.length; m++){
                                                 folioList.push(clientAssetList[m].Folio_Number__c); 
                                             }
-                                            /* if(orderEntry.Folio__c == ''){
-                                                     orderEntry.Folio__c = 'New';
-                                                }*/
                                                 component.set("v.orderEntry",orderEntry); 
                                                 component.set("v.clientAssetListPurchase",clientAssetList); 
                                                 component.set("v.folioListPurchase",folioList); 
@@ -1204,337 +1093,7 @@
                 component.set("v.isPreviewScreen" , false); 
                 component.set("v.isDisabled" , true);
                 component.set("v.isBondPreviewScreen",false);
-                
             }
-              /*demarging start*/
-          /* else  if(orderEntry.Product_Type_Order_Entry__c === 'Bond'){
-                
-                var selectedClientRecord = component.get("v.selectedClientRecord");
-                var listOfAllClients = component.get("v.filteredClientList");
-                for(var m=0 ; m < listOfAllClients.length; m++){
-                    if(selectedClientRecord.Id == listOfAllClients[m].Id){
-                        component.set("v.selectedClientPAN",listOfAllClients[m].PAN_Number__c);
-                    }
-                }
-                var selectedClientId = selectedClientRecord.Id;
-                var action = component.get("c.getUCCMasterData");
-                action.setParams({
-                    "clientId": selectedClientId
-                });                  
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var bseObjectList = response.getReturnValue();
-                        if(bseObjectList == null){
-                            helper.showToast("UCC Details Not Found","Error");
-                        }else{
-                            uccList.push('-- None --');
-                            for(var m=0 ; m < bseObjectList.length; m++){
-                                uccList.push(bseObjectList[m].CLIENT_CODE__c);
-                            }
-                            component.set("v.uccList",uccList); 
-                        }
-                    }
-                    
-                });$A.enqueueAction(action);
-                
-                var listOfAllClients = component.get("v.filteredClientList");
-                var selectedClientRecord = component.get("v.selectedClientRecord");
-                
-                for(var m=0 ; m < listOfAllClients.length; m++){
-                    if(selectedClientRecord.Id == listOfAllClients[m].Id){
-                        orderEntry.Client_Risk_Profile__c = listOfAllClients[m].Risk_Profile_Based_on_IPS__c;
-                        orderEntry.Primary_FA_FinanceT__c = listOfAllClients[m].Owner.Id;
-                        component.set("v.primaryFA",listOfAllClients[m].Owner.Id);
-                        orderEntry.Primary_FA__c = listOfAllClients[m].Owner.Name;
-                    }
-                }
-                component.set("v.orderEntry" , orderEntry);  
-                var orderEntryObj = component.get("v.orderEntry");  
-                var primaryFa = component.get("v.primaryFA");
-                var action = component.get("c.getEuinDetails");
-                action.setParams({
-                    "faId": primaryFa
-                });                  
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var euinObject = response.getReturnValue();
-                        if(euinObject == null){
-                            //helper.showToast("UCC Not Found","Error");
-                        }else{
-                            orderEntryObj.EUIN__c = euinObject.EMP_Code__c;
-                            component.set("v.orderEntry" , orderEntryObj);  
-                        }
-                    }
-                    
-                });$A.enqueueAction(action);
-                
-                var action = component.get("c.setClientName");
-                action.setParams({
-                    orderEntryObj : orderEntryObj 
-                });
-                action.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var clientName = response.getReturnValue();
-                        if(clientName != null){
-                            component.set("v.orderEntry.Client_Name_Display__c", clientName);
-                            
-                        }
-                    }
-                }); $A.enqueueAction(action);    
-                
-                var action = component.get("c.setClientAccountName");
-                action.setParams({
-                    orderEntryObj : orderEntryObj 
-                });
-                action.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var accountName = response.getReturnValue();
-                        if(accountName != null){
-                            component.set("v.orderEntry.Client_Account_Display__c", accountName);
-                            
-                        }
-                    }
-                }); $A.enqueueAction(action); 
-                component.set("v.orderEntry",orderEntry);  
-                component.set("v.isFirstScreen" , false); 
-                component.set("v.isBond", true);
-                component.set("v.isProuctTypeMF" , false);     
-                component.set("v.isDisabled" , true);
-                component.set("v.isBondPreviewScreen",false);
-                var productName = orderEntry.Instrument_Name_Display__c;                
-                var productISIN = productName.split('-').pop();
-                
-                var orderEntry = component.get("v.orderEntry"); 
-                var clientAccountId = orderEntry.Client_Account__c;
-                var action1 = component.get("c.fetchProductRiskonISIN");
-                action1.setParams({
-                    "ISIN" : productISIN                        
-                });
-                action1.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var prodRiskVal = response.getReturnValue();
-                        if(prodRiskVal != null){
-                            orderEntry.Product_Risk_Profile_FinancialT__c = prodRiskVal.Risk_Profile_of_Product__c;
-                            orderEntry.Product_lookup__c  = prodRiskVal.Id;                                
-                        }
-                    }
-                }); $A.enqueueAction(action1);
-                
-                
-                if(orderEntry.Transaction_Type__c == 'Buy'){
-                    component.set("v.isBondBuy", true); 
-                    component.set("v.isBondSell", false); 
-                } else if(orderEntry.Transaction_Type__c == 'Sell'){
-                    //orderEntry.Client_Account__c *********** To Do start here 
-                    //var orderEntry = component.get("v.orderEntry"); 
-                    var clientAccountId = orderEntry.Client_Account__c;
-                    
-                    productName = productName.substr(0, productName.lastIndexOf("-", productName.length - 2));                                      
-                    var action = component.get("c.fetchSellAUAQty");
-                    action.setParams({
-                        "clientActID" : clientAccountId,
-                        "prodName" : productName
-                    });
-                    action.setCallback(this, function(response){
-                        var state = response.getState();
-                        if(state === "SUCCESS"){
-                            var clintAsset = response.getReturnValue();
-                            if(clintAsset != null){
-                                //component.set("v.orderEntry.Client_Name_Display__c", clientName);                                
-                                component.set("v.orderEntry.Current_Investment_Amount__c",clintAsset.Total_AUM__c);
-                                component.set("v.orderEntry.Available_Quantity__c",clintAsset.Quantity__c);
-                                
-                            }
-                        }
-                    }); $A.enqueueAction(action);
-                    component.set("v.isBondSell", true); 
-                    component.set("v.isBondBuy", false); 
-                }
-                
-            }*/
-               /*demargind start*/
-              /* else  if(orderEntry.Product_Type_Order_Entry__c === 'PMS'){
-                
-                component.set("v.isPMS", true);
-                component.set("v.isProuctTypeMF" , false);
-                component.set("v.isBond" , false);  
-                component.set("v.isFirstScreen" , false);  
-                
-                //Common Functionality
-                var selectedClientRecord = component.get("v.selectedClientRecord");
-                var listOfAllClients = component.get("v.filteredClientList");
-                for(var m=0 ; m < listOfAllClients.length; m++){
-                    if(selectedClientRecord.Id == listOfAllClients[m].Id){
-                        component.set("v.selectedClientPAN",listOfAllClients[m].PAN_Number__c);
-                    }
-                }
-                var selectedClientId = selectedClientRecord.Id;
-                var action = component.get("c.getUCCMasterData");
-                action.setParams({
-                    "clientId": selectedClientId
-                });                  
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var bseObjectList = response.getReturnValue();
-                        if(bseObjectList == null){
-                            helper.showToast("UCC Details Not Found","Error");
-                        }else{
-                            uccList.push('-- None --');
-                            for(var m=0 ; m < bseObjectList.length; m++){
-                                uccList.push(bseObjectList[m].CLIENT_CODE__c);
-                            }
-                            component.set("v.uccList",uccList); 
-                        }
-                    }
-                    
-                });$A.enqueueAction(action);
-                
-                var listOfAllClients = component.get("v.filteredClientList");
-                var selectedClientRecord = component.get("v.selectedClientRecord");
-                
-                for(var m=0 ; m < listOfAllClients.length; m++){
-                    if(selectedClientRecord.Id == listOfAllClients[m].Id){
-                        orderEntry.Client_Risk_Profile__c = listOfAllClients[m].Risk_Profile_Based_on_IPS__c;
-                        orderEntry.Primary_FA_FinanceT__c = listOfAllClients[m].Owner.Id;
-                        component.set("v.primaryFA",listOfAllClients[m].Owner.Id);
-                        orderEntry.Primary_FA__c = listOfAllClients[m].Owner.Name;
-                    }
-                }
-                component.set("v.orderEntry" , orderEntry);  
-                var orderEntryObj = component.get("v.orderEntry");  
-                
-                
-                var action = component.get("c.setClientName");
-                action.setParams({
-                    orderEntryObj : orderEntryObj 
-                });
-                action.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var clientName = response.getReturnValue();
-                        if(clientName != null){
-                            component.set("v.orderEntry.Client_Name_Display__c", clientName);
-                            
-                        }
-                    }
-                }); $A.enqueueAction(action);    
-                
-                var action = component.get("c.setClientAccountName");
-                action.setParams({
-                    orderEntryObj : orderEntryObj 
-                });
-                action.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var accountName = response.getReturnValue();
-                        if(accountName != null){
-                            component.set("v.orderEntry.Client_Account_Display__c", accountName);
-                            
-                        }
-                    }
-                }); $A.enqueueAction(action); 
-                component.set("v.orderEntry",orderEntry); 
-                
-                var productName = orderEntry.Product_Name_Display__c;                
-                var productCode = productName.split('-').pop();
-                
-                var orderEntry = component.get("v.orderEntry"); 
-                var clientAccountId = orderEntry.Client_Account__c;
-                var action1 = component.get("c.fetchProductRiskonProductCode");
-                action1.setParams({
-                    "prdCode" : productCode                        
-                });
-                action1.setCallback(this, function(response){
-                    var state = response.getState();
-                    if(state === "SUCCESS"){
-                        var prodRiskVal = response.getReturnValue();
-                        if(prodRiskVal != null){
-                            orderEntry.Product_Risk_Profile_FinancialT__c = prodRiskVal.Risk_Profile_of_Product__c;
-                            orderEntry.Product_lookup__c  = prodRiskVal.Id;                                
-                        }
-                    }
-                }); $A.enqueueAction(action1);
-                
-                //Common functionality end
-                
-                //Folio should be blank on Subscription New
-                if(orderEntry.Transaction_Type__c == 'Subscription (New)'){
-                    component.set("v.disablePMSFolio",true);  
-                    component.set("v.folioListPMS",'');
-                }else{
-                    component.set("v.disablePMSFolio",false);
-                    var productName = orderEntry.Product_Name_Display__c;
-                    
-                    var productCode = productName.split('-').pop();
-                    
-                    var folioListPMSOther = new Array();
-                    var action = component.get("c.getFolioPMS");
-                    action.setParams({
-                        "clientAccountId" : orderEntry.Client_Account__c,
-                        "prodCode" : productCode               
-                    });                  
-                    action.setCallback(this, function(response) {
-                        
-                        var state = response.getState();
-                        if (state === "SUCCESS") {
-                            var clientAssetList = response.getReturnValue();
-                            if(clientAssetList == null){
-                                helper.showToast("Client Asset not available","Error");
-                            }else{                            
-                                for(var m=0 ; m < clientAssetList.length; m++){
-                                    
-                                    folioListPMSOther.push(clientAssetList[m].Folio_Number__c);                                     
-                                }
-                                
-                                component.set("v.folioListPMS",folioListPMSOther);
-                            }
-                        }
-                    });$A.enqueueAction(action); 
-                    
-                    
-                }
-                
-                //Payment Type display on bases IAS POA
-                var action = component.get("c.getPMSAccountTYpe");
-                action.setParams({
-                    "clientAccountId" : orderEntry.Client_Account__c,
-                    
-                });                  
-                action.setCallback(this, function(response) {
-                    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var clientAccountType = response.getReturnValue();
-                        if(clientAccountType == null){
-                            helper.showToast("Client Account not available","Error");
-                        }else{     
-                            
-                            if(clientAccountType =='IAS' || clientAccountType == 'POA'){ 
-                                
-                                component.set("v.isPOADisplay",true);
-                                component.set("v.isExternalDisplay",false);
-                            }else{
-                                orderEntry.Payment_Mode__c = 'External Bank';
-                                component.set("v.isPaymentModeDisable",true);
-                                component.set("v.isPOADisplay",false);
-                                component.set("v.isExternalDisplay",true);
-                                
-                            }
-                            
-                            
-                        }
-                    }
-                });$A.enqueueAction(action); 
-                
-                
-                
-            }  */
         }
         helper.setClientAccountNameController(component, event, helper);
         helper.setFamilyNameController(component, event, helper);
@@ -1548,67 +1107,18 @@
         var orderEntry = component.get("v.orderEntry"); 
         component.set("v.isFirstScreen" , false); 
         component.set("v.loadPreviewScreen" , false);
-        /*demrge start*/
-       
-       /* if(orderEntry.Product_Type_Order_Entry__c == 'Bond'){
-            component.set("v.isProuctTypeMF" , false);                
-            component.set("v.isBond" , true);      
-            component.set("v.isPMS" , false); 
-            
-        }*/
+
          if(orderEntry.Product_Type_Order_Entry__c == 'MF') {
             component.set("v.isProuctTypeMF" , true);
             component.set("v.isBond" , false);      
             component.set("v.isPMS" , false); 
         } 
-        /*demrge start*/
-          /*  else if(orderEntry.Product_Type_Order_Entry__c == 'PMS') {
-            component.set("v.isProuctTypeMF" , false);
-            component.set("v.isBond" , false);      
-            component.set("v.isPMS" , true); 
-        }    */   
+
         component.set("v.isPreviewScreen" , false); 
         component.set("v.isDisabled" , true);
         
     },
-    
-    //Change Start
-    /*
-    getScheme : function(component, event, helper) {
-        var selectedAMCName = component.get("v.selectedAMCName");  
-        var schemeList;
-        var action = component.get("c.getSchemeController");
-        action.setParams({
-            "amcCode" : selectedAMCName.AMC_Code__c
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var schemeList = response.getReturnValue();
-                if(schemeList == null){
-                    helper.showToast("Client Account not found for family","Error");
-                }else{
-                    component.set("v.schemeList",schemeList);
-                }
-            }
-            
-        });$A.enqueueAction(action);
         
-        
-        /*var amcNameList = component.get("v.amcList");  
-          var selectedAMCName = component.get("v.selectedAMCName");  
-          var schemeList = component.get("v.schemeList"); 
-            
-            for(var m=0 ; m < amcNameList.length; m++){
-                if(selectedAMCName.AMC_Code__c == amcNameList[m].AMC_Code__c){
-                    schemeList.add(amcNameList[m].Scheme_Name__c);
-                }
-            }
-        component.set("v.schemeList",schemeList); 
-        
-    },*/
-    //Change End
-    
     closeModel: function(component, event, helper) {
         var urlEvent = $A.get("e.force:navigateToURL");
         urlEvent.setParams({
@@ -1637,30 +1147,7 @@
         component.set("v.isPMS" , false);
         
     },
-    
-    setvalues: function(component, event, helper) {
-        /* 
-        var orderEntry = component.get("v.orderEntry"); 
-        
-        var selectedAMCName1 = component.get("v.selectedAMCName1"); 
-        orderEntry.AMC_Name__c = selectedAMCName1.label;
-        
-        var selectedSchemeObj = component.get("v.selectedSchemeObj"); 
-        orderEntry.Scheme__c = selectedSchemeObj.label;
-        
-        var selectedFromSchemeObj = component.get("v.selectedFromSchemeObj"); 
-        orderEntry.From_Scheme__c = selectedFromSchemeObj.label;
-        
-        var selectedToSchemeObj = component.get("v.selectedToSchemeObj"); 
-        orderEntry.To_Scheme__c = selectedToSchemeObj.label;
-        
-        var selectedClientPAN = component.get("v.selectedClientPAN"); 
-        orderEntry.UCC__c = selectedClientPAN;
-        
-        
-        component.set("v.orderEntry",orderEntry); */
-        
-    },
+
     fetchClientHolding: function(component, event, helper) {
         
         var orderEntry = component.get("v.orderEntry"); 
@@ -1674,15 +1161,11 @@
         }
         
         var selectedFolio = component.get("v.selectedFolio"); 
-        //orderEntry.Folio__c = selectedFolio.label;
         
         var selectedClientCode = component.get("v.selectedClientCode"); 
         orderEntry.UCC__c = selectedUcc;
-        // orderEntry.UCC__c = selectedClientCode.label;
         
-        component.set("v.orderEntry",orderEntry); 
-        //Change Start
-        
+        component.set("v.orderEntry",orderEntry);         
         var orderEntryObj = component.get("v.orderEntry"); 
         
         if(selectedClientCode != null){
@@ -1699,11 +1182,11 @@
                         helper.showToast("Client holing not available","Error");
                     }else{
                         if(bseobj.CLIENT_HOLDING__c != null){
-                            // orderEntryObj.Holding_Information__c = bseobj.CLIENT_HOLDING__c;
+
                             var tooltip = 'Second  Applicant Name : '+bseobj.SECOND_APPLICANT_NAME__c + ' ,  ' +'Third Applicant Name : '+ bseobj.THIRD_APPLICANT_NAME__c + ' , '+'Client Nominee : '+bseobj.CLIENT_NOMINEE__c;
                             
                             orderEntryObj.CDSLCLTID__c = bseobj.CDSLCLTID__c;
-                            //orderEntryObj.Client_Holding_and_Type__c = bseobj.CLIENT_TYPE__c;
+
                             orderEntryObj.Client_Default_Dp__c = bseobj.CLIENT_DEFAULT_DP__c;
                             if(bseobj.CLIENT_TYPE__c == 'DEMAT'){
                                 if(bseobj.CLIENT_DEFAULT_DP__c != null){
@@ -1731,129 +1214,6 @@
         }
         //Change End
     },
-    //Change Start
-    /*
-    getSchemeNameController: function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry"); 
-        var selectedFolio = component.get("v.selectedFolio");
-        if(selectedFolio != null){
-            orderEntry.Folio__c = selectedFolio.label;
-        }
-        component.set("v.orderEntry",orderEntry);
-        if(selectedFolio != null){
-            var action = component.get("c.getSchemeName");
-            action.setParams({
-                "FolioNumber" : selectedFolio.label
-            });                  
-            action.setCallback(this, function(response) {    
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    var listOfAsset = response.getReturnValue();
-                    if(listOfAsset == null){
-                        helper.showToast("Client Asset not available","Error");
-                    }else{
-                        component.set("v.filteredClientAssetList",listOfAsset); 
-                    }
-                }
-                
-            });$A.enqueueAction(action);
-        }
-    }, */
-    //Change Start
-    
-    //Change start
-    /* 
-    setSelectedScheme: function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry"); 
-        var selectedProduct = component.get("v.selectedClientAssetRecord"); 
-        if(selectedProduct != null){
-            orderEntry.Product_lookup__c = selectedProduct.Id;
-        }
-        component.set("v.orderEntry",orderEntry); 
-        var productList = component.get("v.filteredClientAssetList"); 
-        var orderEntryObj = component.get("v.orderEntry"); 
-        
-        for(var m=0 ; m < productList.length; m++){
-            if(selectedProduct.Id == productList[m].Id){
-                orderEntryObj.Product_Risk_Profile_FinancialT__c = productList[m].Risk_Profile_of_Product__c;
-            }
-        }
-        component.set("v.orderEntry",orderEntryObj); 
-        
-    },
-    
-    setRedemptionValues: function(component, event, helper) {
-        
-        var orderEntry = component.get("v.orderEntry"); 
-        var selectedProduct = component.get("v.selectedClientAssetRecordRedemption"); 
-        if(selectedProduct != null){
-            orderEntry.Product_lookup__c = selectedProduct.Id;
-        }
-        component.set("v.orderEntry",orderEntry); 
-        var productList = component.get("v.filteredClientAssetListRedemption"); 
-        var orderEntryObj = component.get("v.orderEntry"); 
-        
-        for(var m=0 ; m < productList.length; m++){
-            if(selectedProduct.Id == productList[m].Id){
-                orderEntryObj.Product_Risk_Profile_FinancialT__c = productList[m].Risk_Profile_of_Product__c;
-                orderEntryObj.Folio__c = productList[m].Folio_Number__c;
-            }
-        }
-        component.set("v.orderEntry",orderEntryObj); 
-        helper.setProductNameController(component, event, helper);
-        
-        var selectedClientAccountRecord = component.get("v.selectedClientAccountRecord");
-        var selectedClientAccountId =   selectedClientAccountRecord.Id;
-        var prodId = selectedProduct.Id;
-        var folioList = new Array();
-        
-        var action = component.get("c.getFolioNumbers");
-        action.setParams({
-            "clientAccountId" : selectedClientAccountId,
-            "productId" : prodId
-        });                  
-        action.setCallback(this, function(response) {    
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var clientAssetList = response.getReturnValue();
-                if(clientAssetList == null){
-                    helper.showToast("Client Asset not available","Error");
-                }else{
-                    folioList.push('New');
-                    for(var m=0 ; m < clientAssetList.length; m++){
-                        folioList.push(clientAssetList[m].Folio_Number__c);
-                    }
-                    component.set("v.clientAssetListRedemption",clientAssetList); 
-                    component.set("v.folioList",folioList); 
-                }
-            }
-        });$A.enqueueAction(action);
-    },
-    
-    // Change Start
-    // 
-    // Change Start
-    /*setFolioRedemption : function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry"); 
-        var clientAssetList = component.get("v.clientAssetListRedemption"); 
-        var selectedPicklistValue = component.get("v.selectedFolioRedemption");
-        orderEntry.Folio__c = selectedPicklistValue;	
-        if(orderEntry.Folio__c != ''){
-            for(var m=0 ; m < clientAssetList.length; m++){
-                if(clientAssetList[m].Folio_Number__c == orderEntry.Folio__c){
-                    var quantity = clientAssetList[m].Quantity__c;
-                    orderEntry.Redemption_Units__c = quantity.toString();;
-                }
-            }
-        }
-        component.set("v.orderEntry",orderEntry); 
-    },    
-    
-    setUCC : function(component, event, helper) {
-                var selectedUcc = component.get("v.selectedUcc"); 
-    },
-        */   
-    // Change End
     setFolioPurchase : function(component, event, helper) {
         debugger;
         var orderEntry = component.get("v.orderEntry"); 
@@ -1902,44 +1262,12 @@
             for(var m=0 ; m < clientAssetList.length; m++){
                 if(clientAssetList[m].Folio_Number__c == orderEntry.To_Folio__c){
                     var quantity = clientAssetList[m].Quantity__c;
-                    //orderEntry.Redemption_Units__c = quantity.toString();
-                    /*var totalAUA = clientAssetList[m].Total_AUM__c;
-                    orderEntry.Transaction_Amount_Financial_Transaction__c = totalAUA.toString();*/
                 }
             }
         }
         component.set("v.orderEntry",orderEntry); 
            console.log('To_Folio__c :'+orderEntry.To_Folio__c);
     },
-    
-    // Change Start
-    /*setSelectedSchemeRedemption: function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry"); 
-        if(orderEntry.Transaction_Type__c == 'Redemption')
-        {
-            var selectedClientAccountRecord = component.get("v.selectedClientAccountRecord");
-            var selectedClientAccountId =   selectedClientAccountRecord.Id;
-            component.set("v.orderEntry",orderEntry);
-            if(selectedClientAccountId != null){
-                var action = component.get("c.getSchemeNameRedemption");
-                action.setParams({
-                    "selectedClientAcc" : selectedClientAccountId
-                });                  
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var listOfAsset = response.getReturnValue();
-                        if(listOfAsset == null){
-                            helper.showToast("Client Asset not available","Error");
-                        }else{
-                            component.set("v.filteredClientAssetListRedemption",listOfAsset); 
-                        }
-                    }
-                });$A.enqueueAction(action);
-            }
-        }
-    },*/
-    // Change End
     handleComponentEvent : function(component, event, helper) {
         // get the selected Account record from the COMPONETN event 
         var orderEntry = component.get("v.orderEntry"); 
@@ -1948,7 +1276,7 @@
         {
             var selectedAccountGetFromEvent = event.getParam("recordByEvent");
             console.log('selectedAccountGetFromEvent :'+selectedAccountGetFromEvent);
-            component.set("v.selectedAMCName1" , selectedAccountGetFromEvent); 
+            //component.set("v.selectedAMCName1" , selectedAccountGetFromEvent); 
         }
     },
     SaveRecord : function(component, event, helper) {        
@@ -2085,32 +1413,6 @@
             component.set("v.orderEntry",orderEntry);
             
         }
-        //Change Start
-        /*
-        var orderEntry = component.get("v.orderEntry"); 
-        if(orderEntry.Transaction_Type__c == 'Redemption')
-        {
-            var selectedClientAccountRecord = component.get("v.selectedClientAccountRecord");
-            var selectedClientAccountId =   selectedClientAccountRecord.Id;
-            if(selectedClientAccountId != null){
-                var action = component.get("c.getSchemeNameRedemption");
-                action.setParams({
-                    "selectedClientAcc" : selectedClientAccountId
-                });                  
-                action.setCallback(this, function(response) {    
-                    var state = response.getState();
-                    if (state === "SUCCESS") {
-                        var listOfAsset = response.getReturnValue();
-                        if(listOfAsset == null){
-                            helper.showToast("Client Asset not available","Error");
-                        }else{
-                            component.set("v.filteredClientAssetListRedemption",listOfAsset); 
-                        }
-                    }
-                });$A.enqueueAction(action);
-            }
-        }*/
-        //Change End
     },
     // MF Order Entry Changes
     setValuesToFieldFromScheme : function(component, event, helper) {
@@ -2185,18 +1487,6 @@
         }
         
     },
-    //Change Start
-    /* setValuesToFieldUCC : function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry");         
-        var selectedClientPAN = component.get("v.selectedClientPAN"); 
-        if(selectedClientPAN != null){
-            // orderEntry.UCC__c = selectedClientPAN;
-            component.set("v.orderEntry",orderEntry);
-            
-        }
-        
-    },*/
-    //Change End
     setValuesToField : function(component, event, helper) {
         var orderEntry = component.get("v.orderEntry");   
         console.log('orderEntry.Product_Type_Order_Entry__c setValuesToField:'+orderEntry.Product_Type_Order_Entry__c);
@@ -2238,16 +1528,7 @@
                 component.set("v.isPartialUnit" , false);
                 component.set("v.isPartialAmount" , false);
                 component.set("v.isRedemAllUnit" , false);
-            }
-                /*demarge start*/
-            
-               /* else if(orderEntry.Transaction_Type__c == 'Buy'){
-                component.set("v.isBondBuy",true); 
-                component.set("v.isBondSell",false);
-            }else if(orderEntry.Transaction_Type__c == 'Sell'){
-                component.set("v.isBondSell",true); 
-                component.set("v.isBondBuy",false);
-            } */           
+            }         
             
         }
     },
@@ -2290,88 +1571,10 @@
             component.set("v.orderEntry",orderEntry);
         }       
     },
-    /* PMS Start */
-    /* demarge start*/
-   /* setValueToProductName : function(component, event, helper) {
-        
-        var orderEntry = component.get("v.orderEntry");
-        var selectedProductName = component.get("v.selectedProductName");             
-        if(selectedProductName.label != null){
-            orderEntry.Product_Name_Display__c = selectedProductName.label;
-            
-            component.set("v.orderEntry",orderEntry);
-        }       
-    },*/
-    /* PMS Ends */
     HideToolTip1 : function(component, event, helper){
         
         component.set("v.tooltip1" , false);
     },
-    
-    /* demarge start */
-    /*loadBondPreviewScreen : function(component, event, helper){
-        component.set("v.isBond" , false);
-        component.set("v.isBondPreviewScreen" , true); 
-        component.set("v.isDisabled" , true);
-    },
-    loadBondFirstScreen : function(component, event, helper){
-        component.set("v.isDisabled" , true);
-        component.set("v.isBond" , false);
-        component.set("v.isFirstScreen" , true); 
-        component.set("v.isBondPreviewScreen" , false); 
-        
-    },*/
-    /* demarge Start */
-    /*setValuesToBondField : function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry");
-        //var isValid = helper.validateSecondScreen(component, event, helper);
-        var isValid =1;
-        if(isValid == 1){
-            helper.setFamilyNameController(component, event, helper);
-            helper.setClientNameController(component, event, helper);
-            helper.setClientAccountNameController(component, event, helper);
-            // helper.setProductNameController(component, event, helper);
-            if(orderEntry.Transaction_Type__c == 'Buy'){
-                component.set("v.isBondBuy" , true);
-                component.set("v.isBondSell" , false);
-            } else if(orderEntry.Transaction_Type__c == 'Sell'){
-                component.set("v.isBondBuy" , false);
-                component.set("v.isBondSell" , true);
-            }
-            component.set("v.isBond" , false);
-            component.set("v.isPMS" , false);
-            //component.set("v.isBondPreviewScreen" , true); 
-            component.set("v.isPreviewScreen" , true); 
-            component.set("v.isDisabled" , true);
-        }
-    }, */
-    /* demarge Start */
-    /*setValuesToPMSField : function(component, event, helper) {
-        var orderEntry = component.get("v.orderEntry");
-        var isValid = helper.validateSecondScreen(component, event, helper);
-        if(isValid == 1){
-            helper.setFamilyNameController(component, event, helper);
-            helper.setClientNameController(component, event, helper);
-            helper.setClientAccountNameController(component, event, helper);
-            // helper.setProductNameController(component, event, helper);
-            if(orderEntry.Transaction_Type__c == 'Subscription (New)'){
-                component.set("v.isSubscription" , true);
-                component.set("v.isOther" , false);
-            } else if(orderEntry.Transaction_Type__c != 'Subscription (New)'){
-                component.set("v.isSubscription" , false);
-                component.set("v.isOther" , true);
-            }
-            component.set("v.isFirstScreen" , false);
-            component.set("v.isBondBuy" , false);
-            component.set("v.isBondSell" , false);
-            component.set("v.isPMSCompliance" , true);     
-            component.set("v.isBond" , false);
-            component.set("v.isPMS" , false); 
-            component.set("v.isPreviewScreen" , true); 
-            component.set("v.isDisabled" , true);
-        }
-    }, */
-    
     handleRedemptionChange : function(component, event, helper){   
         var orderEntry = component.get("v.orderEntry");
         var isorderentrymf = component.get("v.isoderentryMF");
@@ -2571,75 +1774,6 @@
             }  
         }    
     },    
-    /*handleRedemptionChange1 : function(component, event, helper){       
-        var orderEntry = component.get("v.orderEntry");
-        var quantity;
-        var totalAUA;
-        var clientAssetList = component.get("v.clientAssetListPurchase");           
-        var selectedPicklistValue = component.get("v.selectedFolioPurchase");  
-        if(orderEntry.Folio__c == '-- None --' || orderEntry.Folio__c == ''){          
-            helper.showToast("Please Select Folio ","Error");     
-        } else {
-            for(var m=0 ; m < clientAssetList.length; m++){
-                if(clientAssetList[m].Folio_Number__c == orderEntry.Folio__c){
-                    quantity = clientAssetList[m].Quantity__c;                           
-                    totalAUA = clientAssetList[m].Total_AUM__c;
-                }
-            }
-            if(orderEntry.Redemption_Type__c == 'All Unit'&& orderEntry.Transaction_Type__c != 'Purchase'){
-                if(quantity == 'undefined' || quantity == null){
-                    orderEntry.Redemption_Units__c ='';
-                }else {
-                    orderEntry.Redemption_Units__c = quantity.toString(); 
-                }
-                if(totalAUA == 'undefined' || totalAUA == null){
-                    orderEntry.Transaction_Amount_Financial_Transaction__c ='';
-                }else{
-                    orderEntry.Transaction_Amount_Financial_Transaction__c = totalAUA.toString();}
-                component.set("v.isDisableTxnAmount",true);
-                component.set("v.isDisableRedemptionUnit",true);
-                
-            }else if(orderEntry.Redemption_Type__c == 'Partial Amount' && orderEntry.Transaction_Type__c != 'Purchase'){
-                
-                orderEntry.Redemption_Units__c = ''; 
-                if(totalAUA == 'undefined' || totalAUA == null){
-                    orderEntry.Transaction_Amount_Financial_Transaction__c= '';                    
-                }else {
-                    orderEntry.Transaction_Amount_Financial_Transaction__c = totalAUA.toString();}
-                component.set("v.isDisableTxnAmount",false);
-                component.set("v.isDisableRedemptionUnit",true);
-                
-            }else if(orderEntry.Redemption_Type__c == 'Partial Unit' && orderEntry.Transaction_Type__c != 'Purchase'){
-                if(quantity == 'undefined' || quantity == null){
-                    orderEntry.Redemption_Units__c = '';
-                }else{
-                    orderEntry.Redemption_Units__c = quantity.toString(); }
-                orderEntry.Transaction_Amount_Financial_Transaction__c = '';
-                component.set("v.isDisableTxnAmount",true);
-                component.set("v.isDisableRedemptionUnit",false);
-                
-            } else if(orderEntry.Redemption_Type__c == 'None' || typeof orderEntry.Redemption_Type__c === 'undefined'){
-                
-                orderEntry.Redemption_Units__c = ''; 
-                orderEntry.Transaction_Amount_Financial_Transaction__c = '';
-                component.set("v.isDisableTxnAmount",true);
-                component.set("v.isDisableRedemptionUnit",true);
-                
-            }
-        }        
-        component.set("v.orderEntry",orderEntry); 
-        
-    },*/
-    /* demarge Start */
-    /*setFolioPMS : function(component, event, helper){
-        var orderEntry = component.get("v.orderEntry");
-        
-        var selectedPicklistValue = component.get("v.selectedFolioPMS");               
-        orderEntry.Folio__c = selectedPicklistValue;
-        
-        component.set("v.orderEntry",orderEntry); 
-    },*/
-    
     okClick : function(component, event, helper){        
         component.set("v.ShowModule",false);
         component.set("v.isPreviewScreen",true);
@@ -2698,6 +1832,61 @@
     hideSpinner : function(component,event,helper){
         // make Spinner attribute to false for hiding loading spinner    
         component.set("v.spinner", false);
+    },
+
+    setValueToFamily : function(component, event, helper) {
+        
+        var orderEntry = component.get("v.orderEntry");  
+        if(orderEntry.Family_Name__c != ''){
+            component.set("v.familySelected",true);
+        }else if(orderEntry.Family_Name__c == '') {
+            component.set("v.familySelected",false);
+        }
+        var selectedFamilyRecord = component.get("v.selectedFamilyRecord");
+        console.log('selectedFamilyRecord :'+JSON.stringify(component.get("v.filteredFamilyList")));
+        var selectedFamilyId = selectedFamilyRecord.Id;
+        
+        orderEntry.Family_Name__c =selectedFamilyId;
+        component.set("v.orderEntry", orderEntry);
+
+        //Check for related client and Display Error only if Family is selected
+        if(orderEntry.Family_Name__c != undefined)
+        {
+            var orderEntry = component.get("v.orderEntry");  
+            var orderEntry = component.get("v.orderEntry");  
+            var action = component.get("c.getClientInformation");
+            action.setParams({
+                "familyId" : orderEntry.Family_Name__c
+            });                  
+            
+            action.setCallback(this, function(response) {    
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    var listOfAllClients = response.getReturnValue();
+                    console.log('listOfAllClients:'+listOfAllClients);
+                    //Checking returned list is not null and length should be geater than 0
+                    if(listOfAllClients == null || listOfAllClients.length == 0){
+                        helper.showToast("Client not found for family","Error");
+                        component.set("v.filteredClientList",listOfAllClients);
+                    }else{                    
+                        component.set("v.filteredClientList",listOfAllClients);
+                        helper.setValueToProductType(component, event, helper);
+                    }
+                }
+                
+            });$A.enqueueAction(action);
+        }    
+
+    //Clear Selected Client and Client Account only when family is cleared
+    if(orderEntry.Family_Name__c == undefined)
+    {
+        var clientNameLookup = component.find("clientNameLookup");
+        clientNameLookup.clearMethod();
+        component.set("v.filteredClientList",[]);
+        var clientAccountLookup =component.find("clientAccountLookup");
+        clientAccountLookup.clearMethod();
+        component.set("v.filteredClientAccountList",[]);
     }
+},
     
 })

@@ -90,14 +90,13 @@
         });$A.enqueueAction(action);
         
     },
-    /* De-merger comment Starts */
     
     transactionSelection : function(component, event, helper) {
-        component.set("v.showAllScheme",false);
+        var ipoNameLookup =component.find("ipoNameLookup");
+        ipoNameLookup.clearMethod();
         var orderEntry = component.get("v.orderEntry");  
         component.set("v.orderEntry",orderEntry);  
     },
-    /* De-merger comment Ends */
 
     clientAccountSelection : function(component, event, helper) {
         var orderEntry = component.get("v.orderEntry");  

@@ -97,6 +97,9 @@
         
     },
     transactionSelection : function(component, event, helper) {
+        
+        var productNameLookup =component.find("productNameLookup");
+        productNameLookup.clearMethod();
         var orderEntry = component.get("v.orderEntry");  
         component.set("v.orderEntry",orderEntry);  
     },

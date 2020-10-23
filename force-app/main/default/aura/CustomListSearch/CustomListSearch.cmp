@@ -14,6 +14,7 @@
     <aura:attribute name="selectedFromSchemeObj" type="Object" access="public" default=""/>
     <aura:attribute name="selectedPAN" type="String" access="public" default=""/>
     <aura:attribute name="selectedClientAccountId" type="String" access="public" default=""/>
+    <aura:attribute name="isSchemeField" type="boolean" default="false"/>
     
     <aura:attribute name="selectedIPOType" type="String" access="public" default=""/>
     <aura:attribute name="selectedClientLead" type="String" access="public" default=""/>
@@ -22,6 +23,8 @@
     <!-- PMS Start -->
     <aura:attribute name="selectedProductName" type="Object" access="public" default=""/>
     <!-- PMS ends -->
+    <!-- Used to Clear selected item from parent component-->
+    <aura:method name="clearMethod" action="{!c.removeItem}" access="PUBLIC" />
     
     <!-- SP -->
     <aura:attribute name="selectedInstrumentSP" type="Object" access="public" default=""/>

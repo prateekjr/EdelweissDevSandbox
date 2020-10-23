@@ -10,9 +10,6 @@ public class CustomListSearchController {
                 filteredIDs.add(rec.Id);
             }            
         }
-        
-        
-        
         String searchKey = '%' + searchKeyWord + '%';
         
         
@@ -59,7 +56,6 @@ public class CustomListSearchController {
                         ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' LIMIT 49999';
                 }
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -88,11 +84,7 @@ public class CustomListSearchController {
                         if(orderEntry.Transaction_Type__c.equals('Buy')){
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  IN (\'Bonds (Others)\',\'Bonds (Tax Free)\', \'Debt - Others\',\'Warrants - Direct Debt\') LIMIT 49999';    
-                        }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%bonds%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999'; */          
+                        }else if(orderEntry.Transaction_Type__c.equals('Sell')){    
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  IN (\'Bonds (Others)\',\'Bonds (Tax Free)\', \'Debt - Others\',\'Warrants - Direct Debt\') AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';                                                         
@@ -104,10 +96,6 @@ public class CustomListSearchController {
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' LIMIT 49999';    
                         }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            //
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  */
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  IN(\'Structured Products - Equity\',\'Structured Products - Debt\') AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  
@@ -121,10 +109,6 @@ public class CustomListSearchController {
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  =\'CP\' LIMIT 49999';    
                         }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            //
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  */
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c = \'CP\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  
@@ -138,10 +122,6 @@ public class CustomListSearchController {
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  =\'CD\' LIMIT 49999';    
                         }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            //
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  */
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c = \'CD\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  
@@ -155,10 +135,6 @@ public class CustomListSearchController {
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  = \'FDs\' LIMIT 49999';    
                         }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            //
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  */
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  = \'FDs\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  
@@ -172,10 +148,6 @@ public class CustomListSearchController {
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  = \'ICDs\' LIMIT 49999';    
                         }else if(orderEntry.Transaction_Type__c.equals('Sell')){
-                            //
-                            /*query += ' WHERE '+filterField+
-                                ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%Structured Products%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-                                +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  */
                             query += ' WHERE '+filterField+
                                 ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  = \'ICDs\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                                 +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';  
@@ -184,12 +156,9 @@ public class CustomListSearchController {
                         }
                         System.debug('SP QUERY=== '+query);  
                     }
-                    
-                    
                 }
                 
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -223,16 +192,10 @@ public class CustomListSearchController {
                         query += ' WHERE '+filterField+
                             ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%PMS%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
                             +orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';                                                      
-                    } 
-                    /*
-*  ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c  LIKE \'%PMS%\' AND Id IN (SELECT Product__c FROM Client_Asset_Information__c WHERE Client_Account__c=\''
-+orderEntry.Client_Account__c +'\' AND Annual_Record__c = false) LIMIT 49999';                                                      
-*/
-                    
+                    }    
                 }
                 
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -288,7 +251,6 @@ public class CustomListSearchController {
                 }
                 System.debug('query == '+query);
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -382,7 +344,6 @@ public class CustomListSearchController {
             }else{
                 String transactionFilter;
                 List<Id> productList = new List<Id> ();
-                //List<String> scripkeyList = new List<String>();
                 Map<String,String> scripkeyMap = new Map<String,String>();
                 if(orderEntry.Client_Account__c != null){
                     for(Client_Asset_Information__c caObj : [SELECT id , Client_Account__c , Product__c ,Scrip_Key__c FROM Client_Asset_Information__c where Client_Account__c =: orderEntry.Client_Account__c AND Sub_Asset_Class__c Like '%Mutual Fund%' limit 49999]){
@@ -504,7 +465,6 @@ public class CustomListSearchController {
                         ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Sub_Asset_Class__c LIKE \'%'+subAssetClassValue+'%\' LIMIT 49999';
                 }
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -532,7 +492,6 @@ public class CustomListSearchController {
                     ' LIKE' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND Type__c LIKE \'%'+ipoType+'%\' LIMIT 49999';
                 }
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -560,7 +519,6 @@ public class CustomListSearchController {
                 }
                 System.debug('query :'+query);
                 for(SObject s : Database.query(query)) {
-                    // recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
                     mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
                 }
                 for(String key : mapOfString.keySet()){
@@ -575,44 +533,8 @@ public class CustomListSearchController {
                 }
             }
         }
-
-/* if(filterField == 'Folio_Number__c'){
-try {
-map<String , String > mapOfString = new  map<String , String >();
-set<RecordsData> recordsDataset = new set<RecordsData>();
-String query = 'SELECT Id , ' + filterField + ' FROM '+objectName;
-if(String.isNotBlank(value)) {
-query += ' WHERE Id = \''+ value + '%\' AND  Client_Account__c  =\'' + selectedRecordAMC + '\' LIMIT 49999';
-} else {
-query += ' WHERE '+filterField+
-' LIKE ' + '\'%' + String.escapeSingleQuotes(searchString.trim()) + '%\' AND  Client_Account__c  =\'' + selectedRecordAMC + '\' LIMIT 49999';
-}
-
-for(SObject s : Database.query(query)) {
-// recordsDataList.add( new RecordsData((String)s.get(filterField), (String)s.get('id')) );
-mapOfString.put(((String)s.get(filterField)),((String)s.get('id')));
-}
-for(String key : mapOfString.keySet()){
-recordsDataList.add(new RecordsData(key,mapOfString.get(key)));
-}          
-return recordsDataList;
-} catch (Exception err) {
-if ( String.isNotBlank( err.getMessage() ) && err.getMessage().contains( 'error:' ) ) {
-throw new AuraHandledException(err.getMessage().split('error:')[1].split(':')[0] + '.');
-} else {
-throw new AuraHandledException(err.getMessage());
-}
-}      
-
-}*/
-        
-        
-        
         return null;   
     }
-    
-    
-    
     public class RecordsData {
         @AuraEnabled public String label;
         @AuraEnabled public String value;

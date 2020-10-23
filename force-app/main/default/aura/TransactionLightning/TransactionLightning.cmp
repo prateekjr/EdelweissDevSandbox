@@ -19,10 +19,11 @@
     <!-- disable preview screen fields -->
     <aura:attribute name="isDisabled" type="Boolean" default="true" />
     
-    
+    <aura:attribute name="selectedFamilyRecord" type="sObject" default="{}"/>
     <aura:attribute name="orderEntry" type="Order_Entry__c" 
                     default="{ 'sobjectType': 'Order_Entry__c' }"/>	
     
+    <aura:attribute name="filteredFamilyList" type="String[]" />
     <aura:attribute name="filteredClientList" type="String[]" />
     <aura:attribute name="filteredClientAccountList" type="String[]" />
     <aura:attribute name="filteredClientAssetList" type="String[]" />
@@ -67,7 +68,6 @@
     <aura:attribute name="controllingFieldAPI" type="string" default="Product_Type_Order_Entry__c" description="store field API name of Controller field"/>
     <aura:attribute name="dependingFieldAPI" type="string" default="Transaction_Type__c" description="store field API name of dependent field"/>
     <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
-    <aura:attribute name="listMarketTypeValues" type="list" default="IPO,Market purchase" description="to store Market Type field values"/>
     <aura:attribute name="listDependingValues" type="list" default="['--- None ---']" description="to store dependent field values"/>
     <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
     <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
@@ -93,23 +93,19 @@
     <aura:attribute name="currentTime" type="DateTime" />
     <aura:attribute name="isDisableTxnAmount" type="Boolean" Default ="true" />
     <aura:attribute name="isDisableRedemptionUnit" type="Boolean" Default ="true" />
-    
-
-    <aura:attribute name="isSP" type="Boolean" Default ="false" />
-    <aura:attribute name="isPriceDisable" type="Boolean" default="false" />
-
-    
+   
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="change" value="{!v.orderEntry.Family_Name__c}" action="{!c.familySelection}"/>
+   <!-- <aura:handler name="change" value="{!v.orderEntry.Family_Name__c}" action="{!c.familySelection}"/> -->
     <aura:handler name="change" value="{!v.selectedClientRecord}" action="{!c.clientAccountSelection}"/>
     <aura:handler name="change" value="{!v.selectedClientAccountRecord}" action="{!c.getProducts}"/>
     <aura:handler name="change" value="{!v.selectedAMCName}" action="{!c.getScheme}"/>
+     <aura:handler name="change" value="{!v.selectedFamilyRecord}" action="{!c.setValueToFamily}"/>
     <aura:handler name="change" value="{!v.selectedAMCName1}" action="{!c.setValuesToFieldAmc}"/>
     <aura:handler name="change" value="{!v.selectedSchemeObj}" action="{!c.setValuesToFieldScheme}"/>
     <aura:handler name="change" value="{!v.selectedFromSchemeObj}" action="{!c.setValuesToFieldFromScheme}"/>
     <aura:handler name="change" value="{!v.selectedToSchemeObj}" action="{!c.setValuesToFieldToScheme}"/>
     <aura:handler name="change" value="{!v.selectedInstrument}" action="{!c.setValueToInstrument}"/>
-    
+    <aura:handler name="change" value="{!v.selectedClientCode}" action="{!c.fetchClientHolding}"/>
      <!-- PMS Start -->
     <aura:attribute name="isPMS" type="Boolean" Default ="false" />
     <aura:attribute name="showProductName" type="Boolean" Default ="false" />
@@ -124,37 +120,12 @@
     <aura:attribute name="isExternalDisplay" type="Boolean" Default ="false" />
     <aura:attribute name="isPOA" type="Boolean" Default ="false" />
     <aura:attribute name="isNonPOA" type="Boolean" Default ="true" />
-    <aura:attribute name="selectedFolioPMS" type="String" default=''/>
-	<!-- <aura:attribute name="disablePortfolio" type="Boolean" Default ="false" /> -->
-	<aura:handler name="change" value="{!v.selectedFolioPMS}" action="{!c.setFolioPMS}"/>
 
-    
      <aura:attribute name="folioListPMS" type="String[]" />
     
     <!-- Check for Profile Access -->
     <aura:attribute name="isProfileAccess" type="Boolean" Default ="false" />
     
-    <!-- PMS Ends -->
-    <!-- change start  
-    <aura:handler name="change" value="{!v.selectedClientPAN}" action="{!c.setValuesToFieldUCC}"/>
-<aura:handler name="change" value="{!v.selectedInstrument}" action="{!c.setValueToInstrument}"/>
-          Change End
--->
-    <!-- change start   
-    <aura:handler name="change" value="{!v.selectedClientAssetRecordRedemption}" action="{!c.setRedemptionValues}"/>
-      Change End
--->
-    
-    <aura:handler name="change" value="{!v.selectedClientCode}" action="{!c.fetchClientHolding}"/>
-    <!-- change start   
-    <aura:handler name="change" value="{!v.selectedFolio}" action="{!c.getSchemeNameController}"/>
-        Change End
--->
-    <!-- change start   
-    <aura:handler name="change" value="{!v.selectedClientAssetRecord}" action="{!c.setSelectedScheme}"/>
-    <aura:handler name="change" value="{!v.selectedFolioPurchase}" action="{!c.setFolioPurchase}"/>
-           Change End
--->
     <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.handleComponentEvent}"/>
     <aura:attribute name="tooltip" type="boolean" default="false" />
     <aura:attribute name="tooltip1" type="boolean" default="false" />
@@ -250,7 +221,8 @@
                                 <!--lightning help text for input field-->                                                                
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Family Name</label>
-                                <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />
+                                <!-- <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />  -->
+                               <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedFamilyRecord}" listOfFilteredRecords ="{!v.filteredFamilyList}" placeholder="Search Family"  /> 
                             </div>
                         </div>
                         
@@ -259,14 +231,14 @@
                             <div class="slds-p-around_medium" id="modal-content-id-1" >
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Name</label>
-                                <c:customLookup objectAPIName="Account" IconName="standard:account" selectedRecord="{!v.selectedClientRecord}" listOfFilteredRecords ="{!v.filteredClientList}" placeholder="Search Client"  />
+                                <c:customLookup objectAPIName="Account" aura:id="clientNameLookup" IconName="standard:account" selectedRecord="{!v.selectedClientRecord}" listOfFilteredRecords ="{!v.filteredClientList}" placeholder="Search Client"  />
                             </div>
                         </div>
                         <div class="slds-col slds-size_1-of-2">
                             <div class="slds-p-around_medium" id="modal-content-id-1" >
                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Account Name</label>
-                                <c:customLookup objectAPIName="Client_Account__c" IconName="standard:product" selectedRecord="{!v.selectedClientAccountRecord}" listOfFilteredRecords ="{!v.filteredClientAccountList}" placeholder="Search Client Account"  />
+                                <c:customLookup objectAPIName="Client_Account__c"  aura:id="clientAccountLookup" IconName="standard:product" selectedRecord="{!v.selectedClientAccountRecord}" listOfFilteredRecords ="{!v.filteredClientAccountList}" placeholder="Search Client Account"  />
                             </div>
                         </div>
                         <div class="slds-col slds-size_1-of-2 ">
@@ -277,7 +249,9 @@
                                                   label="Product Type"
                                                   onchange="{!c.onControllerFieldChange}" required="true" >
                                     <aura:iteration items="{!v.listControllingValues}" var="val">
+                                            <aura:if isTrue ="{!val =='MF'}" >
                                         <option value="{!val}">{!val}</option>
+                                            </aura:if>                                        
                                     </aura:iteration>
                                 </lightning:select>
                             </div>
@@ -304,23 +278,16 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >AMC Name</label>
-                                    <c:CustomListSearch  selectedRecord="{!v.selectedAMCName1}"  objectName="Schema_Master__c" fieldName="AMC_Code__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                    <c:CustomListSearch  aura:id="amcLookup" selectedRecord="{!v.selectedAMCName1}"  objectName="Schema_Master__c" fieldName="AMC_Code__c" label="" iconName="standard:account" placeholder="Enter Value"  isSchemeField="false" />
                                 </div>
                             </aura:renderIf>
-                            <!-- <aura:renderIf isTrue="{!v.showInstrument}">                            
-                                <div class="slds-p-around_medium" id="modal-content-id-1" >
-                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Instrument</label>                                   
-                                    <c:customLookup objectAPIName="product2" IconName="standard:account" selectedRecord="{!v.selectedInstrument}" listOfFilteredRecords ="{!v.filteredInstruments}" placeholder="Search Instruments"  />                                    
-                                </div>
-                            </aura:renderIf>-->
                         </div>
                         <div class="slds-col slds-size_1-of-1">
                             <aura:renderIf isTrue="{!v.showInstrument}">                                                                                           
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Insrument </label>
-                                    <c:CustomListSearch  selectedRecord="{!v.selectedInstrument}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productISIN__c" label="" iconName="standard:account" placeholder="Enter Instruments" />
+                                    <c:CustomListSearch  aura:id="instrumentLookup"  selectedRecord="{!v.selectedInstrument}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productISIN__c" label="" iconName="standard:account" placeholder="Enter Instruments"  isSchemeField="false" />
                                 </div>
                             </aura:renderIf>
                             <!-- PMS Start -->
@@ -328,19 +295,11 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Product Name </label>
-                                    <c:CustomListSearch  selectedRecord="{!v.selectedProductName}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productCodeName__c" label="" iconName="standard:account" placeholder="Enter Product Name" />
+                                    <c:CustomListSearch  aura:id="productNameLookup"  selectedRecord="{!v.selectedProductName}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productCodeName__c" label="" iconName="standard:account" placeholder="Enter Product Name"  isSchemeField="false" />
                                 </div>
                             </aura:renderIf>
                             <!-- PMS Ends -->
                         </div>
-                        <!-- Remove Later-->
-                        <!--<div class="slds-col slds-size_1-of-1">
-                                <div class="slds-p-around_medium" id="modal-content-id-1" >
-                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Instrument Testing </label>
-                                    <force:inputField aura:id="familyName" required="true"  value="{!v.orderEntry.Family_Name__c}" />
-                                </div>
-                        </div> -->
                         
                             <aura:renderIf isTrue="{!!v.showAllScheme}">
                         <aura:if isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Purchase',v.orderEntry.Transaction_Type__c == 'Redemption') }">
@@ -348,8 +307,7 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Scheme</label>
-                                    <!--    <c:CustomLookup1  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" objectName="Schema_Master__c"  fieldName="Scheme_Name__c" label="" iconName="standard:account" placeholder="Enter Value" /> -->
-                                    <c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                    <c:CustomListSearch  aura:id="schemeLookup"  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" isSchemeField="true" />
                                 </div>
                             </div>
                         </aura:if> 
@@ -361,8 +319,7 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Scheme</label>
-                                    <!--    <c:CustomLookup1  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" objectName="Schema_Master__c"  fieldName="Scheme_Name__c" label="" iconName="standard:account" placeholder="Enter Value" /> -->
-									<c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" SchemeSelect="All" iconName="standard:account" placeholder="Enter Value" />
+									<c:CustomListSearch  aura:id="schemeLookupShowAll" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" SchemeSelect="All" iconName="standard:account" placeholder="Enter Value" isSchemeField="true"/>
                                 </div>
                             </div>
                         </aura:if> 
@@ -375,15 +332,6 @@
                            </div>
                         </div>
                         </aura:if> 
-                        <!--   <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Redemption'}">
-                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
-                                <div class="slds-p-around_medium" id="modal-content-id-1" >
-                                    <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                    <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Scheme Name</label>
-                                    <c:customLookup objectAPIName="product2" IconName="standard:account" selectedRecord="{!v.selectedClientAssetRecordRedemption}" listOfFilteredRecords ="{!v.filteredClientAssetListRedemption}" placeholder="Search Client Asset"  />
-                                </div>
-                            </div>
-                        </aura:if> -->
                         
                         <aura:if isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
                              <aura:renderIf isTrue="{!!v.showAllScheme}">
@@ -391,8 +339,7 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >From Scheme</label>
-                                    <!-- <c:CustomLookup1  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" objectName="Schema_Master__c"  fieldName="Scheme_Name__c" label="" iconName="standard:account" placeholder="Enter Value" />-->
-                                    <c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" />
+                                    <c:CustomListSearch  aura:id="fromSchemeSwitch"  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" label="" iconName="standard:account" placeholder="Enter Value" isSchemeField="true" />
                                 </div>
                             </div>
                             </aura:renderIf>
@@ -403,8 +350,7 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >From Scheme</label>
-                                    <!-- <c:CustomLookup1  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" objectName="Schema_Master__c"  fieldName="Scheme_Name__c" label="" iconName="standard:account" placeholder="Enter Value" />-->
-									<c:CustomListSearch  selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" SchemeSelect="All" label="" iconName="standard:account" placeholder="Enter Value" />
+									<c:CustomListSearch  aura:id="fromSchemeShowAll" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedFromSchemeObj}" orderEntry="{!v.orderEntry}"  objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" SchemeSelect="All" label="" iconName="standard:account" placeholder="Enter Value" isSchemeField="true"/>
                                 </div>
                             </div>
                             </aura:renderIf>      
@@ -423,8 +369,7 @@
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >To Scheme</label>
-                                    <!--   <c:CustomLookup1  selectedFromSchemeObj ="{!v.selectedFromSchemeObj}" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedToSchemeObj}" objectName="Schema_Master__c"  fieldName="Scheme_Name__c" criteriaField="ToScheme" label="" iconName="standard:account" placeholder="Enter Value" /> -->
-                                    <c:CustomListSearch  selectedFromSchemeObj ="{!v.selectedFromSchemeObj}" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedToSchemeObj}" orderEntry="{!v.orderEntry}"   objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" criteriaField="ToScheme" label="" iconName="standard:account" placeholder="Enter Value" /> 
+                                    <c:CustomListSearch  aura:id="toschemelookup" selectedFromSchemeObj ="{!v.selectedFromSchemeObj}" selectedRecordAMC1 ="{!v.selectedAMCName1}" selectedRecord="{!v.selectedToSchemeObj}" orderEntry="{!v.orderEntry}"   objectName="Scheme_Mapping__c"  fieldName="BSEStarSchemeName__c" criteriaField="ToScheme" label="" iconName="standard:account" placeholder="Enter Value" isSchemeField="true" /> 
                                 </div>
                             </div>
                         </aura:if> 
@@ -526,15 +471,12 @@
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
                                             <img src="{! $Resource.IPSMandatoryIcon}" height="12" width="12"/>
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >UCC</label>
-                                            <!--<c:CustomLookup1 selectedPAN ="{!v.selectedClientPAN}" selectedRecord="{!v.selectedClientCode}"  objectName="BSE_STAR_UCC__c" fieldName="CLIENT_CODE__c" label="" iconName="standard:account" placeholder="Enter Value" /> -->
                                             <ui:inputSelect aura:id="folio" label="" value="{!v.selectedUcc}" change="{!c.fetchClientHolding}" >
                                                 <aura:iteration items="{!v.uccList}" var="ucc">
                                                     <ui:inputSelectOption text="{!ucc}" label="{!ucc}"/>
                                                 </aura:iteration>
                                             </ui:inputSelect>
-                                        </div>
-                                        <!--<aura:if isTrue="{!v.isPurchase}"> -->
-                                        
+                                        </div>                                        
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
                                             <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Client Holding and Type</label>
@@ -542,8 +484,7 @@
                                                 <force:inputField  required="true"  value="{!v.orderEntry.Client_Holding_and_Type__c}" change="{!c.getFolioOnHolding}" />
                                             </div>     
                                         </div>
-                                        
-                                        <!--</aura:if>   -->                                
+                           
                                     </div>
                                     
                                     <div class="slds-form-element__row">
@@ -575,7 +516,7 @@
                                             </ui:inputSelect>
                                         </div>    
                                           <div class="slds-form-element slds-wrap slds-col slds-size_1-of-8" style="padding-top: 32px;padding-left: 35px">
-                                            <button class="slds-button slds-button_brand" onclick="{!c.callApi}" >Refresh</button>
+                                            <button class="slds-button slds-button_brand" onclick="{!c.callApi}" >Callout</button>
                                         </div> 
                                         <aura:renderIf isTrue="{!v.orderEntry.Transaction_Type__c == 'Purchase'}">
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 10px" >
@@ -592,60 +533,29 @@
                                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Type</label>
                                                 <div style="margin-top:-7px;">
-                                                   <!-- <force:inputField required="true"  value="{!v.orderEntry.Redemption_Type__c}" /> -->                                                    
                                                        	<force:inputField required="true"  value="{!v.orderEntry.Redemption_Type__c}" change='{!c.handleRedemptionChange}'/>                                                                                                                                                                   
                                                 </div>
                                             </div>
                                         </aura:renderIf>
-                                        <!--<aura:renderIf  isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 7px;">
-                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Type</label>
-                                                <div style="margin-top:-7px;">
-                                                    <force:inputField required="true"  value="{!v.orderEntry.Redemption_Type__c}" />
-                                                </div>
-                                            </div>
-                                        </aura:renderIf> -->
                                     </div>
                                     <div class="slds-form-element__row" >
                                         <aura:renderIf isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Redemption',v.orderEntry.Transaction_Type__c == 'Switch')}">
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 24px;" >
-                                                <!--<img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
                                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transaction Amount</label>
                                                 <div style="margin-top:7px;">
                                                     <lightning:input required="true"  value="{!v.orderEntry.Transaction_Amount_Financial_Transaction__c}" disabled="{!v.isDisableTxnAmount}"/>
                                                 </div>
                                             </div>
                                         </aura:renderIf>
-                                        <!--<aura:renderIf isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 24px;" >
-                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Transaction Amount </label>
-                                                <div style="margin-top:7px;">
-                                                    <force:inputField required="true"  value="{!v.orderEntry.Transaction_Amount_Financial_Transaction__c}" />
-                                                </div>
-                                            </div>
-                                        </aura:renderIf> -->
                                         
                                         <aura:renderIf  isTrue="{!or(v.orderEntry.Transaction_Type__c == 'Redemption',v.orderEntry.Transaction_Type__c == 'Switch')}">
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 23px;">
-                                                <!--<img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
                                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Units</label>
                                                 <div style="margin-top:7px;">
                                                     <lightning:input required="true"  value="{!v.orderEntry.Redemption_Units__c}" disabled="{!v.isDisableRedemptionUnit}"/>
                                                 </div>
                                             </div>
-                                        </aura:renderIf>
-                                        <!--<aura:renderIf isTrue="{!v.orderEntry.Transaction_Type__c == 'Switch'}">
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 23px;">
-                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Redemption Units</label>
-                                                <div style="margin-top: 7px;">
-                                                    <force:inputField required="true"  value="{!v.orderEntry.Redemption_Units__c}" />
-                                                </div>
-                                            </div>
-                                        </aura:renderIf> -->
-                                        
+                                        </aura:renderIf>                                        
                                     </div>
                                     
                                     <div class="slds-form-element__row">
@@ -689,9 +599,6 @@
                         <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
                         <button class="slds-button slds-button_brand" onclick="{!c.loadFirstScreen}" >Back</button>
                         <button class="slds-button slds-button_brand" onclick="{!c.setValuesToField}" >Next</button>
-                        
-                        
-                        <!--<button class="slds-button slds-button_brand" onclick="{!c.saveAnswer}" >Save</button>-->
                     </footer>
                 </div>
             </section>
@@ -849,7 +756,6 @@
                                             <lightning:input value="{!v.orderEntry.Client_Risk_Profile__c}" disabled="{!v.isDisabled}"/>
                                         </div>
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style ="padding: 20px 0px 0px 10px;">
-                                          <!--  <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>-->
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Product Risk Profile </label>
                                             <lightning:input value="{!v.orderEntry.Product_Risk_Profile_FinancialT__c}" disabled="{!v.isDisabled}"/>
                                         </div>
@@ -1052,22 +958,13 @@
                                         </div>
                                         
                                     </div> 
-                                    <div class="slds-grid slds-wrap">
+                                    <div class="slds-form-element__row" >
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
                                             <img src="{! $Resource.IPSMandatoryIcon}" height="12" width="12"/>
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Face Value</label>
-                                            <!--<c:CustomLookup1 selectedPAN ="{!v.selectedClientPAN}" selectedRecord="{!v.selectedClientCode}"  objectName="BSE_STAR_UCC__c" fieldName="CLIENT_CODE__c" label="" iconName="standard:account" placeholder="Enter Value" /> -->
                                             <force:inputField  required="true"  value="{!v.orderEntry.Face_Value__c}" />
                                         </div>
-                                        
-                                        <div class="slds-form-element slds-wrap slds-col slds-p-left_x-small slds-size_1-of-2" >
-                                            <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Price</label>
-                                            <!--<c:CustomLookup1 selectedPAN ="{!v.selectedClientPAN}" selectedRecord="{!v.selectedClientCode}"  objectName="BSE_STAR_UCC__c" fieldName="CLIENT_CODE__c" label="" iconName="standard:account" placeholder="Enter Value" /> -->
-                                            <div style="margin-top: -16px;"> 
-                                                <lightning:input  value="{!v.orderEntry.Price_new__c}" disabled="{!v.isPriceDisable}"/>
-                                            </div>  
-                                        </div>
-                                        
+
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">                                            
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Total Consideration</label>                                           
                                             <ui:inputNumber  value="{!v.orderEntry.Total_Consideration__c}" disabled="{!v.isDisabled}"/>
@@ -1088,54 +985,15 @@
                                                 <ui:inputNumber  required="true" value="{!v.orderEntry.Available_Quantity__c}" />                                          
                                             </div>
                                         </div>
-                                    </aura:if> 
-                                  
-                                    <aura:if isTrue="{!v.isSP}" >
-                                        <div  class="slds-form-element__row">
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >CounterParty Investment Id(If Available)</label>
-                                                <div style="margin-top: -16px;">
-                                                    <lightning:input value="{!v.orderEntry.Counterparty_investment_id_if_avl__c}" />   
-                                                </div>
-                                            </div>
-                                            
-                                               <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
-                                                   <lightning:select name="dependentFld"
-                                                                     value="{!v.orderEntry.Market_Type__c}"
-                                                                     label="Market Type"
-                                                                     required="true"> 
-                                                       <aura:iteration items="{!v.listMarketTypeValues}" var="val">
-                                                           <option value="{!val}">{!val}</option>
-                                                       </aura:iteration>
-                                                   </lightning:select>
-                                               </div> 
-                                           
-                                        </div>
                                     </aura:if>
                                     <div class="slds-form-element__row">
-                                   <!--        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
+                                        <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
                                             <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
                                             <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
-                                            <div style="margin-top: -16px;">
-                                            <lightning:input  value="{!v.orderEntry.Payment_Mode__c}" disabled="{!v.isPaymentModeDisable}"/>
-                                                </div>
+                                            <force:inputField  required="true"  value="{!v.orderEntry.Payment_Mode__c}"/>
                                         </div>                                                                                    
                                         <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2"  style="padding-top: 7px;">                                            
-                                        </div>      -->       
-                                     <aura:renderIf isTrue="{!v.isExternalDisplay}" >
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">                                            
-                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
-                                                <lightning:input  value="{!v.orderEntry.Payment_Mode__c}" disabled="{!v.isPaymentModeDisable}"/>
-                                            </div>
-                                        </aura:renderIf>                                            
-                                        <aura:renderIf isTrue="{!v.isPOADisplay}" >
-                                            <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
-                                                <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />
-                                                <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
-                                                <force:inputField  required="true"  value="{!v.orderEntry.Payment_Mode__c}" />
-                                            </div> 
-                                        </aura:renderIf>      
+                                        </div>                                        
                                     </div>
                                     
                                     
@@ -1151,10 +1009,8 @@
                     <footer class="slds-modal__footer">
                         <button class="slds-button slds-button_neutral" onclick="{!c.closeModel}" >Cancel</button>
                         <button class="slds-button slds-button_brand" onclick="{!c.loadFirstScreen}" >Back</button>
-                        <!--<button class="slds-button slds-button_brand" onclick="{!c.setValuesToField}" >Next</button>-->                        
                         <button class="slds-button slds-button_brand" onclick="{!c.setValuesToBondField}" >Next</button>
-                        
-                        <!--<button class="slds-button slds-button_brand" onclick="{!c.saveAnswer}" >Save</button>-->
+
                     </footer>
                 </div>
             </section>
@@ -1269,7 +1125,7 @@
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" >
                                                 <img src="{! $Resource.IPSMandatoryIcon}" height="12" width="12"/>
                                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Portfolio Fee Type</label>                                            
-                                                <lightning:input value="{!v.orderEntry.Portfolio_Fee_Type__c}" disabled="{!v.isDisabled}"/>
+                                                <force:inputField required="true"  value="{!v.orderEntry.Portfolio_Fee_Type__c}" />
                                             </div>
                                             
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2">
@@ -1285,7 +1141,7 @@
                                                 <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Payment Mode</label>
                                                 <lightning:input  value="{!v.orderEntry.Payment_Mode__c}" disabled="{!v.isPaymentModeDisable}"/>
                                             </div>
-                                        </aura:renderIf>                                             
+                                        </aura:renderIf>                                            
                                         <aura:renderIf isTrue="{!v.isPOADisplay}" >
                                             <div class="slds-form-element slds-wrap slds-col slds-size_1-of-2" style="padding-top: 18px">
                                                 <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13" />

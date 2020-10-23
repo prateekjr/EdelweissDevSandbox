@@ -115,44 +115,9 @@
         
     },
     transactionSelection : function(component, event, helper) {
-        component.set("v.showAllScheme",false);
+        var securityNameLookup =component.find("securityNameLookup");
+        securityNameLookup.clearMethod();
         var orderEntry = component.get("v.orderEntry");  
-        if(orderEntry.Transaction_Type__c == 'Redemption'){
-            orderEntry.Folio__c = '-- None --';
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",true);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",false);
-            component.set("v.isBondSell",false);
-        }else if(orderEntry.Transaction_Type__c == 'Switch'){
-            orderEntry.Folio__c = '-- None --';
-            component.set("v.isSwitch",true);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",false);
-            component.set("v.isBondSell",false);
-            
-        }else if(orderEntry.Transaction_Type__c == 'Purchase'){
-            orderEntry.Folio__c = 'New';
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",true);  
-            component.set("v.isBondBuy",false);
-            component.set("v.isBondSell",false);
-        } else if(orderEntry.Transaction_Type__c == 'Buy'){           
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",true);
-            component.set("v.isBondSell",false);
-            
-        } else if(orderEntry.Transaction_Type__c == 'Sell'){
-            component.set("v.isSwitch",false);  
-            component.set("v.isRedemption",false);  
-            component.set("v.isPurchase",false);  
-            component.set("v.isBondBuy",false);
-            component.set("v.isBondSell",true);
-        }
         component.set("v.orderEntry",orderEntry);  
     },
     

@@ -8,7 +8,7 @@
 
 .THIS .pillSize{
     width:100%;
-    padding-top : 8px;
+    padding-top: 5px;
 }
 .THIS .slds-pill-container {
      height:35px;
@@ -32,6 +32,8 @@
 }
 .THIS .inputBox input {
 	padding-left: 30px;
+    height:34px;
+    width : 442px;
 }
 .THIS .eachItem:hover {
     background-color: #EEE;

@@ -13,3 +13,6 @@ System.debug('My name is ' + tempvar);
 Account acc = [select id, name, GWM_Online_Id__c from account where name='New Family'];
 acc.GWM_Online_Id__c = '4567';
 update acc;
+
+
+Id devRecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Family').getRecordTypeId();

@@ -32,9 +32,12 @@
     
     <aura:attribute name="criteriaField" type="Object" access="public" default=""/>
     <aura:attribute name="widthFlag" 	type="string" /> 
-    
-    <!-- Added by Raj -->
+
      <aura:method name="removeItem" action="{!c.removeAllItem}" />
+
+         <!-- Used to Clear selected item from parent component-->
+    <aura:method name="clearMethod" action="{!c.removeItem}" access="PUBLIC" />
+     
     
     <!-- Internal Use Attributes -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
