@@ -212,10 +212,7 @@
                             </div> 
                             
                         </div>
-                        
-                        <div class="slds-col slds-size_1-of-2">
-             
-                        <!-- <div class="slds-col slds-size_1-of-1"> -->
+                        <div class="slds-col slds-size_1-of-1">
                             <aura:renderIf isTrue="{!v.showProductName}">                                                                                           
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
@@ -223,7 +220,6 @@
                                     <c:CustomListSearch  selectedRecord="{!v.selectedProductName}" aura:id="productNameLookup" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productCodeName__c" label="" iconName="standard:account" placeholder="Enter Product Name" widthFlag="100"/>
                                 </div>
                             </aura:renderIf>
-                       <!-- </div> -->
                     </div>
                     </div> 
                     <footer class="slds-modal__footer">	

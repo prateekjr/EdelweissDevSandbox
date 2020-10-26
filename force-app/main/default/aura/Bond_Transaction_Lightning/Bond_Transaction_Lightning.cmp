@@ -201,15 +201,13 @@
                             </div> 
                             
                         </div>
-                        
-                        <div class="slds-col slds-size_1-of-2">                            
-                        </div>
+
                         <div class="slds-col slds-size_1-of-1">
                             <aura:renderIf isTrue="{!v.showInstrument}">                                                                                           
                                 <div class="slds-p-around_medium" id="modal-content-id-1" >
                                     <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                     <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Instrument </label>
-                                    <c:CustomListSearch  selectedRecord="{!v.selectedInstrument}" aura:id="instrumentLookup" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productISIN__c" label="" iconName="standard:account" placeholder="Enter Instruments" />
+                                    <c:CustomListSearch  selectedRecord="{!v.selectedInstrument}" aura:id="instrumentLookup" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="productISIN__c" label="" iconName="standard:account" placeholder="Enter Instruments" widthFlag="100"/>
                                 </div>
                             </aura:renderIf>                            
                         </div>                        

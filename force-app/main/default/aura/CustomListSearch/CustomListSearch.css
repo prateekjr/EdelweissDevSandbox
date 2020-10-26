@@ -35,6 +35,12 @@
     height:34px;
     width : 442px;
 }
+
+.THIS .inputBoxfull input {
+	padding-left: 30px;
+    height:34px;
+    width : 912px;
+}
 .THIS .eachItem:hover {
     background-color: #EEE;
     cursor: pointer;

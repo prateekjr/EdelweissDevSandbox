@@ -72,7 +72,7 @@
                         <!-- Icon, Search Bar, Search Icon -->
                         <lightning:icon class="slds-combobox__input-entity-icon" iconName="{!v.iconName}" size="large" alternativeText="icon"/>
                         <aura:if isTrue="{! v.widthFlag == '100' }">
-                            <lightning:input aura:id="inputLookup" class="inputBox" placeholder="{!v.placeholder}" onblur="{!c.blurEvent}" onclick="{!c.showRecords}" onkeyup="{!c.searchRecords}" value="{!v.searchString}" autoComplete="off" variant="label-hidden" id="combobox-id-1" style="width:895px;padding-right: 0px;" />
+                            <lightning:input aura:id="inputLookup" class="inputBoxfull" placeholder="{!v.placeholder}" onblur="{!c.blurEvent}" onclick="{!c.showRecords}" onkeyup="{!c.searchRecords}" value="{!v.searchString}" autoComplete="off" variant="label-hidden" id="combobox-id-1" style="width:895px;padding-right: 0px;" />
                             <lightning:icon class="slds-input__icon" iconName="utility:search" size="x-small" alternativeText="search"/>
                             <lightning:spinner class="slds-hide" aura:id="Spinner" alternativeText="Loading" size="small" variant="brand"/>
                             

@@ -272,7 +272,7 @@
                                         <img src="{! $Resource.IPSMandatoryIcon}" height="13" width="13"/>
                                         <label class="slds-form-element__label" for="textareaSample2" style="display: inline;" >Security Name</label>
                                         <!-- <c:CustomListSearch_Duplicate selectedRecord="{!v.selectedSecurityName}" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="Name" label="" iconName="standard:account" placeholder="Enter Security Name" widthFlag="100"/> -->
-                                        <c:CustomListSearch selectedRecord="{!v.selectedSecurityName}" aura:id="securityNameLookup" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="Name" label="" iconName="standard:account" placeholder="Enter Security Name"/>
+                                        <c:CustomListSearch selectedRecord="{!v.selectedSecurityName}" aura:id="securityNameLookup" orderEntry="{!v.orderEntry}" objectName="Product2" fieldName="Name" label="" iconName="standard:account" placeholder="Enter Security Name"  widthFlag="100"/>
                                     </div>
                                 </aura:renderIf>
                  
